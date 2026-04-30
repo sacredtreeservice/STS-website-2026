@@ -1,0 +1,175 @@
+---
+const phone = '(407) 452-8779';
+const phoneHref = 'tel:+14074528779';
+const email = 'sacredtreeservice@gmail.com';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Sacred Tree Service — New Site Coming Soon</title>
+    <meta
+      name="description"
+      content="Sacred Tree Service: expert tree removal, pruning & landscaping. New site coming soon."
+    />
+    <meta property="og:title" content="Sacred Tree Service — Coming Soon" />
+    <meta
+      property="og:description"
+      content="Expert tree removal, pruning & landscaping. New site coming soon."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sacredtreeservice.com/" />
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Marcellus&family=Lato:wght@300;400;700&display=swap"
+    />
+  </head>
+  <body>
+    <main class="wrap">
+      <div class="card">
+        <img class="logo" src="/assets/logo.jpg" alt="Sacred Tree Service" />
+        <h1>Something new is taking root.</h1>
+        <p class="lede">
+          Our redesigned site is coming soon. In the meantime, we're still
+          climbing, cutting, and caring for trees across Central Florida.
+        </p>
+
+        <div class="cta">
+          <a class="btn primary" href={phoneHref}>Call {phone}</a>
+          <a class="btn ghost" href={`mailto:${email}`}>Email Us</a>
+        </div>
+
+        <ul class="services">
+          <li>Tree Removal</li>
+          <li>Pruning &amp; Trimming</li>
+          <li>Stump Grinding</li>
+          <li>Landscaping</li>
+        </ul>
+
+        <footer>
+          <small>&copy; {new Date().getFullYear()} Sacred Tree Service · Licensed &amp; Insured</small>
+        </footer>
+      </div>
+    </main>
+
+    <style>
+      :root {
+        --green: #4b7021;
+        --green-dark: #324a16;
+        --teal: #68ccd1;
+        --ink: #1f2a17;
+        --paper: #faf9f6;
+        --muted: #5b6657;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        min-height: 100vh;
+        font-family: 'Lato', system-ui, -apple-system, sans-serif;
+        color: var(--ink);
+        background:
+          linear-gradient(rgba(20, 30, 15, 0.55), rgba(20, 30, 15, 0.75)),
+          url('/assets/hero.jpg') center/cover no-repeat fixed;
+      }
+      .wrap {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 2rem 1rem;
+      }
+      .card {
+        max-width: 640px;
+        width: 100%;
+        background: var(--paper);
+        border-radius: 14px;
+        padding: 3rem 2.25rem;
+        text-align: center;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+      }
+      .logo {
+        width: 180px;
+        height: auto;
+        margin: 0 auto 1.25rem;
+        display: block;
+        border-radius: 8px;
+      }
+      h1 {
+        font-family: 'Marcellus', Georgia, serif;
+        font-weight: 400;
+        font-size: clamp(1.6rem, 4vw, 2.4rem);
+        margin: 0 0 0.75rem;
+        color: var(--green-dark);
+        letter-spacing: 0.01em;
+      }
+      .lede {
+        font-size: 1.05rem;
+        line-height: 1.55;
+        color: var(--muted);
+        margin: 0 auto 1.75rem;
+        max-width: 44ch;
+      }
+      .cta {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 1.75rem;
+      }
+      .btn {
+        display: inline-block;
+        padding: 0.85rem 1.5rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        transition: transform 0.15s ease, background 0.2s ease;
+      }
+      .btn:hover { transform: translateY(-1px); }
+      .btn.primary {
+        background: var(--green);
+        color: #fff;
+      }
+      .btn.primary:hover { background: var(--green-dark); }
+      .btn.ghost {
+        background: transparent;
+        color: var(--green-dark);
+        border: 2px solid var(--green);
+      }
+      .btn.ghost:hover { background: rgba(75, 112, 33, 0.08); }
+      .services {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+      }
+      .services li {
+        font-size: 0.85rem;
+        color: var(--muted);
+        padding: 0.35rem 0.85rem;
+        border: 1px solid rgba(75, 112, 33, 0.25);
+        border-radius: 999px;
+        background: rgba(75, 112, 33, 0.04);
+      }
+      footer {
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        padding-top: 1rem;
+        color: var(--muted);
+      }
+      @media (max-width: 480px) {
+        .card { padding: 2rem 1.25rem; }
+        .btn { width: 100%; }
+      }
+    </style>
+  </body>
+</html>
