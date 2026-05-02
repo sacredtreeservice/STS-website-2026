@@ -16,8 +16,8 @@ const cityShortlist = cities.slice(0, 12);
 ---
 
 <Base
-  title="Tree Removal, Pruning & Tree Care in Orlando"
-  description="ISA Certified Arborists in Orlando. Tree removal, pruning, stump grinding, and emergency storm response across Central Florida. Licensed & insured."
+  title="Tree Care, Pruning & Plant Health in Orlando"
+  description="ISA Certified Arborists in Orlando. Proactive tree care, pruning, plant health, and thoughtful removals across Central Florida. Family-owned, licensed & insured."
 >
   <section class="hero">
     <div class="hero-bg" aria-hidden="true"></div>
@@ -29,9 +29,9 @@ const cityShortlist = cities.slice(0, 12);
         Central Florida tree care, <span class="ink">done right.</span>
       </h1>
       <p class="lede" data-reveal>
-        Tree removal, pruning, and emergency response from ISA Certified
-        Arborists. Family-owned, fully insured, serving the Orlando area within
-        a 50-mile radius.
+        Proactive care for the trees that shape Central Florida — pruning,
+        plant health, and thoughtful work when it’s time. Family-owned,
+        ISA Certified, fully insured.
       </p>
       <div class="cta" data-reveal>
         <a class="btn primary large" href={company.phoneHref}>
@@ -49,8 +49,8 @@ const cityShortlist = cities.slice(0, 12);
   <section class="container svc-section">
     <header class="section-head" data-reveal>
       <span class="kicker">What we do</span>
-      <h2>Full-service tree care</h2>
-      <p>From routine pruning to crane-assisted removals — all under one crew.</p>
+      <h2>Care for every stage of a tree's life</h2>
+      <p>From routine pruning and plant health, through removals and replanting — all under one crew.</p>
     </header>
     <div class="cards" data-reveal data-reveal-stagger>
       {featuredServices.map((s) => (
@@ -168,8 +168,8 @@ const cityShortlist = cities.slice(0, 12);
     justify-content: center;
     flex-wrap: wrap;
   }
-  .hero .btn.primary { background: #fff; color: var(--green-dark); }
-  .hero .btn.primary:hover { background: var(--paper); }
+  .hero .btn.primary { background: #ffffff; color: #1a2110; }
+  .hero .btn.primary:hover { background: #f3f1eb; color: #1a2110; }
   .hero .btn.ghost { color: #fff; border-color: rgba(255,255,255,0.5); }
   .hero .btn.ghost:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
 
@@ -193,8 +193,8 @@ const cityShortlist = cities.slice(0, 12);
   }
   .card {
     display: block;
-    background: #fff;
-    border: 1px solid rgba(0,0,0,0.06);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 16px;
     padding: 1.75rem;
     text-decoration: none;
@@ -270,13 +270,13 @@ const cityShortlist = cities.slice(0, 12);
     border-radius: 999px;
     text-decoration: none;
     color: var(--green-dark);
-    background: #fff;
+    background: var(--surface);
     font-size: 0.9rem;
     transition: all 0.2s var(--easing);
   }
   .cloud li a:hover {
     background: var(--green);
-    color: #fff;
+    color: var(--ink-strong);
     border-color: var(--green);
     transform: translateY(-2px);
   }

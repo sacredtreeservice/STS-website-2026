@@ -25,7 +25,7 @@ const allSchema = [...baseSchema, ...extra];
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -41,6 +41,20 @@ const allSchema = [...baseSchema, ...extra];
     <Seo title={title} description={description} canonical={canonical} ogImage={ogImage} noindex={noindex} />
     <JsonLd data={allSchema} />
     <ClientRouter />
+
+    <script is:inline>
+      // Anti-FOUC theme bootstrap. Runs before paint, applies stored or system theme.
+      (function () {
+        try {
+          var stored = localStorage.getItem('sts-theme');
+          var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = stored || (sysDark ? 'dark' : 'light');
+          document.documentElement.dataset.theme = theme;
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', theme === 'dark' ? '#141a0d' : '#324a16');
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <Header />
@@ -75,23 +89,67 @@ const allSchema = [...baseSchema, ...extra];
     </script>
 
     <style is:global>
-      :root {
+      /* ── Light theme (default) ─────────────────────────────────────── */
+      :root,
+      :root[data-theme='light'] {
         --green: #4b7021;
         --green-dark: #324a16;
         --green-light: #6b9a3a;
+        --green-tint: rgba(75, 112, 33, 0.1);
         --teal: #68ccd1;
         --ink: #1f2a17;
         --ink-soft: #2d3b22;
+        --ink-strong: #1a2110;
         --paper: #faf9f6;
         --paper-2: #f3f1eb;
+        --surface: #ffffff;
+        --surface-2: #f8f7f2;
+        --border: rgba(0, 0, 0, 0.06);
+        --border-strong: rgba(75, 112, 33, 0.25);
         --muted: #5b6657;
         --warning: #c44d2e;
         --shadow-sm: 0 2px 6px rgba(20, 30, 15, 0.06);
         --shadow-md: 0 8px 24px rgba(20, 30, 15, 0.08);
         --shadow-lg: 0 24px 60px rgba(20, 30, 15, 0.14);
+        --hero-overlay-1: rgba(20, 30, 15, 0.55);
+        --hero-overlay-2: rgba(20, 30, 15, 0.78);
+        --highlight-bg: #fff8e6;
+        --highlight-border: #d4b15a;
+        --highlight-ink: #6b5418;
         --radius: 14px;
         --easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+        color-scheme: light;
       }
+
+      /* ── Dark theme ────────────────────────────────────────────────── */
+      :root[data-theme='dark'] {
+        --green: #8fb654;
+        --green-dark: #b9d093;        /* used for headings — must be light on dark */
+        --green-light: #6b9a3a;
+        --green-tint: rgba(143, 182, 84, 0.14);
+        --teal: #68ccd1;
+        --ink: #e8efe0;
+        --ink-soft: #d4dbcd;
+        --ink-strong: #ffffff;
+        --paper: #141a0d;
+        --paper-2: #1c2414;
+        --surface: #1f2615;
+        --surface-2: #262e1c;
+        --border: rgba(255, 255, 255, 0.07);
+        --border-strong: rgba(143, 182, 84, 0.3);
+        --muted: #9aa68f;
+        --warning: #e07a5f;
+        --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.35);
+        --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+        --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.55);
+        --hero-overlay-1: rgba(10, 14, 7, 0.65);
+        --hero-overlay-2: rgba(10, 14, 7, 0.88);
+        --highlight-bg: #2c2410;
+        --highlight-border: #7a6018;
+        --highlight-ink: #e8d28a;
+        color-scheme: dark;
+      }
+
       * { box-sizing: border-box; }
       html { scroll-behavior: smooth; }
       html, body { margin: 0; padding: 0; }
@@ -101,6 +159,7 @@ const allSchema = [...baseSchema, ...extra];
         background: var(--paper);
         line-height: 1.6;
         -webkit-font-smoothing: antialiased;
+        transition: background 0.3s ease, color 0.3s ease;
       }
       h1, h2, h3, h4 {
         font-family: 'Marcellus', Georgia, serif;
@@ -138,14 +197,16 @@ const allSchema = [...baseSchema, ...extra];
       }
       .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
       .btn:active { transform: translateY(0); }
-      .btn.primary { background: var(--green); color: #fff; }
-      .btn.primary:hover { background: var(--green-dark); }
+      .btn.primary { background: var(--green); color: #0c100a; }
+      .btn.primary:hover { background: var(--green-light); }
+      :root[data-theme='light'] .btn.primary { color: #fff; }
+      :root[data-theme='light'] .btn.primary:hover { background: var(--green-dark); color: #fff; }
       .btn.ghost {
         background: transparent;
         color: var(--green-dark);
         border: 2px solid var(--green);
       }
-      .btn.ghost:hover { background: rgba(75, 112, 33, 0.08); }
+      .btn.ghost:hover { background: var(--green-tint); }
       .btn.large { padding: 1.05rem 2rem; font-size: 1.05rem; }
 
       /* Reveal-on-scroll */
@@ -184,7 +245,7 @@ const allSchema = [...baseSchema, ...extra];
         right: 1rem;
         text-align: center;
         background: var(--green);
-        color: #fff;
+        color: #0c100a;
         padding: 0.95rem;
         border-radius: 999px;
         text-decoration: none;
@@ -195,6 +256,7 @@ const allSchema = [...baseSchema, ...extra];
         justify-content: center;
         gap: 0.5rem;
       }
+      :root[data-theme='light'] .sticky-call { color: #fff; }
       @media (max-width: 700px) {
         .sticky-call { display: inline-flex; }
         body { padding-bottom: 4rem; }

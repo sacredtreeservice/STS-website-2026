@@ -48,8 +48,8 @@ const JOBBER_EMBED_SNIPPET = '';
 
 <style>
   .lead-form {
-    background: #fff;
-    border: 1px solid rgba(75, 112, 33, 0.18);
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
     border-radius: 14px;
     padding: 2rem 1.75rem;
     box-shadow: 0 8px 24px rgba(0,0,0,0.04);
@@ -64,7 +64,7 @@ const JOBBER_EMBED_SNIPPET = '';
   }
   .lead-form p { margin: 0.25rem 0; color: var(--muted); }
   .context {
-    background: rgba(75, 112, 33, 0.08);
+    background: var(--green-tint);
     color: var(--green-dark);
     padding: 0.5rem 0.85rem;
     border-radius: 8px;
@@ -72,11 +72,11 @@ const JOBBER_EMBED_SNIPPET = '';
     display: inline-block;
   }
   .placeholder {
-    background: #fff8e6;
-    border: 1px dashed #d4b15a;
+    background: var(--highlight-bg);
+    border: 1px dashed var(--highlight-border);
     padding: 1.25rem;
     border-radius: 10px;
-    color: #6b5418;
+    color: var(--highlight-ink);
     font-size: 0.92rem;
   }
   .placeholder code {
@@ -85,6 +85,6 @@ const JOBBER_EMBED_SNIPPET = '';
     border-radius: 4px;
     font-size: 0.85em;
   }
-  .fallback { margin-top: 0.6rem; color: #4b3c10; }
+  .fallback { margin-top: 0.6rem; color: var(--highlight-ink); }
   .fallback a { color: var(--green-dark); font-weight: 700; }
 </style>

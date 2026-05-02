@@ -2,10 +2,34 @@
 import { Icon } from 'astro-icon/components';
 
 const actions = [
-  { icon: 'lucide:siren', title: 'Storm just hit', sub: 'Emergency tree response', href: '/emergency/', tone: 'warning' },
-  { icon: 'lucide:axe', title: 'Hazardous tree', sub: 'Free risk assessment', href: '/services/tree-removal/', tone: 'default' },
-  { icon: 'lucide:scissors', title: 'Pruning needed', sub: 'Pre-storm or routine', href: '/services/tree-pruning/', tone: 'default' },
-  { icon: 'lucide:clipboard-check', title: 'Get an estimate', sub: 'In-person, free, no pressure', href: '/contact/', tone: 'accent' },
+  {
+    icon: 'lucide:leaf',
+    title: 'Plant health & care',
+    sub: 'Keep what you love thriving',
+    href: '/services/plant-health-care/',
+    tone: 'default',
+  },
+  {
+    icon: 'lucide:scissors',
+    title: 'Pruning & trimming',
+    sub: 'Routine care that prevents problems',
+    href: '/services/tree-pruning/',
+    tone: 'default',
+  },
+  {
+    icon: 'lucide:tree-deciduous',
+    title: 'Removal & replanting',
+    sub: 'Thoughtful, when it’s time',
+    href: '/services/tree-removal/',
+    tone: 'default',
+  },
+  {
+    icon: 'lucide:clipboard-check',
+    title: 'Free estimate',
+    sub: 'In-person, no pressure',
+    href: '/contact/',
+    tone: 'accent',
+  },
 ];
 ---
 
@@ -36,10 +60,11 @@ const actions = [
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 0.85rem;
-    background: #fff;
+    background: var(--surface);
     padding: 0.85rem;
     border-radius: 18px;
     box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
   }
   .tile {
     display: flex;
@@ -54,10 +79,7 @@ const actions = [
     position: relative;
     overflow: hidden;
   }
-  .tile:hover { transform: translateY(-2px); background: rgba(75, 112, 33, 0.08); }
-  .tile.tone-warning { background: rgba(196, 77, 46, 0.08); }
-  .tile.tone-warning:hover { background: rgba(196, 77, 46, 0.15); }
-  .tile.tone-warning .iconwrap { background: var(--warning); color: #fff; }
+  .tile:hover { transform: translateY(-2px); background: var(--green-tint); }
   .tile.tone-accent { background: var(--green); color: #fff; }
   .tile.tone-accent:hover { background: var(--green-dark); }
   .tile.tone-accent .iconwrap { background: rgba(255,255,255,0.2); color: #fff; }
@@ -67,7 +89,7 @@ const actions = [
     width: 42px;
     height: 42px;
     border-radius: 10px;
-    background: rgba(75, 112, 33, 0.12);
+    background: var(--green-tint);
     color: var(--green-dark);
     display: grid;
     place-items: center;

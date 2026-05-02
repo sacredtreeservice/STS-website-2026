@@ -1,0 +1,76 @@
+---
+import { Icon } from 'astro-icon/components';
+---
+
+<button
+  class="theme-toggle"
+  type="button"
+  aria-label="Toggle dark mode"
+  data-theme-toggle
+>
+  <span class="sun"><Icon name="lucide:sun" /></span>
+  <span class="moon"><Icon name="lucide:moon" /></span>
+</button>
+
+<script>
+  const THEME_KEY = 'sts-theme';
+
+  const apply = (theme: 'light' | 'dark') => {
+    document.documentElement.dataset.theme = theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute(
+      'content',
+      theme === 'dark' ? '#141a0d' : '#324a16'
+    );
+  };
+
+  const setup = () => {
+    const btns = document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]');
+    btns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        apply(next);
+        try { localStorage.setItem(THEME_KEY, next); } catch {}
+      });
+    });
+  };
+
+  setup();
+  document.addEventListener('astro:page-load', setup);
+</script>
+
+<style>
+  .theme-toggle {
+    --size: 38px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    display: inline-grid;
+    place-items: center;
+    position: relative;
+    transition: background 0.2s ease, transform 0.2s var(--easing), border-color 0.2s ease;
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover { transform: translateY(-1px); border-color: var(--green); }
+  .theme-toggle .sun, .theme-toggle .moon {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    transition: opacity 0.3s ease, transform 0.3s var(--easing);
+  }
+  .theme-toggle [data-icon] { width: 18px; height: 18px; }
+
+  /* Light theme: show moon (click to go dark) */
+  :root[data-theme='light'] .sun,
+  :root:not([data-theme='dark']) .sun { opacity: 0; transform: rotate(-30deg) scale(0.6); }
+  :root[data-theme='light'] .moon,
+  :root:not([data-theme='dark']) .moon { opacity: 1; transform: rotate(0) scale(1); }
+
+  /* Dark theme: show sun (click to go light) */
+  :root[data-theme='dark'] .sun { opacity: 1; transform: rotate(0) scale(1); }
+  :root[data-theme='dark'] .moon { opacity: 0; transform: rotate(30deg) scale(0.6); }
+</style>
