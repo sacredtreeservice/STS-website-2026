@@ -1,0 +1,105 @@
+---
+import { Icon } from 'astro-icon/components';
+
+const reasons = [
+  {
+    icon: 'lucide:badge-check',
+    title: 'ISA Certified Arborists',
+    body: 'Every job is assessed by a credentialed arborist before we touch a saw — not just a sales rep.',
+  },
+  {
+    icon: 'lucide:shield-check',
+    title: 'Fully licensed & insured',
+    body: 'Liability + workers’ comp coverage on every crew. Ask for our certificate of insurance any time.',
+  },
+  {
+    icon: 'lucide:trees',
+    title: 'ISA & TCIA member',
+    body: 'Bound by the national best-practice standards (ANSI A300) the entire industry should follow.',
+  },
+  {
+    icon: 'lucide:heart-handshake',
+    title: 'We’ll talk you out of work',
+    body: 'If a tree doesn’t need to come down, we’ll say so. Our reputation matters more than one job.',
+  },
+  {
+    icon: 'lucide:calendar-clock',
+    title: 'Fast, real estimates',
+    body: 'Free in-person estimates, usually within a few business days. Written quotes, no surprises.',
+  },
+  {
+    icon: 'lucide:sprout',
+    title: 'Replanting on request',
+    body: 'When a tree comes down, we’ll plant another where you want one. Keeping the cycle going.',
+  },
+];
+---
+
+<section class="why">
+  <div class="container">
+    <header class="head" data-reveal>
+      <span class="kicker">Why us</span>
+      <h2>Tree care you can trust to be honest.</h2>
+      <p>Six things that genuinely separate us from the truck-and-saw outfits.</p>
+    </header>
+
+    <div class="grid" data-reveal data-reveal-stagger>
+      {reasons.map((r) => (
+        <article class="tile">
+          <span class="ico"><Icon name={r.icon} /></span>
+          <h3>{r.title}</h3>
+          <p>{r.body}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .why { padding: 5rem 0; background: var(--paper-2); }
+  .head { text-align: center; margin: 0 auto 3rem; max-width: 60ch; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h2 { font-size: clamp(1.8rem, 3.6vw, 2.4rem); margin: 0 0 0.5rem; }
+  .head p { color: var(--muted); margin: 0; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  .tile {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem;
+    transition: transform 0.25s var(--easing), border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .tile:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+  }
+  .ico {
+    display: inline-grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--green-tint), color-mix(in srgb, var(--teal) 18%, transparent));
+    color: var(--green-dark);
+    margin-bottom: 1rem;
+  }
+  .ico [data-icon] { width: 26px; height: 26px; }
+  h3 { font-size: 1.15rem; margin: 0 0 0.4rem; }
+  p { color: var(--muted); margin: 0; font-size: 0.95rem; line-height: 1.55; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+</style>

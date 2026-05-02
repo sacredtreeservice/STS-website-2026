@@ -1,0 +1,142 @@
+---
+import { Icon } from 'astro-icon/components';
+import { testimonials } from '../data/testimonials';
+
+const fmt = (iso: string) => {
+  try {
+    return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+  } catch {
+    return iso;
+  }
+};
+---
+
+<section class="reviews">
+  <div class="container">
+    <header class="head" data-reveal>
+      <span class="kicker">What folks say</span>
+      <h2>The kind of work people remember.</h2>
+      <p class="sub">A few words from neighbors across Central Florida.</p>
+    </header>
+
+    <ul class="grid" data-reveal data-reveal-stagger>
+      {testimonials.map((t) => (
+        <li class="card">
+          <div class="stars" aria-label={`${t.rating} out of 5 stars`}>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Icon name={i < t.rating ? 'lucide:star' : 'lucide:star'} class:list={[i < t.rating ? 'on' : 'off']} />
+            ))}
+          </div>
+          <blockquote>“{t.quote}”</blockquote>
+          <footer>
+            <div class="who">
+              <strong>{t.name}</strong>
+              <em>{t.location}</em>
+            </div>
+            <div class="src">
+              <span class="badge">
+                <Icon name={t.source === 'Google' ? 'lucide:badge-check' : 'lucide:thumbs-up'} />
+                {t.source}
+              </span>
+              <time>{fmt(t.date)}</time>
+            </div>
+          </footer>
+          {t.job && <span class="job">{t.job}</span>}
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .reviews { padding: 5rem 0; background: var(--paper-2); }
+  .head { text-align: center; margin: 0 0 2.5rem; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h2 { font-size: clamp(1.8rem, 3.6vw, 2.4rem); margin: 0 0 0.4rem; }
+  .sub { color: var(--muted); margin: 0; }
+
+  .grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem 1.5rem 1.25rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    position: relative;
+    transition: transform 0.25s var(--easing), box-shadow 0.25s ease;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+  .stars { display: flex; gap: 2px; color: #f5b94a; }
+  .stars [data-icon] { width: 16px; height: 16px; }
+  .stars .on { fill: #f5b94a; }
+  .stars .off { color: var(--border); fill: transparent; }
+  blockquote {
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+  footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .who strong { display: block; font-weight: 700; color: var(--ink); }
+  .who em {
+    font-style: normal;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .src {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: var(--green-tint);
+    color: var(--green-dark);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+  .badge [data-icon] { width: 12px; height: 12px; }
+  .job {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 0.7rem;
+    background: var(--paper-2);
+    color: var(--muted);
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+  }
+</style>

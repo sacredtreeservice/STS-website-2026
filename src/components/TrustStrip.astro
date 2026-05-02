@@ -1,0 +1,62 @@
+---
+import { Icon } from 'astro-icon/components';
+
+const items = [
+  { icon: 'lucide:badge-check', label: 'ISA Certified Arborists' },
+  { icon: 'lucide:shield', label: 'Licensed & Insured' },
+  { icon: 'lucide:landmark', label: 'TCIA Member' },
+  { icon: 'lucide:hard-hat', label: 'Workers’ Comp' },
+  { icon: 'lucide:map-pin', label: 'Family-Owned · Orlando' },
+];
+---
+
+<section class="trust">
+  <div class="container" data-reveal>
+    <ul>
+      {items.map((i) => (
+        <li>
+          <span class="ico"><Icon name={i.icon} /></span>
+          <span>{i.label}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .trust {
+    padding: 1.5rem 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem 2rem;
+    align-items: center;
+  }
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    letter-spacing: 0.01em;
+  }
+  .ico {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    background: var(--green-tint);
+    color: var(--green-dark);
+    display: grid;
+    place-items: center;
+  }
+  .ico [data-icon] { width: 16px; height: 16px; }
+</style>

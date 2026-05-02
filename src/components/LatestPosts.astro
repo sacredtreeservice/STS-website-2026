@@ -1,0 +1,163 @@
+---
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+
+const all = await getCollection('blog', ({ data }) => !data.draft);
+const posts = all
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf())
+  .slice(0, 3);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+
+{posts.length > 0 && (
+  <section class="latest">
+    <div class="container">
+      <header class="head" data-reveal>
+        <div>
+          <span class="kicker">Field notes</span>
+          <h2>From the climbers, for tree owners.</h2>
+        </div>
+        <a class="all" href="/blog/">
+          All posts <Icon name="lucide:arrow-right" />
+        </a>
+      </header>
+      <ul class="grid" data-reveal data-reveal-stagger>
+        {posts.map((p) => (
+          <li>
+            <a href={`/blog/${p.id}/`}>
+              {p.data.coverImage ? (
+                <div class="img"><img src={p.data.coverImage.src} alt={p.data.coverAlt ?? p.data.title} loading="lazy" /></div>
+              ) : (
+                <div class="img placeholder"><Icon name="lucide:leaf" /></div>
+              )}
+              <div class="meta">
+                {p.data.categories.length > 0 && (
+                  <span class="cat">{p.data.categories.slice(0, 2).join(' · ')}</span>
+                )}
+                <h3>{p.data.title}</h3>
+                <p>{p.data.excerpt}</p>
+                <footer>
+                  <span class="author">
+                    {p.data.author}
+                    {p.data.isaCertified && (
+                      <span class="isa"><Icon name="lucide:badge-check" /> ISA</span>
+                    )}
+                  </span>
+                  <time>{fmt(p.data.publishedAt)}</time>
+                </footer>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+
+<style>
+  .latest { padding: 5rem 0; }
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 0 0 2.5rem;
+  }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h2 {
+    font-size: clamp(1.8rem, 3.6vw, 2.4rem);
+    margin: 0;
+    max-width: 22ch;
+  }
+  .all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--green-dark);
+    font-weight: 700;
+    text-decoration: none;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    transition: all 0.2s var(--easing);
+  }
+  .all:hover { background: var(--green-tint); transform: translateY(-1px); }
+  .all [data-icon] { width: 16px; height: 16px; transition: transform 0.2s var(--easing); }
+  .all:hover [data-icon] { transform: translateX(3px); }
+
+  .grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  .grid a {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    text-decoration: none;
+    color: var(--ink);
+    overflow: hidden;
+    height: 100%;
+    transition: transform 0.25s var(--easing), box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .grid a:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-strong);
+  }
+  .img { aspect-ratio: 16/9; overflow: hidden; }
+  .img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .img.placeholder {
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--green-tint), var(--paper-2));
+    color: var(--green);
+  }
+  .img.placeholder [data-icon] { width: 56px; height: 56px; opacity: 0.55; }
+
+  .meta { padding: 1.4rem 1.5rem 1.5rem; flex: 1; display: flex; flex-direction: column; gap: 0.45rem; }
+  .cat { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--green); font-weight: 700; }
+  .grid h3 { font-size: 1.2rem; margin: 0; }
+  .grid p { color: var(--muted); margin: 0; flex: 1; }
+  .meta footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--muted);
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--border);
+    margin-top: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .author { display: inline-flex; gap: 0.4rem; align-items: center; }
+  .isa {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    background: var(--green-tint);
+    color: var(--green-dark);
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .isa [data-icon] { width: 11px; height: 11px; }
+</style>
