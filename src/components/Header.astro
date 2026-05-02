@@ -2,6 +2,15 @@
 import { Icon } from 'astro-icon/components';
 import ThemeToggle from './ThemeToggle.astro';
 import { company } from '../data/company';
+
+const navLinks = [
+  { href: '/services/', label: 'Services' },
+  { href: '/service-area/', label: 'Service Area' },
+  { href: '/tree-care/', label: 'Tree Care' },
+  { href: '/blog/', label: 'Blog' },
+  { href: '/about/', label: 'About' },
+  { href: '/contact/', label: 'Contact' },
+];
 ---
 
 <header class="site-header">
@@ -14,17 +23,82 @@ import { company } from '../data/company';
         <em>{company.tagline}</em>
       </span>
     </a>
-    <nav aria-label="Main">
-      <a href="/services/">Services</a>
-      <a href="/service-area/">Service Area</a>
-      <a href="/tree-care/">Tree Care</a>
-      <a href="/blog/">Blog</a>
-      <a href="/about/">About</a>
-      <a href="/contact/">Contact</a>
+    <nav class="desktop-nav" aria-label="Main">
+      {navLinks.map((l) => <a href={l.href}>{l.label}</a>)}
     </nav>
     <a class="cta" href={company.phoneHref}><Icon name="lucide:phone" /> {company.phone}</a>
+    <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false" data-menu-toggle>
+      <Icon name="lucide:menu" />
+    </button>
+  </div>
+
+  <div class="mobile-menu" data-menu-panel hidden>
+    <div class="mobile-menu-inner">
+      <header class="mobile-menu-header">
+        <span class="brand-mini">{company.brandName}</span>
+        <button class="close" type="button" aria-label="Close menu" data-menu-toggle>
+          <Icon name="lucide:x" />
+        </button>
+      </header>
+      <nav aria-label="Mobile">
+        {navLinks.map((l) => <a href={l.href}>{l.label} <Icon name="lucide:arrow-right" /></a>)}
+      </nav>
+      <div class="mobile-actions">
+        <a class="btn primary large" href={company.phoneHref}>
+          <Icon name="lucide:phone" /> Call {company.phone}
+        </a>
+        <a class="btn ghost large" href={`mailto:${company.email}`}>
+          <Icon name="lucide:mail" /> Email Us
+        </a>
+      </div>
+    </div>
   </div>
 </header>
+
+<script>
+  const setup = () => {
+    const panel = document.querySelector<HTMLElement>('[data-menu-panel]');
+    if (!panel) return;
+    const toggles = document.querySelectorAll<HTMLButtonElement>('[data-menu-toggle]');
+
+    const open = () => {
+      panel.hidden = false;
+      requestAnimationFrame(() => panel.classList.add('is-open'));
+      document.body.style.overflow = 'hidden';
+      toggles.forEach((b) => b.setAttribute('aria-expanded', 'true'));
+    };
+    const close = () => {
+      panel.classList.remove('is-open');
+      document.body.style.overflow = '';
+      toggles.forEach((b) => b.setAttribute('aria-expanded', 'false'));
+      // Wait for transition before hiding to keep it accessible
+      setTimeout(() => { if (!panel.classList.contains('is-open')) panel.hidden = true; }, 250);
+    };
+
+    toggles.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (panel.classList.contains('is-open')) close();
+        else open();
+      });
+    });
+
+    // Close on link click within the panel
+    panel.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+
+    // Close on backdrop click
+    panel.addEventListener('click', (e) => {
+      if (e.target === panel) close();
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && panel.classList.contains('is-open')) close();
+    });
+  };
+
+  setup();
+  document.addEventListener('astro:page-load', setup);
+</script>
 
 <style>
   .site-header {
@@ -64,18 +138,19 @@ import { company } from '../data/company';
     font-size: 0.75rem;
     color: var(--muted);
   }
-  nav {
+  .desktop-nav {
     display: flex;
     gap: 1.25rem;
     margin-left: auto;
   }
-  nav a {
+  .desktop-nav a {
     color: var(--ink);
     text-decoration: none;
     font-size: 0.95rem;
     font-weight: 500;
+    transition: color 0.2s ease;
   }
-  nav a:hover { color: var(--green); }
+  .desktop-nav a:hover { color: var(--green); }
   .cta {
     background: var(--green);
     color: #0c100a;
@@ -93,8 +168,113 @@ import { company } from '../data/company';
   .cta:hover { background: var(--green-light); transform: translateY(-1px); }
   :root[data-theme='light'] .cta:hover { background: var(--green-dark); color: #fff; }
   .cta [data-icon] { width: 14px; height: 14px; }
+
+  .hamburger {
+    display: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    place-items: center;
+    transition: border-color 0.2s ease;
+  }
+  .hamburger:hover { border-color: var(--green); }
+  .hamburger [data-icon] { width: 22px; height: 22px; }
+
+  /* Mobile menu panel */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 14, 12, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .mobile-menu.is-open { opacity: 1; }
+  .mobile-menu-inner {
+    background: var(--paper);
+    width: min(360px, 90vw);
+    height: 100%;
+    padding: 1.25rem 1.25rem 2rem;
+    box-shadow: var(--shadow-lg);
+    transform: translateX(100%);
+    transition: transform 0.3s var(--easing);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: auto;
+  }
+  .mobile-menu.is-open .mobile-menu-inner { transform: translateX(0); }
+  .mobile-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand-mini {
+    font-family: 'Marcellus', Georgia, serif;
+    font-size: 1rem;
+    color: var(--green-dark);
+  }
+  .close {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+  .close [data-icon] { width: 20px; height: 20px; }
+  .mobile-menu nav { display: flex; flex-direction: column; gap: 0.25rem; }
+  .mobile-menu nav a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1rem;
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--ink);
+    font-size: 1.05rem;
+    font-weight: 500;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    transition: all 0.2s var(--easing);
+  }
+  .mobile-menu nav a:hover {
+    border-color: var(--green);
+    background: var(--green-tint);
+  }
+  .mobile-menu nav a [data-icon] {
+    width: 18px;
+    height: 18px;
+    color: var(--green);
+    opacity: 0.6;
+    transition: opacity 0.2s ease, transform 0.2s var(--easing);
+  }
+  .mobile-menu nav a:hover [data-icon] { opacity: 1; transform: translateX(2px); }
+  .mobile-actions {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .mobile-actions .btn { justify-content: center; width: 100%; }
+
   @media (max-width: 900px) {
-    nav { display: none; }
+    .desktop-nav { display: none; }
     .brand em { display: none; }
+    .cta { display: none; }
+    .hamburger { display: grid; margin-left: auto; }
   }
 </style>
