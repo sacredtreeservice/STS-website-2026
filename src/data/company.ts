@@ -21,7 +21,7 @@ export const company = {
   // Public-facing review aggregate. Set this to the actual current Google
   // review count when known; otherwise schema/UI will show the 5-star
   // rating without a specific count (better than under-counting).
-  googleReviewCount: undefined as number | undefined,
+  googleReviewCount: 62 as number | undefined,
   googleAverageRating: 5.0,
   memberships: ['ISA — International Society of Arboriculture', 'TCIA — Tree Care Industry Association'],
   credentials: ['ISA Certified Arborists on Staff', 'Licensed', 'Insured', 'Workers’ Comp'],
