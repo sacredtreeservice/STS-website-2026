@@ -34,16 +34,16 @@ const pillars = [
 
     <div class="pillars">
       {pillars.map((p) => (
-        <a class="card" href={`/tree-care/${p.slug}/`}>
+        <div class="card">
           <h2>{p.title}</h2>
-          <p>{p.blurb}</p>
-          <span class="more">Read →</span>
-        </a>
+          <p set:html={p.blurb} />
+          <span class="more">Coming soon</span>
+        </div>
       ))}
     </div>
 
     <p class="todo">
-      <em>Pillar pages coming soon — outline only for now. Want one prioritized? Tell us which.</em>
+      <em>Pillar pages are being written. In the meantime, head to <a href="/blog/">the blog</a> for field notes — or <a href="/contact/">ask us a question</a> and we’ll cover it.</em>
     </p>
   </div>
 </Base>
@@ -62,18 +62,22 @@ const pillars = [
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 1.5rem;
-    text-decoration: none;
     color: var(--ink);
-    transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  }
-  .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 14px 30px rgba(0,0,0,0.07);
-    border-color: rgba(75, 112, 33, 0.35);
   }
   .card h2 { font-size: 1.2rem; margin: 0 0 0.5rem; }
   .card p { color: var(--muted); margin: 0 0 0.85rem; font-size: 0.95rem; }
-  .more { color: var(--green); font-weight: 700; font-size: 0.9rem; }
+  .more {
+    display: inline-block;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: var(--green-tint);
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+  }
+  .todo a { color: var(--green-dark); font-weight: 700; }
   .todo {
     margin-top: 3rem;
     padding: 1rem 1.25rem;

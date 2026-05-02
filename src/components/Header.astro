@@ -32,7 +32,7 @@ const navLinks = [
     </button>
   </div>
 
-  <div class="mobile-menu" data-menu-panel hidden>
+  <div class="mobile-menu" data-menu-panel aria-hidden="true">
     <div class="mobile-menu-inner">
       <header class="mobile-menu-header">
         <span class="brand-mini">{company.brandName}</span>
@@ -62,17 +62,16 @@ const navLinks = [
     const toggles = document.querySelectorAll<HTMLButtonElement>('[data-menu-toggle]');
 
     const open = () => {
-      panel.hidden = false;
-      requestAnimationFrame(() => panel.classList.add('is-open'));
+      panel.classList.add('is-open');
+      panel.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
       toggles.forEach((b) => b.setAttribute('aria-expanded', 'true'));
     };
     const close = () => {
       panel.classList.remove('is-open');
+      panel.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
       toggles.forEach((b) => b.setAttribute('aria-expanded', 'false'));
-      // Wait for transition before hiding to keep it accessible
-      setTimeout(() => { if (!panel.classList.contains('is-open')) panel.hidden = true; }, 250);
     };
 
     toggles.forEach((btn) => {
@@ -184,20 +183,26 @@ const navLinks = [
   .hamburger:hover { border-color: var(--green); }
   .hamburger [data-icon] { width: 22px; height: 22px; }
 
-  /* Mobile menu panel */
+  /* Mobile menu panel — hidden + non-interactive when closed so it doesn't
+     trap clicks across the whole page on desktop. */
   .mobile-menu {
     position: fixed;
     inset: 0;
     background: rgba(8, 14, 12, 0.55);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
     z-index: 100;
-    opacity: 0;
-    transition: opacity 0.25s ease;
     display: flex;
     justify-content: flex-end;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s ease, visibility 0s linear 0.25s;
   }
-  .mobile-menu.is-open { opacity: 1; }
+  .mobile-menu.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.25s ease, visibility 0s linear 0s;
+  }
   .mobile-menu-inner {
     background: var(--paper);
     width: min(360px, 90vw);

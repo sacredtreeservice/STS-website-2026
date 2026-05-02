@@ -16,11 +16,18 @@ import { Icon } from 'astro-icon/components';
   const THEME_KEY = 'sts-theme';
 
   const apply = (theme: 'light' | 'dark') => {
-    document.documentElement.dataset.theme = theme;
+    // Briefly suppress transitions so the swap doesn't kick off a paint storm
+    // (every element with a color/bg/border transition would animate at once).
+    const root = document.documentElement;
+    root.classList.add('theme-flash');
+    root.dataset.theme = theme;
     document.querySelector('meta[name="theme-color"]')?.setAttribute(
       'content',
       theme === 'dark' ? '#0e1815' : '#324a16'
     );
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => root.classList.remove('theme-flash'));
+    });
   };
 
   const setup = () => {

@@ -163,6 +163,11 @@ const allSchema = [...baseSchema, ...extra];
         -webkit-font-smoothing: antialiased;
         transition: background 0.3s ease, color 0.3s ease;
       }
+      /* Suppress all transitions during a theme swap to avoid a paint storm
+         when every variable cascades. ThemeToggle adds/removes this class. */
+      :root.theme-flash, :root.theme-flash *, :root.theme-flash *::before, :root.theme-flash *::after {
+        transition: none !important;
+      }
       h1, h2, h3, h4 {
         font-family: 'Marcellus', Georgia, serif;
         font-weight: 400;
