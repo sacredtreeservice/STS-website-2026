@@ -1,0 +1,89 @@
+---
+import { company } from '../data/company';
+---
+
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="/">
+      <img src="/assets/logo.jpg" alt={company.brandName} width="48" height="48" />
+      <span>
+        <strong>{company.brandName}</strong>
+        <em>{company.tagline}</em>
+      </span>
+    </a>
+    <nav aria-label="Main">
+      <a href="/services/">Services</a>
+      <a href="/service-area/">Service Area</a>
+      <a href="/tree-care/">Tree Care</a>
+      <a href="/blog/">Blog</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    <a class="cta" href={company.phoneHref}>Call {company.phone}</a>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: var(--paper);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .bar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .brand img { border-radius: 6px; }
+  .brand strong {
+    font-family: 'Marcellus', Georgia, serif;
+    font-weight: 400;
+    font-size: 1.05rem;
+    color: var(--green-dark);
+    display: block;
+    line-height: 1.1;
+  }
+  .brand em {
+    font-style: normal;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  nav {
+    display: flex;
+    gap: 1.25rem;
+    margin-left: auto;
+  }
+  nav a {
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  nav a:hover { color: var(--green); }
+  .cta {
+    background: var(--green);
+    color: #fff;
+    padding: 0.6rem 1.1rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+  .cta:hover { background: var(--green-dark); }
+  @media (max-width: 900px) {
+    nav { display: none; }
+    .brand em { display: none; }
+  }
+</style>

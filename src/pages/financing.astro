@@ -1,0 +1,102 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import JobberForm from '../components/JobberForm.astro';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Financing', url: '/financing/' },
+];
+---
+
+<Base
+  title="Tree Service Financing"
+  description="Financing options for larger tree care projects. Spread the cost of major removals, land clearing, or storm cleanup over time."
+  breadcrumbs={trail}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head">
+      <h1>Financing Available</h1>
+      <p class="lede">
+        Major tree work shouldn’t require choosing between safety and budget.
+        We offer financing on qualifying projects so you can take care of
+        hazardous trees, storm damage, or large-scale removals on a schedule
+        that works for you.
+      </p>
+    </header>
+
+    <div class="layout">
+      <article>
+        <h2>What qualifies?</h2>
+        <ul class="checks">
+          <li>Large or hazardous tree removals</li>
+          <li>Storm cleanup and post-hurricane recovery</li>
+          <li>Land or lot clearing projects</li>
+          <li>Multi-tree pruning packages</li>
+          <li>Crane-assisted or specialty equipment work</li>
+        </ul>
+
+        <h2>How it works</h2>
+        <ol class="steps">
+          <li><strong>Get an estimate.</strong> We quote the work in person, free of charge.</li>
+          <li><strong>Mention financing.</strong> Let us know during the estimate that you’d like financing options.</li>
+          <li><strong>Apply &amp; approve.</strong> We’ll walk you through the application — quick approvals.</li>
+          <li><strong>Schedule the work.</strong> Once approved, we schedule the crew and the work gets done.</li>
+        </ol>
+
+        <p class="note">
+          Financing approval is provided through a third-party lender. Specific
+          terms (rates, length, qualifications) are determined at application.
+          Ask during your estimate for current options.
+        </p>
+      </article>
+
+      <aside>
+        <JobberForm
+          heading="Request Estimate + Financing"
+          context="Project with financing"
+        />
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .head { margin: 1rem 0 2rem; }
+  h1 { font-size: 2.5rem; margin: 0 0 0.6rem; }
+  .lede { color: var(--muted); font-size: 1.15rem; max-width: 60ch; }
+  .layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  article h2 { font-size: 1.5rem; margin: 2rem 0 0.85rem; }
+  .checks { list-style: none; padding: 0; }
+  .checks li { padding-left: 1.5rem; position: relative; margin-bottom: 0.5rem; }
+  .checks li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-weight: 700;
+  }
+  .steps { padding-left: 1.2rem; }
+  .steps li { margin-bottom: 0.6rem; }
+  .note {
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    background: #fff;
+    border-left: 3px solid var(--muted);
+    color: var(--muted);
+    font-size: 0.92rem;
+    border-radius: 4px;
+  }
+  aside { position: sticky; top: 100px; }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { position: static; }
+  }
+</style>

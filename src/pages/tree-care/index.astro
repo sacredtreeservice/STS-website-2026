@@ -1,0 +1,86 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Tree Care', url: '/tree-care/' },
+];
+
+// Placeholder topic clusters — these become the educational pillar pages.
+const pillars = [
+  { slug: 'florida-tree-species', title: 'Florida Tree Species', blurb: 'Live oak, sabal palm, magnolia, citrus, pine — care needs and ID.' },
+  { slug: 'storm-prep', title: 'Storm & Hurricane Prep', blurb: 'How to prepare trees for hurricane season — and what to do after.' },
+  { slug: 'pruning-basics', title: 'Pruning Basics', blurb: 'When to prune, what topping does, and the ANSI A300 standard.' },
+  { slug: 'tree-removal-decisions', title: 'Should I Remove This Tree?', blurb: 'How arborists decide between removal, pruning, and preservation.' },
+  { slug: 'cost-guides', title: 'Cost Guides', blurb: 'What tree work actually costs in Central Florida, and why prices vary.' },
+  { slug: 'pests-and-diseases', title: 'Pests &amp; Diseases', blurb: 'Lethal bronzing, oak wilt, beetles — what to watch for in Florida.' },
+];
+---
+
+<Base
+  title="Tree Care Education — Florida Tree Owner's Guide"
+  description="Educational guides on Florida tree species, pruning, storm prep, costs, and pest/disease identification — written by ISA Certified Arborists."
+  breadcrumbs={trail}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+    <h1>Tree Care Education</h1>
+    <p class="lede">
+      Practical, no-fluff guides for Central Florida tree owners — from
+      species ID to storm prep to cost expectations. Written by ISA Certified
+      Arborists.
+    </p>
+
+    <div class="pillars">
+      {pillars.map((p) => (
+        <a class="card" href={`/tree-care/${p.slug}/`}>
+          <h2>{p.title}</h2>
+          <p>{p.blurb}</p>
+          <span class="more">Read →</span>
+        </a>
+      ))}
+    </div>
+
+    <p class="todo">
+      <em>Pillar pages coming soon — outline only for now. Want one prioritized? Tell us which.</em>
+    </p>
+  </div>
+</Base>
+
+<style>
+  h1 { font-size: 2.5rem; margin: 0 0 0.75rem; }
+  .lede { color: var(--muted); max-width: 70ch; font-size: 1.1rem; margin-bottom: 2.5rem; }
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+  .card {
+    display: block;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: var(--ink);
+    transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.07);
+    border-color: rgba(75, 112, 33, 0.35);
+  }
+  .card h2 { font-size: 1.2rem; margin: 0 0 0.5rem; }
+  .card p { color: var(--muted); margin: 0 0 0.85rem; font-size: 0.95rem; }
+  .more { color: var(--green); font-weight: 700; font-size: 0.9rem; }
+  .todo {
+    margin-top: 3rem;
+    padding: 1rem 1.25rem;
+    background: #fff;
+    border-left: 3px solid var(--muted);
+    color: var(--muted);
+    font-size: 0.92rem;
+    border-radius: 4px;
+  }
+</style>

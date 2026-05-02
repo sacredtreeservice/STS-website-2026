@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import JobberForm from '../components/JobberForm.astro';
+import { company, fullAddress } from '../data/company';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Contact', url: '/contact/' },
+];
+---
+
+<Base
+  title="Contact Sacred Tree Service"
+  description="Request a free tree service estimate in Orlando and Central Florida. Call (407) 452-8779 or submit the form."
+  breadcrumbs={trail}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head">
+      <h1>Contact Us</h1>
+      <p class="lede">
+        Free estimates. ISA Certified Arborists. Real people answering the phone.
+      </p>
+    </header>
+
+    <div class="layout">
+      <aside class="info">
+        <h2>Get in touch</h2>
+        <p>
+          <strong>Phone</strong><br />
+          <a href={company.phoneHref}>{company.phone}</a>
+        </p>
+        <p>
+          <strong>Email</strong><br />
+          <a href={`mailto:${company.email}`}>{company.email}</a>
+        </p>
+        <p>
+          <strong>HQ</strong><br />
+          {fullAddress}
+        </p>
+        <p class="hours">
+          <strong>Hours</strong><br />
+          Mon–Sat · By appointment<br />
+          Emergency response available — call any time.
+        </p>
+        <p class="emergency">
+          🌪 <a href="/emergency/">Storm or emergency?</a>
+        </p>
+      </aside>
+
+      <main class="form">
+        <JobberForm
+          heading="Request a Free Estimate"
+          subheading="Tell us about your trees and we’ll be in touch."
+        />
+      </main>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .head { margin: 1rem 0 2rem; }
+  h1 { font-size: 2.5rem; margin: 0 0 0.6rem; }
+  .lede { color: var(--muted); font-size: 1.15rem; }
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  .info h2 { font-size: 1.5rem; margin: 0 0 1rem; }
+  .info p { margin: 0 0 1rem; line-height: 1.6; }
+  .info a { color: var(--green-dark); }
+  .emergency a {
+    color: var(--warning);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  @media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+</style>

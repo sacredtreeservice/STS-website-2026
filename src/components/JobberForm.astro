@@ -1,0 +1,90 @@
+---
+// Jobber-embedded lead form. The actual embed snippet lives in JOBBER_EMBED_SNIPPET below.
+// Paste the script tag from Jobber's "Online Booking / Request Form" embed settings into the
+// <Fragment set:html=...> below. Until then, this renders a clear placeholder so dev work
+// can continue without blocking on the embed.
+
+export interface Props {
+  heading?: string;
+  subheading?: string;
+  /**
+   * Optional context label shown to the user (e.g. "Tree Removal in Winter Park").
+   * The Jobber form itself doesn't take URL params by default, but seeing the context helps
+   * the visitor self-select the right service when filling it in.
+   */
+  context?: string;
+}
+
+const {
+  heading = 'Request a Free Estimate',
+  subheading = 'Tell us about your trees and we’ll be in touch to schedule a visit.',
+  context,
+} = Astro.props;
+
+// TODO: Paste your Jobber embed snippet here. It will look something like:
+// <script src="https://clienthub.getjobber.com/client_hubs/.../public/work_request_embed/JS"
+//   clienthub_id="..." form_url="..."></script>
+// <div id="..."></div>
+const JOBBER_EMBED_SNIPPET = '';
+---
+
+<section class="lead-form">
+  <header>
+    <h2>{heading}</h2>
+    <p>{subheading}</p>
+    {context && <p class="context">For: <strong>{context}</strong></p>}
+  </header>
+
+  {JOBBER_EMBED_SNIPPET ? (
+    <Fragment set:html={JOBBER_EMBED_SNIPPET} />
+  ) : (
+    <div class="placeholder">
+      <p><strong>Jobber form will embed here.</strong></p>
+      <p>To activate: paste your Jobber embed snippet into <code>src/components/JobberForm.astro</code>.</p>
+      <p class="fallback">In the meantime, call <a href="tel:+14074528779">(407) 452-8779</a> or email <a href="mailto:sacredtreeservice@gmail.com">sacredtreeservice@gmail.com</a>.</p>
+    </div>
+  )}
+</section>
+
+<style>
+  .lead-form {
+    background: #fff;
+    border: 1px solid rgba(75, 112, 33, 0.18);
+    border-radius: 14px;
+    padding: 2rem 1.75rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+  }
+  .lead-form header { margin-bottom: 1.25rem; }
+  .lead-form h2 {
+    font-family: 'Marcellus', Georgia, serif;
+    font-weight: 400;
+    color: var(--green-dark);
+    margin: 0 0 0.4rem;
+    font-size: 1.4rem;
+  }
+  .lead-form p { margin: 0.25rem 0; color: var(--muted); }
+  .context {
+    background: rgba(75, 112, 33, 0.08);
+    color: var(--green-dark);
+    padding: 0.5rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    display: inline-block;
+  }
+  .placeholder {
+    background: #fff8e6;
+    border: 1px dashed #d4b15a;
+    padding: 1.25rem;
+    border-radius: 10px;
+    color: #6b5418;
+    font-size: 0.92rem;
+  }
+  .placeholder code {
+    background: rgba(0,0,0,0.05);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.85em;
+  }
+  .fallback { margin-top: 0.6rem; color: #4b3c10; }
+  .fallback a { color: var(--green-dark); font-weight: 700; }
+</style>

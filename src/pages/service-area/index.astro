@@ -1,0 +1,68 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { cities } from '../../data/cities';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Service Area', url: '/service-area/' },
+];
+
+const byCounty = cities.reduce<Record<string, typeof cities>>((acc, c) => {
+  (acc[c.county] ||= []).push(c);
+  return acc;
+}, {});
+---
+
+<Base
+  title="Service Area — Central Florida"
+  description="Sacred Tree Service serves Orlando and Central Florida within a 50-mile radius of our HQ — Orange, Seminole, Lake, Osceola, Volusia, Brevard, and Polk counties."
+  breadcrumbs={trail}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+    <h1>Where We Work</h1>
+    <p class="lede">
+      Sacred Tree Service operates across Central Florida within a 50-mile
+      radius of our Orlando HQ. We serve homeowners, property managers, HOAs,
+      and developers throughout the cities below.
+    </p>
+
+    {Object.entries(byCounty).map(([county, list]) => (
+      <section class="county">
+        <h2>{county} County</h2>
+        <ul>
+          {list.map((c) => (
+            <li><a href={`/service-area/${c.slug}/`}>{c.name}</a></li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+</Base>
+
+<style>
+  h1 { font-size: 2.5rem; margin: 0 0 0.75rem; }
+  .lede { color: var(--muted); max-width: 70ch; font-size: 1.1rem; margin-bottom: 2.5rem; }
+  .county { margin-bottom: 2rem; }
+  .county h2 { font-size: 1.4rem; margin: 0 0 0.85rem; }
+  .county ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .county ul li a {
+    display: inline-block;
+    padding: 0.45rem 0.95rem;
+    border: 1px solid rgba(75, 112, 33, 0.25);
+    border-radius: 999px;
+    text-decoration: none;
+    color: var(--green-dark);
+    background: rgba(75, 112, 33, 0.04);
+    font-size: 0.9rem;
+  }
+  .county ul li a:hover { background: rgba(75, 112, 33, 0.12); }
+</style>

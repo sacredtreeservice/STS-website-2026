@@ -1,0 +1,139 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import JobberForm from '../../components/JobberForm.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import { services } from '../../data/services';
+import { cities } from '../../data/cities';
+import { serviceSchema, faqSchema } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  return services.map((s) => ({ params: { service: s.slug }, props: { service: s } }));
+}
+
+const { service } = Astro.props;
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: service.name, url: `/services/${service.slug}/` },
+];
+
+const defaultFaqs = [
+  { q: `How much does ${service.name.toLowerCase()} cost in Central Florida?`,
+    a: 'Pricing depends on tree size, access, location relative to structures, and disposal needs. We provide free in-person estimates so the quote reflects the actual job, not a generic ballpark.' },
+  { q: `Do you offer free estimates for ${service.name.toLowerCase()}?`,
+    a: 'Yes. We come to the property, walk the job with you, and provide a written estimate at no cost.' },
+  { q: 'Are you licensed and insured?',
+    a: 'Yes — Sacred Tree Service LLC is licensed, insured, and carries workers’ compensation. We are members of ISA and TCIA, with ISA Certified Arborists on staff.' },
+];
+const faqs = service.faqs ?? defaultFaqs;
+
+const cityList = cities.slice(0, 18);
+
+const jsonLd = [serviceSchema({ name: service.name, description: service.description, slug: service.slug }), faqSchema(faqs)];
+---
+
+<Base
+  title={`${service.name} in Orlando & Central Florida`}
+  description={`${service.blurb} ISA Certified Arborists. Free estimates. Licensed & insured.`}
+  breadcrumbs={trail}
+  jsonLd={jsonLd}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+    <header class="head">
+      <span class="icon" aria-hidden="true">{service.icon}</span>
+      <h1>{service.name}</h1>
+      <p class="lede">{service.blurb}</p>
+    </header>
+
+    <div class="layout">
+      <article>
+        <h2>What this service includes</h2>
+        <p>{service.description}</p>
+
+        <h2>Why Sacred Tree Service?</h2>
+        <ul class="checks">
+          <li>ISA Certified Arborists assess every job before we touch a saw.</li>
+          <li>Member of ISA and TCIA — bound by national best-practice standards.</li>
+          <li>Fully licensed and insured, with workers’ comp coverage.</li>
+          <li>Family-owned and based in Orlando — your call goes to a real person.</li>
+        </ul>
+
+        <h2>Cities we serve</h2>
+        <p>We provide {service.shortName.toLowerCase()} services across Central Florida, including:</p>
+        <ul class="cities">
+          {cityList.map((c) => (
+            <li><a href={`/services/${service.slug}/${c.slug}/`}>{service.shortName} in {c.name}</a></li>
+          ))}
+        </ul>
+
+        <FaqBlock faqs={faqs} />
+      </article>
+
+      <aside>
+        <JobberForm context={service.name} />
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .head {
+    text-align: center;
+    margin: 1rem 0 3rem;
+  }
+  .icon { font-size: 3rem; }
+  h1 { font-size: 2.5rem; margin: 0.5rem 0 0.75rem; }
+  .lede { color: var(--muted); max-width: 65ch; margin: 0 auto; font-size: 1.15rem; }
+  .layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  article h2 {
+    font-size: 1.5rem;
+    margin: 2rem 0 0.85rem;
+  }
+  .checks {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .checks li {
+    padding-left: 1.5rem;
+    position: relative;
+    margin-bottom: 0.5rem;
+  }
+  .checks li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-weight: 700;
+  }
+  .cities {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    columns: 2;
+    gap: 1rem;
+  }
+  .cities li { margin-bottom: 0.4rem; }
+  .cities a {
+    color: var(--green-dark);
+    text-decoration: none;
+  }
+  .cities a:hover { text-decoration: underline; }
+  aside {
+    position: sticky;
+    top: 100px;
+  }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { position: static; }
+    .cities { columns: 1; }
+  }
+</style>

@@ -1,0 +1,147 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import JobberForm from '../../components/JobberForm.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import { cities } from '../../data/cities';
+import { services } from '../../data/services';
+import { faqSchema } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  return cities.map((c) => ({ params: { city: c.slug }, props: { city: c } }));
+}
+
+const { city } = Astro.props;
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Service Area', url: '/service-area/' },
+  { name: city.name, url: `/service-area/${city.slug}/` },
+];
+
+const faqs = [
+  { q: `Does Sacred Tree Service work in ${city.name}, FL?`,
+    a: `Yes. ${city.name} is approximately ${city.miles} miles from our Orlando HQ — well within our 50-mile service radius. We provide full tree care services across ${city.county} County.` },
+  { q: `What tree services are available in ${city.name}?`,
+    a: 'We provide tree removal, pruning, stump grinding, palm tree services, emergency storm response, crane-assisted removal, plant health care, cabling and bracing, land clearing, and arborist consulting.' },
+  { q: 'How do I request an estimate?',
+    a: `Call (407) 452-8779 or submit the form on this page. We schedule free in-person estimates in ${city.name} typically within 1–3 business days.` },
+];
+
+const localHook = city.hook ?? `Sacred Tree Service has worked across ${city.name} and ${city.county} County, helping homeowners and property managers care for the trees that define their landscapes.`;
+---
+
+<Base
+  title={`Tree Service in ${city.name}, FL`}
+  description={`Tree removal, pruning, and emergency tree care in ${city.name}, FL. ISA Certified Arborists. Licensed & insured. Free estimates.`}
+  breadcrumbs={trail}
+  jsonLd={[faqSchema(faqs)]}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head">
+      <h1>Tree Service in {city.name}, FL</h1>
+      <p class="lede">
+        ISA Certified Arborists serving {city.name} and {city.county} County —
+        about {city.miles} miles from our Orlando HQ.
+      </p>
+    </header>
+
+    <div class="layout">
+      <article>
+        <p class="answer">{localHook}</p>
+
+        <h2>Tree care services in {city.name}</h2>
+        <ul class="services">
+          {services.map((s) => (
+            <li>
+              <a href={`/services/${s.slug}/${city.slug}/`}>
+                <span aria-hidden="true">{s.icon}</span>
+                <strong>{s.name}</strong>
+                <em>{s.shortName} in {city.name}</em>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <h2>Why {city.name} property owners choose us</h2>
+        <ul class="checks">
+          <li>ISA Certified Arborists — every job assessed by a credentialed pro.</li>
+          <li>Member of ISA and TCIA — bound by national best-practice standards.</li>
+          <li>Local to Orlando — no out-of-area surcharges, fast scheduling.</li>
+          <li>Fully licensed and insured with workers’ comp coverage.</li>
+        </ul>
+
+        <FaqBlock faqs={faqs} />
+      </article>
+
+      <aside>
+        <JobberForm
+          heading={`Free Estimate in ${city.name}`}
+          context={`${city.name}, FL — general tree service estimate`}
+        />
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .head { margin: 1rem 0 2rem; }
+  h1 { font-size: clamp(1.8rem, 4vw, 2.5rem); margin: 0 0 0.6rem; }
+  .lede { color: var(--muted); font-size: 1.1rem; margin: 0; }
+  .answer {
+    background: #fff;
+    border-left: 4px solid var(--green);
+    padding: 1rem 1.25rem;
+    margin: 0 0 2rem;
+    border-radius: 4px;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  article h2 { font-size: 1.5rem; margin: 2rem 0 0.85rem; }
+  .services {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .services a {
+    display: block;
+    padding: 0.85rem 1rem;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .services a:hover { border-color: rgba(75, 112, 33, 0.4); }
+  .services strong { display: block; color: var(--green-dark); }
+  .services em {
+    display: block;
+    font-style: normal;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .checks { list-style: none; padding: 0; }
+  .checks li { padding-left: 1.5rem; position: relative; margin-bottom: 0.5rem; }
+  .checks li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-weight: 700;
+  }
+  aside { position: sticky; top: 100px; }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .services { grid-template-columns: 1fr; }
+    aside { position: static; }
+  }
+</style>

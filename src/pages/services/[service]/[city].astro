@@ -1,0 +1,127 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import JobberForm from '../../../components/JobberForm.astro';
+import FaqBlock from '../../../components/FaqBlock.astro';
+import { services } from '../../../data/services';
+import { cities } from '../../../data/cities';
+import { serviceSchema, faqSchema } from '../../../lib/schema';
+
+export async function getStaticPaths() {
+  const out = [];
+  for (const s of services) {
+    for (const c of cities) {
+      out.push({
+        params: { service: s.slug, city: c.slug },
+        props: { service: s, city: c },
+      });
+    }
+  }
+  return out;
+}
+
+const { service, city } = Astro.props;
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: service.name, url: `/services/${service.slug}/` },
+  { name: city.name, url: `/services/${service.slug}/${city.slug}/` },
+];
+
+const faqs = [
+  { q: `Do you provide ${service.name.toLowerCase()} in ${city.name}, FL?`,
+    a: `Yes. Sacred Tree Service serves ${city.name} and the surrounding ${city.county} County area for ${service.name.toLowerCase()}. Our HQ is roughly ${city.miles} miles away in Orlando, well within our 50-mile service radius.` },
+  { q: `How quickly can you respond in ${city.name}?`,
+    a: `Most ${city.name} estimates are scheduled within 1–3 business days. Storm damage and emergency calls are prioritized — we’ll do our best to get a crew out the same day during active storm response.` },
+  { q: 'Are you licensed and insured to work in this area?',
+    a: 'Yes — Sacred Tree Service LLC is licensed, insured, and carries workers’ comp. We are members of ISA and TCIA with ISA Certified Arborists on staff.' },
+];
+
+const localHook = city.hook ?? `Property owners in ${city.name} rely on us for safe, professional tree care across ${city.county} County.`;
+
+const jsonLd = [
+  serviceSchema({ name: service.name, description: service.description, slug: service.slug, city: city.name }),
+  faqSchema(faqs),
+];
+---
+
+<Base
+  title={`${service.name} in ${city.name}, FL`}
+  description={`${service.blurb} Serving ${city.name} and ${city.county} County. ISA Certified Arborists, licensed & insured.`}
+  breadcrumbs={trail}
+  jsonLd={jsonLd}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head">
+      <h1>{service.name} in {city.name}, FL</h1>
+      <p class="lede">{service.blurb}</p>
+    </header>
+
+    <div class="layout">
+      <article>
+        <p class="answer">
+          <strong>Yes — Sacred Tree Service provides {service.name.toLowerCase()} in {city.name}, FL.</strong>{' '}
+          {localHook} Our ISA Certified Arborists handle each job from in-person
+          estimate through cleanup, with full licensing and insurance.
+        </p>
+
+        <h2>About {service.name.toLowerCase()} in {city.name}</h2>
+        <p>{service.description}</p>
+
+        <h2>Serving {city.name} and nearby</h2>
+        <p>
+          Sacred Tree Service is based in Orlando — about {city.miles} miles
+          from {city.name}. We work across {city.county} County and the broader
+          Central Florida region within a 50-mile radius of our HQ.
+        </p>
+
+        <h2>What to expect</h2>
+        <ol class="steps">
+          <li><strong>Free estimate.</strong> Call or request a visit; we walk the job with you on-site.</li>
+          <li><strong>Written quote.</strong> Clear scope, no surprises, no hidden fees.</li>
+          <li><strong>Schedule the work.</strong> Most jobs are scheduled within 1–2 weeks; emergencies sooner.</li>
+          <li><strong>Crew arrives.</strong> We complete the work, clean up, and walk through the finished site.</li>
+        </ol>
+
+        <FaqBlock faqs={faqs} />
+      </article>
+
+      <aside>
+        <JobberForm
+          heading={`Free ${service.shortName} Estimate in ${city.name}`}
+          context={`${service.name} — ${city.name}, FL`}
+        />
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .head { margin: 1rem 0 2rem; }
+  h1 { font-size: clamp(1.8rem, 4vw, 2.5rem); margin: 0 0 0.6rem; }
+  .lede { color: var(--muted); font-size: 1.1rem; max-width: 65ch; margin: 0; }
+  .answer {
+    background: #fff;
+    border-left: 4px solid var(--green);
+    padding: 1rem 1.25rem;
+    margin: 0 0 2rem;
+    border-radius: 4px;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  article h2 { font-size: 1.5rem; margin: 2rem 0 0.85rem; }
+  .steps { padding-left: 1.2rem; }
+  .steps li { margin-bottom: 0.6rem; }
+  aside { position: sticky; top: 100px; }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { position: static; }
+  }
+</style>

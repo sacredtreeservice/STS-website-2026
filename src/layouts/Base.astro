@@ -1,0 +1,128 @@
+---
+import Seo from '../components/Seo.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { localBusinessSchema, breadcrumbSchema } from '../lib/schema';
+
+export interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  noindex?: boolean;
+  breadcrumbs?: { name: string; url: string }[];
+  jsonLd?: Record<string, any> | Record<string, any>[];
+}
+
+const { title, description, canonical, ogImage, noindex, breadcrumbs, jsonLd } = Astro.props;
+
+const baseSchema: Record<string, any>[] = [localBusinessSchema()];
+if (breadcrumbs && breadcrumbs.length > 1) baseSchema.push(breadcrumbSchema(breadcrumbs));
+const extra = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const allSchema = [...baseSchema, ...extra];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Marcellus&family=Lato:wght@300;400;700&display=swap"
+    />
+    <Seo title={title} description={description} canonical={canonical} ogImage={ogImage} noindex={noindex} />
+    <JsonLd data={allSchema} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <a class="sticky-call" href="tel:+14074528779" aria-label="Call Sacred Tree Service">
+      📞 Call (407) 452-8779
+    </a>
+    <Footer />
+
+    <style is:global>
+      :root {
+        --green: #4b7021;
+        --green-dark: #324a16;
+        --green-light: #6b9a3a;
+        --teal: #68ccd1;
+        --ink: #1f2a17;
+        --paper: #faf9f6;
+        --muted: #5b6657;
+        --warning: #c44d2e;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: 'Lato', system-ui, -apple-system, sans-serif;
+        color: var(--ink);
+        background: var(--paper);
+        line-height: 1.55;
+      }
+      h1, h2, h3, h4 {
+        font-family: 'Marcellus', Georgia, serif;
+        font-weight: 400;
+        color: var(--green-dark);
+        line-height: 1.2;
+      }
+      a { color: var(--green-dark); }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.25rem;
+      }
+      .narrow {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 0 1.25rem;
+      }
+      .btn {
+        display: inline-block;
+        padding: 0.85rem 1.5rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        transition: transform 0.15s ease, background 0.2s ease;
+      }
+      .btn:hover { transform: translateY(-1px); }
+      .btn.primary { background: var(--green); color: #fff; }
+      .btn.primary:hover { background: var(--green-dark); }
+      .btn.ghost {
+        background: transparent;
+        color: var(--green-dark);
+        border: 2px solid var(--green);
+      }
+      .btn.ghost:hover { background: rgba(75, 112, 33, 0.08); }
+      .sticky-call {
+        display: none;
+        position: fixed;
+        bottom: 1rem;
+        left: 1rem;
+        right: 1rem;
+        text-align: center;
+        background: var(--green);
+        color: #fff;
+        padding: 0.95rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        z-index: 100;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      }
+      @media (max-width: 700px) {
+        .sticky-call { display: block; }
+        body { padding-bottom: 4rem; }
+      }
+    </style>
+  </body>
+</html>

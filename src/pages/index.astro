@@ -1,175 +1,176 @@
 ---
-const phone = '(407) 452-8779';
-const phoneHref = 'tel:+14074528779';
-const email = 'sacredtreeservice@gmail.com';
+import Base from '../layouts/Base.astro';
+import JobberForm from '../components/JobberForm.astro';
+import { services } from '../data/services';
+import { cities } from '../data/cities';
+import { company } from '../data/company';
+
+const featuredServices = services.slice(0, 6);
+const cityShortlist = cities.slice(0, 12);
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Sacred Tree Service — New Site Coming Soon</title>
-    <meta
-      name="description"
-      content="Sacred Tree Service: expert tree removal, pruning & landscaping. New site coming soon."
-    />
-    <meta property="og:title" content="Sacred Tree Service — Coming Soon" />
-    <meta
-      property="og:description"
-      content="Expert tree removal, pruning & landscaping. New site coming soon."
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://sacredtreeservice.com/" />
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-    />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Marcellus&family=Lato:wght@300;400;700&display=swap"
-    />
-  </head>
-  <body>
-    <main class="wrap">
-      <div class="card">
-        <img class="logo" src="/assets/logo.jpg" alt="Sacred Tree Service" />
-        <h1>Something new is taking root.</h1>
-        <p class="lede">
-          Our redesigned site is coming soon. In the meantime, we're still
-          climbing, cutting, and caring for trees across Central Florida.
-        </p>
-
-        <div class="cta">
-          <a class="btn primary" href={phoneHref}>Call {phone}</a>
-          <a class="btn ghost" href={`mailto:${email}`}>Email Us</a>
-        </div>
-
-        <ul class="services">
-          <li>Tree Removal</li>
-          <li>Pruning &amp; Trimming</li>
-          <li>Stump Grinding</li>
-          <li>Landscaping</li>
-        </ul>
-
-        <footer>
-          <small>&copy; {new Date().getFullYear()} Sacred Tree Service · Licensed &amp; Insured</small>
-        </footer>
+<Base
+  title="Tree Removal, Pruning & Tree Care in Orlando"
+  description="ISA Certified Arborists in Orlando. Tree removal, pruning, stump grinding, and emergency storm response across Central Florida. Licensed & insured."
+>
+  <section class="hero">
+    <div class="hero-inner">
+      <h1>Central Florida tree care, done right.</h1>
+      <p class="lede">
+        Tree removal, pruning, and emergency response from ISA Certified
+        Arborists. Family-owned, fully insured, serving the Orlando area within
+        a 50-mile radius of our HQ.
+      </p>
+      <div class="cta">
+        <a class="btn primary" href={company.phoneHref}>Call {company.phone}</a>
+        <a class="btn ghost" href="/contact/">Request a Free Estimate</a>
       </div>
-    </main>
+      <ul class="trust">
+        <li>ISA Certified Arborists</li>
+        <li>ISA &amp; TCIA Member</li>
+        <li>Licensed &amp; Insured</li>
+        <li>Family-Owned, Orlando-Based</li>
+      </ul>
+    </div>
+  </section>
 
-    <style>
-      :root {
-        --green: #4b7021;
-        --green-dark: #324a16;
-        --teal: #68ccd1;
-        --ink: #1f2a17;
-        --paper: #faf9f6;
-        --muted: #5b6657;
-      }
-      * { box-sizing: border-box; }
-      html, body { margin: 0; padding: 0; }
-      body {
-        min-height: 100vh;
-        font-family: 'Lato', system-ui, -apple-system, sans-serif;
-        color: var(--ink);
-        background:
-          linear-gradient(rgba(20, 30, 15, 0.55), rgba(20, 30, 15, 0.75)),
-          url('/assets/hero.jpg') center/cover no-repeat fixed;
-      }
-      .wrap {
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        padding: 2rem 1rem;
-      }
-      .card {
-        max-width: 640px;
-        width: 100%;
-        background: var(--paper);
-        border-radius: 14px;
-        padding: 3rem 2.25rem;
-        text-align: center;
-        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
-      }
-      .logo {
-        width: 180px;
-        height: auto;
-        margin: 0 auto 1.25rem;
-        display: block;
-        border-radius: 8px;
-      }
-      h1 {
-        font-family: 'Marcellus', Georgia, serif;
-        font-weight: 400;
-        font-size: clamp(1.6rem, 4vw, 2.4rem);
-        margin: 0 0 0.75rem;
-        color: var(--green-dark);
-        letter-spacing: 0.01em;
-      }
-      .lede {
-        font-size: 1.05rem;
-        line-height: 1.55;
-        color: var(--muted);
-        margin: 0 auto 1.75rem;
-        max-width: 44ch;
-      }
-      .cta {
-        display: flex;
-        gap: 0.75rem;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin-bottom: 1.75rem;
-      }
-      .btn {
-        display: inline-block;
-        padding: 0.85rem 1.5rem;
-        border-radius: 999px;
-        text-decoration: none;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        transition: transform 0.15s ease, background 0.2s ease;
-      }
-      .btn:hover { transform: translateY(-1px); }
-      .btn.primary {
-        background: var(--green);
-        color: #fff;
-      }
-      .btn.primary:hover { background: var(--green-dark); }
-      .btn.ghost {
-        background: transparent;
-        color: var(--green-dark);
-        border: 2px solid var(--green);
-      }
-      .btn.ghost:hover { background: rgba(75, 112, 33, 0.08); }
-      .services {
-        list-style: none;
-        padding: 0;
-        margin: 0 0 2rem;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        justify-content: center;
-      }
-      .services li {
-        font-size: 0.85rem;
-        color: var(--muted);
-        padding: 0.35rem 0.85rem;
-        border: 1px solid rgba(75, 112, 33, 0.25);
-        border-radius: 999px;
-        background: rgba(75, 112, 33, 0.04);
-      }
-      footer {
-        border-top: 1px solid rgba(0, 0, 0, 0.08);
-        padding-top: 1rem;
-        color: var(--muted);
-      }
-      @media (max-width: 480px) {
-        .card { padding: 2rem 1.25rem; }
-        .btn { width: 100%; }
-      }
-    </style>
-  </body>
-</html>
+  <section class="container svc-grid">
+    <header class="section-head">
+      <h2>What we do</h2>
+      <p>Full-service tree care for Central Florida homes, estates, and properties.</p>
+    </header>
+    <div class="cards">
+      {featuredServices.map((s) => (
+        <a class="card" href={`/services/${s.slug}/`}>
+          <span class="icon" aria-hidden="true">{s.icon}</span>
+          <h3>{s.name}</h3>
+          <p>{s.blurb}</p>
+          <span class="more">Learn more →</span>
+        </a>
+      ))}
+    </div>
+    <div style="text-align:center; margin-top:1.5rem;">
+      <a class="btn ghost" href="/services/">All Services</a>
+    </div>
+  </section>
+
+  <section class="container area">
+    <header class="section-head">
+      <h2>Where we work</h2>
+      <p>50 miles around Orlando. Click a city for local service details.</p>
+    </header>
+    <ul class="city-cloud">
+      {cityShortlist.map((c) => (
+        <li><a href={`/service-area/${c.slug}/`}>{c.name}</a></li>
+      ))}
+      <li><a class="more" href="/service-area/">All cities →</a></li>
+    </ul>
+  </section>
+
+  <section class="container narrow form-block">
+    <JobberForm context="General estimate" />
+  </section>
+</Base>
+
+<style>
+  .hero {
+    background:
+      linear-gradient(rgba(20, 30, 15, 0.55), rgba(20, 30, 15, 0.75)),
+      url('/assets/hero.jpg') center/cover no-repeat;
+    color: #fff;
+    padding: 5rem 1.25rem 4rem;
+  }
+  .hero-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .hero h1 {
+    color: #fff;
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin: 0 0 1rem;
+  }
+  .lede {
+    font-size: 1.15rem;
+    color: #e8efe0;
+    margin: 0 auto 1.75rem;
+    max-width: 56ch;
+  }
+  .cta {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.75rem;
+  }
+  .hero .btn.ghost { color: #fff; border-color: #fff; }
+  .hero .btn.ghost:hover { background: rgba(255,255,255,0.1); }
+  .trust {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+  .trust li {
+    font-size: 0.85rem;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+  }
+  .section-head {
+    text-align: center;
+    margin: 3.5rem 0 2rem;
+  }
+  .section-head h2 { font-size: 2rem; margin: 0 0 0.4rem; }
+  .section-head p { color: var(--muted); margin: 0; }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+  .card {
+    display: block;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: var(--ink);
+    transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.07);
+    border-color: rgba(75, 112, 33, 0.35);
+  }
+  .icon { font-size: 2rem; }
+  .card h3 { margin: 0.6rem 0 0.4rem; font-size: 1.2rem; }
+  .card p { color: var(--muted); margin: 0 0 0.85rem; font-size: 0.92rem; }
+  .more { color: var(--green); font-weight: 700; font-size: 0.9rem; }
+
+  .city-cloud {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+  .city-cloud li a {
+    display: inline-block;
+    padding: 0.45rem 0.95rem;
+    border: 1px solid rgba(75, 112, 33, 0.25);
+    border-radius: 999px;
+    text-decoration: none;
+    color: var(--green-dark);
+    font-size: 0.9rem;
+    background: rgba(75, 112, 33, 0.04);
+  }
+  .city-cloud li a:hover { background: rgba(75, 112, 33, 0.12); }
+  .form-block { margin: 4rem auto; }
+</style>

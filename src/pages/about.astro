@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import JobberForm from '../components/JobberForm.astro';
+import { company, fullAddress } from '../data/company';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'About', url: '/about/' },
+];
+---
+
+<Base
+  title="About Sacred Tree Service"
+  description="Family-owned Orlando tree service founded in 2023 by Alexander Satoski. ISA Certified Arborists. ISA & TCIA member. Licensed and insured."
+  breadcrumbs={trail}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head">
+      <h1>About Sacred Tree Service</h1>
+      <p class="lede">
+        Family-owned, Orlando-based, and built by tree people who care more
+        about the trees than the invoice.
+      </p>
+    </header>
+
+    <div class="layout">
+      <article>
+        <p>
+          Sacred Tree Service was founded in {new Date(company.founded).getFullYear()} by{' '}
+          <strong>{company.owner}</strong> with one goal: bring honest,
+          credentialed tree care to Central Florida homeowners. Too much of
+          the tree care industry is built on rushed estimates, bad pruning,
+          and crews that disappear. We do the opposite — show up on time,
+          assess the job carefully, and stand behind the work.
+        </p>
+
+        <h2>Credentials &amp; Memberships</h2>
+        <ul class="checks">
+          <li><strong>ISA Certified Arborists</strong> on staff — every removal and pruning job is assessed by a credentialed professional.</li>
+          <li>Member of the <strong>International Society of Arboriculture (ISA)</strong>.</li>
+          <li>Member of the <strong>Tree Care Industry Association (TCIA)</strong>.</li>
+          <li>Fully <strong>licensed and insured</strong>, with workers’ compensation.</li>
+        </ul>
+
+        <h2>Where We Work</h2>
+        <p>
+          Our HQ is at <strong>{fullAddress}</strong>. We serve a 50-mile radius
+          across Orange, Seminole, Lake, Osceola, Volusia, Brevard, and Polk
+          counties. <a href="/service-area/">See all cities we serve →</a>
+        </p>
+
+        <h2>How We Work</h2>
+        <ol class="steps">
+          <li><strong>You reach out.</strong> Call, message, or fill out the form.</li>
+          <li><strong>We come look.</strong> Free in-person estimate, usually within a few business days.</li>
+          <li><strong>You get a written quote.</strong> Clear scope, fair price, no surprises.</li>
+          <li><strong>The crew shows up.</strong> Job done safely, site cleaned, walkthrough at the end.</li>
+        </ol>
+      </article>
+
+      <aside>
+        <JobberForm context="General estimate" />
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .head { margin: 1rem 0 2rem; }
+  h1 { font-size: 2.5rem; margin: 0 0 0.6rem; }
+  .lede { color: var(--muted); font-size: 1.15rem; max-width: 60ch; }
+  .layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  article h2 { font-size: 1.5rem; margin: 2rem 0 0.85rem; }
+  .checks { list-style: none; padding: 0; }
+  .checks li { padding-left: 1.5rem; position: relative; margin-bottom: 0.5rem; }
+  .checks li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-weight: 700;
+  }
+  .steps { padding-left: 1.2rem; }
+  .steps li { margin-bottom: 0.6rem; }
+  aside { position: sticky; top: 100px; }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { position: static; }
+  }
+</style>

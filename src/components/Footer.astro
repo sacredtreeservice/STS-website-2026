@@ -1,0 +1,99 @@
+---
+import { company, fullAddress } from '../data/company';
+import { services } from '../data/services';
+import { cities } from '../data/cities';
+
+const topCities = cities.slice(0, 12);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="grid">
+    <section>
+      <h4>{company.brandName}</h4>
+      <p class="addr">{fullAddress}</p>
+      <p>
+        <a href={company.phoneHref}>{company.phone}</a><br />
+        <a href={`mailto:${company.email}`}>{company.email}</a>
+      </p>
+      <p class="creds">
+        {company.credentials.join(' · ')}<br />
+        Member: {company.memberships.map((m) => m.split(' — ')[0]).join(' · ')}
+      </p>
+    </section>
+
+    <section>
+      <h4>Services</h4>
+      <ul>
+        {services.map((s) => (
+          <li><a href={`/services/${s.slug}/`}>{s.name}</a></li>
+        ))}
+      </ul>
+    </section>
+
+    <section>
+      <h4>Service Area</h4>
+      <ul>
+        {topCities.map((c) => (
+          <li><a href={`/service-area/${c.slug}/`}>{c.name}</a></li>
+        ))}
+        <li><a href="/service-area/">All cities →</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h4>Company</h4>
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/financing/">Financing</a></li>
+        <li><a href="/emergency/">24/7 Emergency</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </section>
+  </div>
+  <div class="legal">
+    <small>&copy; {year} {company.legalName} · Licensed &amp; Insured · ISA Certified Arborists on Staff</small>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--ink);
+    color: #cdd5c6;
+    padding: 3rem 1.25rem 1.5rem;
+    margin-top: 4rem;
+  }
+  .grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 2rem;
+  }
+  h4 {
+    font-family: 'Marcellus', Georgia, serif;
+    font-weight: 400;
+    color: #fff;
+    font-size: 1.05rem;
+    margin: 0 0 0.85rem;
+  }
+  ul { list-style: none; padding: 0; margin: 0; }
+  ul li { margin-bottom: 0.4rem; }
+  a { color: #cdd5c6; text-decoration: none; }
+  a:hover { color: #fff; }
+  .addr, .creds { font-size: 0.85rem; line-height: 1.55; color: #9aa68f; }
+  .legal {
+    max-width: 1200px;
+    margin: 2rem auto 0;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    color: #7a8470;
+  }
+  @media (max-width: 800px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
