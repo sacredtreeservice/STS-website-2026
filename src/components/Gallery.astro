@@ -1,11 +1,9 @@
 ---
 const photos = [
-  { src: '/assets/work-1.jpg', alt: 'Tree removal job in progress' },
-  { src: '/assets/work-2.jpg', alt: 'Climber working in canopy' },
-  { src: '/assets/work-3.jpg', alt: 'Storm damage cleanup' },
-  { src: '/assets/work-4.jpg', alt: 'Crew on a Central Florida tree job' },
-  { src: '/assets/work-5.jpg', alt: 'Pruning work on a mature tree' },
-  { src: '/assets/work-6.jpg', alt: 'Florida tree canopy' },
+  { src: '/assets/work-1.jpg', alt: 'Removal of a large hardwood' },
+  { src: '/assets/work-2.jpg', alt: 'Crew working safely up in a tree' },
+  { src: '/assets/work-4.jpg', alt: 'Climber pruning a mature canopy' },
+  { src: '/assets/work-6.jpg', alt: 'Crane-loading a large log' },
 ];
 ---
 
@@ -42,8 +40,8 @@ const photos = [
   .head p { color: var(--muted); margin: 0; }
   .grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-auto-rows: 130px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 180px;
     gap: 0.75rem;
   }
   .g {
@@ -55,14 +53,12 @@ const photos = [
   }
   .g:hover { transform: scale(1.02); box-shadow: var(--shadow-md); }
   .g img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .g-0 { grid-column: span 3; grid-row: span 2; }
-  .g-1 { grid-column: span 3; grid-row: span 1; }
-  .g-2 { grid-column: span 2; grid-row: span 1; }
-  .g-3 { grid-column: span 2; grid-row: span 2; }
-  .g-4 { grid-column: span 2; grid-row: span 1; }
-  .g-5 { grid-column: span 4; grid-row: span 1; }
+  .g-0 { grid-column: span 2; grid-row: span 2; }
+  .g-1 { grid-column: span 2; grid-row: span 1; }
+  .g-2 { grid-column: span 1; grid-row: span 1; }
+  .g-3 { grid-column: span 1; grid-row: span 1; }
   @media (max-width: 800px) {
     .grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; }
-    .g, .g-0, .g-1, .g-2, .g-3, .g-4, .g-5 { grid-column: span 1; grid-row: span 1; }
+    .g, .g-0, .g-1, .g-2, .g-3 { grid-column: span 1; grid-row: span 1; }
   }
 </style>
