@@ -1,16 +1,12 @@
 ---
-// Jobber-embedded lead form. The actual embed snippet lives in JOBBER_EMBED_SNIPPET below.
-// Paste the script tag from Jobber's "Online Booking / Request Form" embed settings into the
-// <Fragment set:html=...> below. Until then, this renders a clear placeholder so dev work
-// can continue without blocking on the embed.
+import { company } from '../data/company';
 
 export interface Props {
   heading?: string;
   subheading?: string;
   /**
-   * Optional context label shown to the user (e.g. "Tree Removal in Winter Park").
-   * The Jobber form itself doesn't take URL params by default, but seeing the context helps
-   * the visitor self-select the right service when filling it in.
+   * Optional context label shown above the form (e.g. "Tree Removal in Winter Park").
+   * Helps the visitor self-select on a form that doesn't take URL params.
    */
   context?: string;
 }
@@ -21,12 +17,18 @@ const {
   context,
 } = Astro.props;
 
-// TODO: Paste your Jobber embed snippet here. It will look something like:
-// <script src="https://clienthub.getjobber.com/client_hubs/.../public/work_request_embed/JS"
-//   clienthub_id="..." form_url="..."></script>
-// <div id="..."></div>
-const JOBBER_EMBED_SNIPPET = '';
+// Jobber Work Request Form embed config.
+// To replace this form, grab a fresh snippet from Jobber and update these three values.
+const JOBBER_CLIENTHUB_ID = 'f668b8d3-2de5-4f31-9cea-bb01b8809b50-2408119';
+const JOBBER_FORM_URL =
+  'https://clienthub.getjobber.com/client_hubs/f668b8d3-2de5-4f31-9cea-bb01b8809b50/public/work_request/embedded_work_request_form?form_id=2408119';
+const JOBBER_SCRIPT_SRC =
+  'https://d3ey4dbjkt2f6s.cloudfront.net/assets/static_link/work_request_embed_snippet.js';
+const JOBBER_CSS =
+  'https://d3ey4dbjkt2f6s.cloudfront.net/assets/external/work_request_embed.css';
 ---
+
+<link rel="stylesheet" href={JOBBER_CSS} media="screen" />
 
 <section class="lead-form">
   <header>
@@ -35,16 +37,32 @@ const JOBBER_EMBED_SNIPPET = '';
     {context && <p class="context">For: <strong>{context}</strong></p>}
   </header>
 
-  {JOBBER_EMBED_SNIPPET ? (
-    <Fragment set:html={JOBBER_EMBED_SNIPPET} />
-  ) : (
-    <div class="placeholder">
-      <p><strong>Jobber form will embed here.</strong></p>
-      <p>To activate: paste your Jobber embed snippet into <code>src/components/JobberForm.astro</code>.</p>
-      <p class="fallback">In the meantime, call <a href="tel:+14074528779">(407) 452-8779</a> or email <a href="mailto:sacredtreeservice@gmail.com">sacredtreeservice@gmail.com</a>.</p>
-    </div>
-  )}
+  <div class="jobber-mount">
+    <div id={JOBBER_CLIENTHUB_ID}></div>
+  </div>
+
+  <p class="fallback-call">
+    Prefer to talk? Call <a href={company.phoneHref}>{company.phone}</a>.
+  </p>
 </section>
+
+<script is:inline define:vars={{ JOBBER_SCRIPT_SRC, JOBBER_CLIENTHUB_ID, JOBBER_FORM_URL }}>
+  // Mount (or remount) the Jobber embed. Survives Astro view transitions:
+  // each navigation re-fires astro:page-load, and we re-inject the script if
+  // the new page's mount node is still empty.
+  const initJobber = () => {
+    const mount = document.getElementById(JOBBER_CLIENTHUB_ID);
+    if (!mount) return;
+    if (mount.querySelector('iframe')) return; // already mounted on this page
+    const s = document.createElement('script');
+    s.src = JOBBER_SCRIPT_SRC;
+    s.setAttribute('clienthub_id', JOBBER_CLIENTHUB_ID);
+    s.setAttribute('form_url', JOBBER_FORM_URL);
+    document.body.appendChild(s);
+  };
+  initJobber();
+  document.addEventListener('astro:page-load', initJobber);
+</script>
 
 <style>
   .lead-form {
@@ -52,7 +70,7 @@ const JOBBER_EMBED_SNIPPET = '';
     border: 1px solid var(--border-strong);
     border-radius: 14px;
     padding: 2rem 1.75rem;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+    box-shadow: var(--shadow-sm);
   }
   .lead-form header { margin-bottom: 1.25rem; }
   .lead-form h2 {
@@ -71,20 +89,23 @@ const JOBBER_EMBED_SNIPPET = '';
     font-size: 0.9rem;
     display: inline-block;
   }
-  .placeholder {
-    background: var(--highlight-bg);
-    border: 1px dashed var(--highlight-border);
-    padding: 1.25rem;
-    border-radius: 10px;
-    color: var(--highlight-ink);
+  .jobber-mount {
+    margin: 1.25rem 0 0.75rem;
+    min-height: 320px;
+    /* Jobber's iframe maxes at 760px and centers itself. */
+  }
+  .fallback-call {
+    margin: 1rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
     font-size: 0.92rem;
+    color: var(--muted);
+    text-align: center;
   }
-  .placeholder code {
-    background: rgba(0,0,0,0.05);
-    padding: 0.1rem 0.4rem;
-    border-radius: 4px;
-    font-size: 0.85em;
+  .fallback-call a {
+    color: var(--green-dark);
+    font-weight: 700;
+    text-decoration: none;
   }
-  .fallback { margin-top: 0.6rem; color: var(--highlight-ink); }
-  .fallback a { color: var(--green-dark); font-weight: 700; }
+  .fallback-call a:hover { text-decoration: underline; }
 </style>
