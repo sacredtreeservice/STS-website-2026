@@ -1,6 +1,8 @@
 ---
+import { Icon } from 'astro-icon/components';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CtaBand from '../../components/CtaBand.astro';
 import { cities } from '../../data/cities';
 
 const trail = [
@@ -21,48 +23,205 @@ const byCounty = cities.reduce<Record<string, typeof cities>>((acc, c) => {
 >
   <div class="container">
     <Breadcrumbs trail={trail} />
-    <h1>Where We Work</h1>
-    <p class="lede">
-      Sacred Tree Service operates across Central Florida within a 50-mile
-      radius of our Orlando HQ. We serve homeowners, property managers, HOAs,
-      and developers throughout the cities below.
-    </p>
+    <header class="head" data-reveal>
+      <span class="kicker">Where we work</span>
+      <h1>Central Florida service area</h1>
+      <p class="lede">
+        50 miles around our Orlando HQ — across Orange, Seminole, Lake,
+        Osceola, Volusia, Brevard, and Polk counties.
+      </p>
+    </header>
 
-    {Object.entries(byCounty).map(([county, list]) => (
-      <section class="county">
-        <h2>{county} County</h2>
-        <ul>
-          {list.map((c) => (
-            <li><a href={`/service-area/${c.slug}/`}>{c.name}</a></li>
-          ))}
-        </ul>
-      </section>
-    ))}
+    <div class="search-wrap" data-reveal>
+      <Icon name="lucide:search" />
+      <input
+        id="city-search"
+        type="search"
+        placeholder="Search for your city — e.g. Winter Park, Apopka..."
+        autocomplete="off"
+      />
+      <span class="count" id="city-count">{cities.length} cities</span>
+    </div>
+
+    <div id="city-results">
+      {Object.entries(byCounty).map(([county, list]) => (
+        <section class="county" data-county={county}>
+          <h2>{county} County <span class="cct">{list.length}</span></h2>
+          <ul>
+            {list.map((c) => (
+              <li data-city={c.name.toLowerCase()} data-slug={c.slug}>
+                <a href={`/service-area/${c.slug}/`}>
+                  <Icon name="lucide:map-pin" />
+                  <span>{c.name}</span>
+                  <em>{c.miles} mi</em>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+      <p id="no-results" class="no-results" hidden>
+        No cities match your search. We may still be able to help — <a href="/contact/">reach out</a>.
+      </p>
+    </div>
   </div>
+
+  <CtaBand
+    heading="Don't see your city?"
+    subheading="If you're within ~50 miles of Orlando, we may still be able to help. Give us a call."
+  />
 </Base>
 
+<script>
+  const setup = () => {
+    const input = document.getElementById('city-search') as HTMLInputElement | null;
+    const counter = document.getElementById('city-count');
+    const noResults = document.getElementById('no-results');
+    if (!input || !counter || !noResults) return;
+
+    const items = Array.from(document.querySelectorAll<HTMLElement>('[data-city]'));
+    const counties = Array.from(document.querySelectorAll<HTMLElement>('[data-county]'));
+    const total = items.length;
+
+    const filter = () => {
+      const q = input.value.trim().toLowerCase();
+      let visible = 0;
+      items.forEach((el) => {
+        const match = !q || el.dataset.city!.includes(q) || el.dataset.slug!.includes(q);
+        el.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+      counties.forEach((c) => {
+        const anyVisible = Array.from(c.querySelectorAll<HTMLElement>('[data-city]')).some(
+          (li) => li.style.display !== 'none'
+        );
+        c.style.display = anyVisible ? '' : 'none';
+      });
+      counter.textContent = q
+        ? `${visible} of ${total}`
+        : `${total} cities`;
+      noResults.hidden = visible !== 0;
+    };
+
+    input.addEventListener('input', filter);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        input.value = '';
+        filter();
+      }
+    });
+  };
+
+  setup();
+  document.addEventListener('astro:page-load', setup);
+</script>
+
 <style>
-  h1 { font-size: 2.5rem; margin: 0 0 0.75rem; }
-  .lede { color: var(--muted); max-width: 70ch; font-size: 1.1rem; margin-bottom: 2.5rem; }
+  .head { text-align: center; margin: 2rem 0 2.5rem; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  h1 { font-size: clamp(2.2rem, 5vw, 3rem); margin: 0 0 0.6rem; }
+  .lede { color: var(--muted); max-width: 60ch; font-size: 1.1rem; margin: 0 auto; }
+
+  .search-wrap {
+    position: sticky;
+    top: 76px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #fff;
+    border: 1px solid rgba(75, 112, 33, 0.15);
+    border-radius: 14px;
+    padding: 0.85rem 1.1rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .search-wrap [data-icon] { width: 20px; height: 20px; color: var(--muted); flex-shrink: 0; }
+  .search-wrap input {
+    flex: 1;
+    border: 0;
+    outline: 0;
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--ink);
+    background: transparent;
+  }
+  .search-wrap input::placeholder { color: var(--muted); }
+  .count {
+    font-size: 0.85rem;
+    color: var(--muted);
+    background: var(--paper-2);
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
   .county { margin-bottom: 2rem; }
-  .county h2 { font-size: 1.4rem; margin: 0 0 0.85rem; }
+  .county h2 {
+    font-size: 1.4rem;
+    margin: 0 0 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .cct {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.7rem;
+    background: rgba(75, 112, 33, 0.12);
+    color: var(--green-dark);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-weight: 700;
+  }
   .county ul {
     list-style: none;
     padding: 0;
     margin: 0;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 0.5rem;
   }
   .county ul li a {
-    display: inline-block;
-    padding: 0.45rem 0.95rem;
-    border: 1px solid rgba(75, 112, 33, 0.25);
-    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 0.95rem;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 10px;
     text-decoration: none;
     color: var(--green-dark);
-    background: rgba(75, 112, 33, 0.04);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    transition: all 0.2s var(--easing);
   }
-  .county ul li a:hover { background: rgba(75, 112, 33, 0.12); }
+  .county ul li a:hover {
+    background: var(--green);
+    color: #fff;
+    border-color: var(--green);
+    transform: translateY(-2px);
+  }
+  .county ul li a [data-icon] { width: 16px; height: 16px; opacity: 0.7; }
+  .county ul li a span { flex: 1; }
+  .county ul li a em {
+    font-style: normal;
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+  .no-results {
+    text-align: center;
+    color: var(--muted);
+    padding: 2rem;
+    background: var(--paper-2);
+    border-radius: 12px;
+    margin: 1rem 0;
+  }
 </style>

@@ -1,0 +1,68 @@
+---
+const photos = [
+  { src: '/assets/work-1.jpg', alt: 'Tree removal job in progress' },
+  { src: '/assets/work-2.jpg', alt: 'Climber working in canopy' },
+  { src: '/assets/work-3.jpg', alt: 'Storm damage cleanup' },
+  { src: '/assets/work-4.jpg', alt: 'Crew on a Central Florida tree job' },
+  { src: '/assets/work-5.jpg', alt: 'Pruning work on a mature tree' },
+  { src: '/assets/work-6.jpg', alt: 'Florida tree canopy' },
+];
+---
+
+<section class="gallery-section">
+  <div class="container">
+    <header class="head" data-reveal>
+      <span class="kicker">From the field</span>
+      <h2>Real jobs, real trees</h2>
+      <p>A few snapshots from recent work across Central Florida.</p>
+    </header>
+    <div class="grid" data-reveal data-reveal-stagger>
+      {photos.map((p, i) => (
+        <figure class={`g g-${i}`}>
+          <img src={p.src} alt={p.alt} loading="lazy" />
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .gallery-section { padding: 4rem 0; background: var(--paper-2); }
+  .head { text-align: center; margin-bottom: 2.5rem; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h2 { font-size: 2.2rem; margin: 0 0 0.4rem; }
+  .head p { color: var(--muted); margin: 0; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: 130px;
+    gap: 0.75rem;
+  }
+  .g {
+    margin: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s var(--easing), box-shadow 0.3s ease;
+  }
+  .g:hover { transform: scale(1.02); box-shadow: var(--shadow-md); }
+  .g img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .g-0 { grid-column: span 3; grid-row: span 2; }
+  .g-1 { grid-column: span 3; grid-row: span 1; }
+  .g-2 { grid-column: span 2; grid-row: span 1; }
+  .g-3 { grid-column: span 2; grid-row: span 2; }
+  .g-4 { grid-column: span 2; grid-row: span 1; }
+  .g-5 { grid-column: span 4; grid-row: span 1; }
+  @media (max-width: 800px) {
+    .grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; }
+    .g, .g-0, .g-1, .g-2, .g-3, .g-4, .g-5 { grid-column: span 1; grid-row: span 1; }
+  }
+</style>

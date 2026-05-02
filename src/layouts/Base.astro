@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import Seo from '../components/Seo.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -29,25 +30,49 @@ const allSchema = [...baseSchema, ...extra];
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#324a16" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Marcellus&family=Lato:wght@300;400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Marcellus&family=Lato:wght@300;400;700;900&display=swap"
     />
     <Seo title={title} description={description} canonical={canonical} ogImage={ogImage} noindex={noindex} />
     <JsonLd data={allSchema} />
+    <ClientRouter />
   </head>
   <body>
     <Header />
-    <main>
+    <main transition:animate="fade">
       <slot />
     </main>
     <a class="sticky-call" href="tel:+14074528779" aria-label="Call Sacred Tree Service">
-      📞 Call (407) 452-8779
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+      </svg>
+      Call (407) 452-8779
     </a>
     <Footer />
+
+    <script>
+      // Scroll-reveal: any element with [data-reveal] fades up when it enters the viewport.
+      const reveal = () => {
+        const els = document.querySelectorAll('[data-reveal]:not(.is-revealed)');
+        if (!els.length) return;
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('is-revealed');
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+        els.forEach((el) => io.observe(el));
+      };
+      reveal();
+      document.addEventListener('astro:page-load', reveal);
+    </script>
 
     <style is:global>
       :root {
@@ -56,25 +81,37 @@ const allSchema = [...baseSchema, ...extra];
         --green-light: #6b9a3a;
         --teal: #68ccd1;
         --ink: #1f2a17;
+        --ink-soft: #2d3b22;
         --paper: #faf9f6;
+        --paper-2: #f3f1eb;
         --muted: #5b6657;
         --warning: #c44d2e;
+        --shadow-sm: 0 2px 6px rgba(20, 30, 15, 0.06);
+        --shadow-md: 0 8px 24px rgba(20, 30, 15, 0.08);
+        --shadow-lg: 0 24px 60px rgba(20, 30, 15, 0.14);
+        --radius: 14px;
+        --easing: cubic-bezier(0.2, 0.8, 0.2, 1);
       }
       * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
       html, body { margin: 0; padding: 0; }
       body {
         font-family: 'Lato', system-ui, -apple-system, sans-serif;
         color: var(--ink);
         background: var(--paper);
-        line-height: 1.55;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
       }
       h1, h2, h3, h4 {
         font-family: 'Marcellus', Georgia, serif;
         font-weight: 400;
         color: var(--green-dark);
-        line-height: 1.2;
+        line-height: 1.15;
+        letter-spacing: -0.01em;
       }
       a { color: var(--green-dark); }
+      img { max-width: 100%; height: auto; }
+
       .container {
         max-width: 1200px;
         margin: 0 auto;
@@ -86,15 +123,21 @@ const allSchema = [...baseSchema, ...extra];
         padding: 0 1.25rem;
       }
       .btn {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
         padding: 0.85rem 1.5rem;
         border-radius: 999px;
         text-decoration: none;
         font-weight: 700;
         letter-spacing: 0.02em;
-        transition: transform 0.15s ease, background 0.2s ease;
+        transition: transform 0.2s var(--easing), background 0.25s ease, box-shadow 0.25s ease;
+        border: 0;
+        font-size: 1rem;
+        cursor: pointer;
       }
-      .btn:hover { transform: translateY(-1px); }
+      .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+      .btn:active { transform: translateY(0); }
       .btn.primary { background: var(--green); color: #fff; }
       .btn.primary:hover { background: var(--green-dark); }
       .btn.ghost {
@@ -103,6 +146,36 @@ const allSchema = [...baseSchema, ...extra];
         border: 2px solid var(--green);
       }
       .btn.ghost:hover { background: rgba(75, 112, 33, 0.08); }
+      .btn.large { padding: 1.05rem 2rem; font-size: 1.05rem; }
+
+      /* Reveal-on-scroll */
+      [data-reveal] {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.7s var(--easing), transform 0.7s var(--easing);
+      }
+      [data-reveal].is-revealed { opacity: 1; transform: none; }
+      [data-reveal-stagger] > * {
+        opacity: 0;
+        transform: translateY(16px);
+        transition: opacity 0.6s var(--easing), transform 0.6s var(--easing);
+      }
+      [data-reveal-stagger].is-revealed > * { opacity: 1; transform: none; }
+      [data-reveal-stagger].is-revealed > *:nth-child(1) { transition-delay: 0.05s; }
+      [data-reveal-stagger].is-revealed > *:nth-child(2) { transition-delay: 0.1s; }
+      [data-reveal-stagger].is-revealed > *:nth-child(3) { transition-delay: 0.15s; }
+      [data-reveal-stagger].is-revealed > *:nth-child(4) { transition-delay: 0.2s; }
+      [data-reveal-stagger].is-revealed > *:nth-child(5) { transition-delay: 0.25s; }
+      [data-reveal-stagger].is-revealed > *:nth-child(6) { transition-delay: 0.3s; }
+      [data-reveal-stagger].is-revealed > *:nth-child(7) { transition-delay: 0.35s; }
+      [data-reveal-stagger].is-revealed > *:nth-child(8) { transition-delay: 0.4s; }
+
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; transition: none !important; }
+        html { scroll-behavior: auto; }
+        [data-reveal], [data-reveal-stagger] > * { opacity: 1; transform: none; }
+      }
+
       .sticky-call {
         display: none;
         position: fixed;
@@ -117,10 +190,13 @@ const allSchema = [...baseSchema, ...extra];
         text-decoration: none;
         font-weight: 700;
         z-index: 100;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+        box-shadow: var(--shadow-md);
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
       }
       @media (max-width: 700px) {
-        .sticky-call { display: block; }
+        .sticky-call { display: inline-flex; }
         body { padding-bottom: 4rem; }
       }
     </style>

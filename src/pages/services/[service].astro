@@ -1,4 +1,5 @@
 ---
+import { Icon } from 'astro-icon/components';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import JobberForm from '../../components/JobberForm.astro';
@@ -42,8 +43,8 @@ const jsonLd = [serviceSchema({ name: service.name, description: service.descrip
 >
   <div class="container">
     <Breadcrumbs trail={trail} />
-    <header class="head">
-      <span class="icon" aria-hidden="true">{service.icon}</span>
+    <header class="head" data-reveal>
+      <span class="icon-hero" aria-hidden="true"><Icon name={service.icon} /></span>
       <h1>{service.name}</h1>
       <p class="lede">{service.blurb}</p>
     </header>
@@ -84,7 +85,17 @@ const jsonLd = [serviceSchema({ name: service.name, description: service.descrip
     text-align: center;
     margin: 1rem 0 3rem;
   }
-  .icon { font-size: 3rem; }
+  .icon-hero {
+    display: inline-grid;
+    place-items: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(75, 112, 33, 0.15), rgba(104, 204, 209, 0.12));
+    color: var(--green-dark);
+    margin-bottom: 1rem;
+  }
+  .icon-hero [data-icon] { width: 40px; height: 40px; }
   h1 { font-size: 2.5rem; margin: 0.5rem 0 0.75rem; }
   .lede { color: var(--muted); max-width: 65ch; margin: 0 auto; font-size: 1.15rem; }
   .layout {

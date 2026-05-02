@@ -1,6 +1,8 @@
 ---
+import { Icon } from 'astro-icon/components';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CtaBand from '../../components/CtaBand.astro';
 import { services } from '../../data/services';
 
 const trail = [
@@ -24,19 +26,20 @@ const trail = [
       safely.
     </p>
 
-    <ul class="svc-grid">
+    <ul class="svc-grid" data-reveal data-reveal-stagger>
       {services.map((s) => (
         <li>
           <a href={`/services/${s.slug}/`}>
-            <span class="icon" aria-hidden="true">{s.icon}</span>
+            <span class="icon" aria-hidden="true"><Icon name={s.icon} /></span>
             <h2>{s.name}</h2>
             <p>{s.blurb}</p>
-            <span class="more">Learn more →</span>
+            <span class="more">Learn more <Icon name="lucide:arrow-right" /></span>
           </a>
         </li>
       ))}
     </ul>
   </div>
+  <CtaBand />
 </Base>
 
 <style>
@@ -54,20 +57,39 @@ const trail = [
     display: block;
     background: #fff;
     border: 1px solid rgba(0,0,0,0.06);
-    border-radius: 12px;
-    padding: 1.5rem;
+    border-radius: 16px;
+    padding: 1.75rem;
     text-decoration: none;
     color: var(--ink);
-    transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: transform 0.2s var(--easing), box-shadow 0.25s ease, border-color 0.2s ease;
     height: 100%;
   }
   .svc-grid a:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 14px 30px rgba(0,0,0,0.07);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
     border-color: rgba(75, 112, 33, 0.35);
   }
-  .icon { font-size: 2rem; }
+  .icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(75, 112, 33, 0.12), rgba(104, 204, 209, 0.1));
+    color: var(--green-dark);
+    margin-bottom: 1rem;
+  }
+  .icon [data-icon] { width: 28px; height: 28px; }
   .svc-grid h2 { font-size: 1.25rem; margin: 0.6rem 0 0.4rem; }
   .svc-grid p { color: var(--muted); margin: 0 0 0.85rem; font-size: 0.95rem; }
-  .more { color: var(--green); font-weight: 700; font-size: 0.9rem; }
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--green);
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+  .more [data-icon] { width: 16px; height: 16px; transition: transform 0.2s var(--easing); }
+  .svc-grid a:hover .more [data-icon] { transform: translateX(3px); }
 </style>

@@ -1,82 +1,65 @@
 ---
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import { safeFetch, sanityIsConfigured, urlFor } from '../../lib/sanity-helpers';
 
 const trail = [
   { name: 'Home', url: '/' },
   { name: 'Blog', url: '/blog/' },
 ];
 
-type PostSummary = {
-  _id: string;
-  title: string;
-  slug: { current: string };
-  excerpt: string;
-  publishedAt: string;
-  mainImage?: any;
-  author?: { name: string; isaCertified?: boolean };
-  categories?: { title: string }[];
-};
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const posts = allPosts.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 
-const posts = await safeFetch<PostSummary[]>(
-  `*[_type == "post" && defined(slug.current)] | order(publishedAt desc) {
-    _id, title, slug, excerpt, publishedAt, mainImage,
-    author->{name, isaCertified},
-    categories[]->{title}
-  }`,
-  {},
-  []
-);
-
-const fmt = (iso: string) =>
-  new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
 
 <Base
-  title="Blog — Central Florida Tree Care Notes"
-  description="Notes from the field on Florida tree care, storm prep, species ID, and what we’re learning on the job."
+  title="Field Notes — Florida Tree Care Blog"
+  description="Notes from the field on Florida tree care, storm prep, species ID, and what we’re learning on the job — written by ISA Certified Arborists."
   breadcrumbs={trail}
 >
   <div class="container">
     <Breadcrumbs trail={trail} />
-    <h1>Notes from the Field</h1>
-    <p class="lede">
-      Stories, tree ID, storm lessons, and what we’re seeing across Central
-      Florida — from the people climbing the trees.
-    </p>
+    <header class="head" data-reveal>
+      <span class="kicker">Field Notes</span>
+      <h1>Notes from the field</h1>
+      <p class="lede">
+        Stories, tree ID, storm lessons, and what we’re seeing across Central
+        Florida — from the people climbing the trees.
+      </p>
+    </header>
 
-    {!sanityIsConfigured() ? (
-      <div class="empty">
-        <p><strong>Sanity isn’t configured yet.</strong></p>
-        <p>
-          Set <code>PUBLIC_SANITY_PROJECT_ID</code> and <code>PUBLIC_SANITY_DATASET</code> in
-          <code>.env</code>, then visit <code>/studio</code> to start publishing.
-          See <code>SANITY_SETUP.md</code> for the full walkthrough.
-        </p>
-      </div>
-    ) : posts.length === 0 ? (
+    {posts.length === 0 ? (
       <div class="empty">
         <p><strong>No posts yet.</strong></p>
-        <p>Head to <a href="/studio">/studio</a> to write the first one — it’ll appear here automatically.</p>
+        <p>Drop a new <code>.md</code> file in <code>src/content/blog/</code> and it'll show up here.</p>
       </div>
     ) : (
-      <ul class="posts">
+      <ul class="posts" data-reveal data-reveal-stagger>
         {posts.map((p) => (
           <li>
-            <a href={`/blog/${p.slug.current}/`}>
-              {p.mainImage && (
-                <img src={urlFor(p.mainImage).width(800).height(450).fit('crop').url()} alt={p.title} loading="lazy" />
+            <a href={`/blog/${p.id}/`}>
+              {p.data.coverImage && (
+                <div class="img">
+                  <img src={p.data.coverImage.src} alt={p.data.coverAlt ?? p.data.title} loading="lazy" />
+                </div>
               )}
               <div class="meta">
-                {p.categories && p.categories.length > 0 && (
-                  <span class="cat">{p.categories.map((c) => c.title).join(' · ')}</span>
+                {p.data.categories.length > 0 && (
+                  <span class="cat">{p.data.categories.join(' · ')}</span>
                 )}
-                <h2>{p.title}</h2>
-                <p>{p.excerpt}</p>
+                <h2>{p.data.title}</h2>
+                <p>{p.data.excerpt}</p>
                 <footer>
-                  {p.author && <span>{p.author.name}{p.author.isaCertified ? ' · ISA Certified Arborist' : ''}</span>}
-                  <time>{fmt(p.publishedAt)}</time>
+                  <span class="byline">
+                    {p.data.author}{p.data.isaCertified && (
+                      <span class="badge"><Icon name="lucide:badge-check" /> ISA Certified</span>
+                    )}
+                  </span>
+                  <time>{fmt(p.data.publishedAt)}</time>
                 </footer>
               </div>
             </a>
@@ -88,8 +71,18 @@ const fmt = (iso: string) =>
 </Base>
 
 <style>
-  h1 { font-size: 2.5rem; margin: 0 0 0.75rem; }
-  .lede { color: var(--muted); max-width: 70ch; font-size: 1.1rem; margin-bottom: 2.5rem; }
+  .head { text-align: center; margin: 2rem 0 3rem; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  h1 { font-size: clamp(2.2rem, 5vw, 3rem); margin: 0 0 0.6rem; }
+  .lede { color: var(--muted); max-width: 60ch; font-size: 1.1rem; margin: 0 auto; }
   .empty {
     background: #fff8e6;
     border: 1px dashed #d4b15a;
@@ -97,35 +90,54 @@ const fmt = (iso: string) =>
     border-radius: 12px;
     color: #6b5418;
   }
-  .empty code {
-    background: rgba(0,0,0,0.05);
-    padding: 0.1rem 0.4rem;
-    border-radius: 4px;
-    font-size: 0.85em;
+  .posts {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 5rem;
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   }
-  .posts { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
   .posts a {
-    display: block;
+    display: flex;
+    flex-direction: column;
     background: #fff;
     border: 1px solid rgba(0,0,0,0.06);
-    border-radius: 12px;
+    border-radius: 16px;
     text-decoration: none;
     color: var(--ink);
     overflow: hidden;
-    transition: transform 0.15s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s var(--easing), box-shadow 0.25s ease;
+    height: 100%;
   }
-  .posts a:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(0,0,0,0.07); }
-  .posts img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
-  .meta { padding: 1.25rem; }
-  .cat { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--green); font-weight: 700; }
+  .posts a:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .posts .img { aspect-ratio: 16/9; overflow: hidden; }
+  .posts .img img { width: 100%; height: 100%; object-fit: cover; }
+  .meta { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+  .cat { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--green); font-weight: 700; }
   .posts h2 { font-size: 1.3rem; margin: 0.4rem 0 0.5rem; }
-  .posts p { color: var(--muted); margin: 0 0 1rem; }
+  .posts p { color: var(--muted); margin: 0 0 1rem; flex: 1; }
   .meta footer {
     display: flex;
     justify-content: space-between;
     font-size: 0.85rem;
     color: var(--muted);
     border-top: 1px solid rgba(0,0,0,0.06);
-    padding-top: 0.75rem;
+    padding-top: 0.85rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
   }
+  .byline { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: rgba(75, 112, 33, 0.12);
+    color: var(--green-dark);
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+  .badge [data-icon] { width: 12px; height: 12px; }
 </style>

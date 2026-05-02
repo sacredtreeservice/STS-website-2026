@@ -1,4 +1,5 @@
 ---
+import { Icon } from 'astro-icon/components';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import JobberForm from '../../components/JobberForm.astro';
@@ -57,9 +58,11 @@ const localHook = city.hook ?? `Sacred Tree Service has worked across ${city.nam
           {services.map((s) => (
             <li>
               <a href={`/services/${s.slug}/${city.slug}/`}>
-                <span aria-hidden="true">{s.icon}</span>
-                <strong>{s.name}</strong>
-                <em>{s.shortName} in {city.name}</em>
+                <span class="ico" aria-hidden="true"><Icon name={s.icon} /></span>
+                <span class="text">
+                  <strong>{s.name}</strong>
+                  <em>{s.shortName} in {city.name}</em>
+                </span>
               </a>
             </li>
           ))}
@@ -113,18 +116,32 @@ const localHook = city.hook ?? `Sacred Tree Service has worked across ${city.nam
     gap: 0.75rem;
   }
   .services a {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     padding: 0.85rem 1rem;
     background: #fff;
     border: 1px solid rgba(0,0,0,0.06);
-    border-radius: 10px;
+    border-radius: 12px;
     text-decoration: none;
     color: var(--ink);
+    transition: all 0.2s var(--easing);
   }
-  .services a:hover { border-color: rgba(75, 112, 33, 0.4); }
-  .services strong { display: block; color: var(--green-dark); }
+  .services a:hover { border-color: rgba(75, 112, 33, 0.4); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+  .services .ico {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(75, 112, 33, 0.1);
+    color: var(--green-dark);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .services .ico [data-icon] { width: 18px; height: 18px; }
+  .services .text { display: flex; flex-direction: column; min-width: 0; }
+  .services strong { color: var(--green-dark); }
   .services em {
-    display: block;
     font-style: normal;
     font-size: 0.85rem;
     color: var(--muted);

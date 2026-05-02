@@ -1,0 +1,67 @@
+---
+import { company } from '../data/company';
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+  heading?: string;
+  subheading?: string;
+}
+const {
+  heading = 'Ready to take care of your trees?',
+  subheading = 'Free in-person estimates across Central Florida. Real arborists, no high-pressure sales.',
+} = Astro.props;
+---
+
+<section class="cta-band" data-reveal>
+  <div class="container">
+    <div class="inner">
+      <div class="text">
+        <h2>{heading}</h2>
+        <p>{subheading}</p>
+      </div>
+      <div class="actions">
+        <a class="btn primary large" href={company.phoneHref}>
+          <Icon name="lucide:phone" /> Call {company.phone}
+        </a>
+        <a class="btn ghost large" href="/contact/">
+          <Icon name="lucide:clipboard-check" /> Request Estimate
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    margin: 3rem 0;
+    padding: 3.5rem 0;
+    background:
+      linear-gradient(135deg, rgba(50, 74, 22, 0.92), rgba(75, 112, 33, 0.92)),
+      url('/assets/hero.jpg') center/cover no-repeat;
+    color: #fff;
+  }
+  .inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .text h2 {
+    color: #fff;
+    font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+    margin: 0 0 0.4rem;
+  }
+  .text p { color: rgba(255,255,255,0.85); margin: 0; max-width: 50ch; }
+  .actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .actions .btn.primary { background: #fff; color: var(--green-dark); }
+  .actions .btn.primary:hover { background: var(--paper); }
+  .actions .btn.ghost { color: #fff; border-color: rgba(255,255,255,0.5); }
+  .actions .btn.ghost:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+  .btn [data-icon] { width: 18px; height: 18px; }
+  @media (max-width: 700px) {
+    .inner { flex-direction: column; text-align: center; }
+    .actions { width: 100%; flex-direction: column; }
+    .actions .btn { justify-content: center; }
+  }
+</style>

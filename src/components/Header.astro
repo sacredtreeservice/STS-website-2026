@@ -1,4 +1,5 @@
 ---
+import { Icon } from 'astro-icon/components';
 import { company } from '../data/company';
 ---
 
@@ -19,7 +20,7 @@ import { company } from '../data/company';
       <a href="/about/">About</a>
       <a href="/contact/">Contact</a>
     </nav>
-    <a class="cta" href={company.phoneHref}>Call {company.phone}</a>
+    <a class="cta" href={company.phoneHref}><Icon name="lucide:phone" /> {company.phone}</a>
   </div>
 </header>
 
@@ -80,8 +81,13 @@ import { company } from '../data/company';
     text-decoration: none;
     font-weight: 700;
     font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: background 0.2s ease, transform 0.2s var(--easing);
   }
-  .cta:hover { background: var(--green-dark); }
+  .cta:hover { background: var(--green-dark); transform: translateY(-1px); }
+  .cta [data-icon] { width: 14px; height: 14px; }
   @media (max-width: 900px) {
     nav { display: none; }
     .brand em { display: none; }
