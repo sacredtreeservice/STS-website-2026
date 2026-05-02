@@ -1,0 +1,181 @@
+---
+import { Icon } from 'astro-icon/components';
+import { company } from '../data/company';
+
+// Site-wide sticky action bar. Lives at the bottom of every page.
+// Desktop: 4 buttons. Mobile: drops to 2 (the most direct conversion paths).
+//
+// We keep these stable site-wide so users always know where to find them —
+// like a mobile-app dock. Future: a `context` prop on individual pages could
+// swap one or two buttons for page-specific actions.
+
+const actions = [
+  {
+    icon: 'lucide:trees',
+    label: 'Services',
+    sub: 'See what we do',
+    href: '/services/',
+    tone: 'default',
+    mobileHide: true,
+  },
+  {
+    icon: 'lucide:star',
+    label: 'Reviews',
+    sub: 'What customers say',
+    href: '/reviews/',
+    tone: 'default',
+    mobileHide: true,
+  },
+  {
+    icon: 'lucide:clipboard-check',
+    label: 'Free estimate',
+    sub: 'In-person, no pressure',
+    href: '/contact/',
+    tone: 'accent',
+    mobileHide: false,
+  },
+  {
+    icon: 'lucide:phone',
+    label: 'Call now',
+    sub: company.phone,
+    href: company.phoneHref,
+    tone: 'outline',
+    mobileHide: false,
+  },
+];
+---
+
+<aside class="action-bar" aria-label="Quick actions">
+  <div class="bar-inner">
+    {actions.map((a) => (
+      <a
+        class:list={['bar-btn', `tone-${a.tone}`]}
+        href={a.href}
+        data-mobile-hide={a.mobileHide ? 'true' : 'false'}
+      >
+        <span class="ico"><Icon name={a.icon} /></span>
+        <span class="text">
+          <strong>{a.label}</strong>
+          <em>{a.sub}</em>
+        </span>
+      </a>
+    ))}
+  </div>
+</aside>
+
+<style>
+  .action-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 90;
+    padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom));
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    border-top: 1px solid var(--border);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    box-shadow: 0 -8px 28px rgba(8, 14, 12, 0.08);
+    transform: translateY(0);
+    transition: transform 0.3s var(--easing);
+  }
+  :root[data-theme='dark'] .action-bar {
+    box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.4);
+  }
+
+  .bar-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+
+  .bar-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.7rem 0.95rem;
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--ink);
+    background: var(--paper-2);
+    border: 1px solid var(--border);
+    transition: transform 0.2s var(--easing), background 0.2s ease, border-color 0.2s ease;
+    min-width: 0; /* enable text-overflow inside */
+  }
+  .bar-btn:hover { transform: translateY(-2px); border-color: var(--border-strong); }
+
+  .bar-btn.tone-accent {
+    background: var(--green);
+    border-color: var(--green);
+    color: #0c100a;
+  }
+  :root[data-theme='light'] .bar-btn.tone-accent { color: #fff; }
+  .bar-btn.tone-accent .ico {
+    background: rgba(255, 255, 255, 0.18);
+    color: inherit;
+  }
+  .bar-btn.tone-accent strong, .bar-btn.tone-accent em { color: inherit; }
+  .bar-btn.tone-accent em { opacity: 0.85; }
+  .bar-btn.tone-accent:hover { background: var(--green-light); border-color: var(--green-light); }
+
+  .bar-btn.tone-outline {
+    background: transparent;
+    border-color: var(--border-strong);
+    color: var(--green-dark);
+  }
+  .bar-btn.tone-outline .ico { background: var(--green-tint); color: var(--green-dark); }
+  .bar-btn.tone-outline:hover { background: var(--green-tint); }
+
+  .ico {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--green-tint);
+    color: var(--green-dark);
+    display: grid;
+    place-items: center;
+  }
+  .ico [data-icon] { width: 18px; height: 18px; }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+    min-width: 0;
+  }
+  .text strong {
+    font-weight: 700;
+    font-size: 0.93rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .text em {
+    font-style: normal;
+    font-size: 0.78rem;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 1px;
+  }
+  .bar-btn.tone-accent .text em { color: rgba(0, 0, 0, 0.7); }
+  :root[data-theme='light'] .bar-btn.tone-accent .text em { color: rgba(255, 255, 255, 0.85); }
+
+  /* Mobile: collapse to 2 highest-conversion buttons */
+  @media (max-width: 700px) {
+    .bar-inner { grid-template-columns: 1fr 1fr; }
+    .bar-btn[data-mobile-hide='true'] { display: none; }
+    .bar-btn { padding: 0.65rem 0.75rem; }
+    .text em { display: none; }
+    .text strong { font-size: 0.92rem; }
+  }
+
+  /* Tablet: tighten paddings */
+  @media (max-width: 900px) and (min-width: 701px) {
+    .text em { font-size: 0.72rem; }
+  }
+</style>
