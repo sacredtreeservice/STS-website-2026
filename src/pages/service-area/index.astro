@@ -4,6 +4,7 @@ import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import { cities } from '../../data/cities';
+import { counties, getCountyByName } from '../../data/counties';
 
 const trail = [
   { name: 'Home', url: '/' },
@@ -32,6 +33,16 @@ const byCounty = cities.reduce<Record<string, typeof cities>>((acc, c) => {
       </p>
     </header>
 
+    <section class="county-overview" data-reveal data-reveal-stagger>
+      {counties.map((c) => (
+        <a class="county-card" href={`/service-area/${c.slug}/`}>
+          <span class="cc-name">{c.name}</span>
+          <span class="cc-region">{c.region}</span>
+          <span class="cc-cta">View county page <Icon name="lucide:arrow-right" /></span>
+        </a>
+      ))}
+    </section>
+
     <div class="search-wrap" data-reveal>
       <Icon name="lucide:search" />
       <input
@@ -44,9 +55,14 @@ const byCounty = cities.reduce<Record<string, typeof cities>>((acc, c) => {
     </div>
 
     <div id="city-results">
-      {Object.entries(byCounty).map(([county, list]) => (
+      {Object.entries(byCounty).map(([county, list]) => {
+        const meta = getCountyByName(county);
+        return (
         <section class="county" data-county={county}>
-          <h2>{county} County <span class="cct">{list.length}</span></h2>
+          <h2>
+            {meta ? <a href={`/service-area/${meta.slug}/`}>{county} County</a> : `${county} County`}
+            <span class="cct">{list.length}</span>
+          </h2>
           <ul>
             {list.map((c) => (
               <li data-city={c.name.toLowerCase()} data-slug={c.slug}>
@@ -59,7 +75,8 @@ const byCounty = cities.reduce<Record<string, typeof cities>>((acc, c) => {
             ))}
           </ul>
         </section>
-      ))}
+        );
+      })}
       <p id="no-results" class="no-results" hidden>
         No cities match your search. We may still be able to help — <a href="/contact/">reach out</a>.
       </p>
@@ -129,6 +146,51 @@ const byCounty = cities.reduce<Record<string, typeof cities>>((acc, c) => {
   }
   h1 { font-size: clamp(2.2rem, 5vw, 3rem); margin: 0 0 0.6rem; }
   .lede { color: var(--muted); max-width: 60ch; font-size: 1.1rem; margin: 0 auto; }
+
+  .county-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.85rem;
+    margin: 0 0 2.5rem;
+  }
+  .county-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--ink);
+    transition: all 0.2s var(--easing);
+  }
+  .county-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+    border-color: var(--green);
+  }
+  .cc-name { font-weight: 700; color: var(--green-dark); font-size: 1rem; }
+  .cc-region { font-size: 0.85rem; color: var(--muted); }
+  .cc-cta {
+    margin-top: 0.35rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--green);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .cc-cta [data-icon] { width: 14px; height: 14px; transition: transform 0.2s var(--easing); }
+  .county-card:hover .cc-cta [data-icon] { transform: translateX(3px); }
+
+  .county h2 a {
+    text-decoration: none;
+    color: var(--green-dark);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+  .county h2 a:hover { border-bottom-color: var(--green); }
 
   .search-wrap {
     position: sticky;

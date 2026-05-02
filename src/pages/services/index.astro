@@ -18,13 +18,15 @@ const trail = [
 >
   <div class="container">
     <Breadcrumbs trail={trail} />
-    <h1>Our Tree Care Services</h1>
-    <p class="lede">
-      Every tree on your property is different — and so is the right approach.
-      Our ISA Certified Arborists assess each job individually, recommend the
-      right scope, and execute with the equipment and expertise to do it
-      safely.
-    </p>
+    <header class="head">
+      <h1>Our Tree Care Services</h1>
+      <p class="lede">
+        Every tree on your property is different — and so is the right approach.
+        Our ISA Certified Arborists assess each job individually, recommend the
+        right scope, and execute with the equipment and expertise to do it
+        safely.
+      </p>
+    </header>
 
     <ul class="svc-grid" data-reveal data-reveal-stagger>
       {services.map((s) => (
@@ -43,8 +45,9 @@ const trail = [
 </Base>
 
 <style>
+  .head { text-align: center; max-width: 65ch; margin: 1rem auto 2.5rem; }
   h1 { font-size: 2.5rem; margin: 0 0 0.75rem; }
-  .lede { color: var(--muted); max-width: 70ch; font-size: 1.1rem; margin-bottom: 2.5rem; }
+  .lede { color: var(--muted); font-size: 1.1rem; margin: 0 auto; }
   .svc-grid {
     list-style: none;
     padding: 0;

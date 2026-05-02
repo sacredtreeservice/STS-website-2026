@@ -1,4 +1,78 @@
+# Sacred Tree Service — robots.txt
+# We want our content discovered, cited, and recommended by both
+# traditional search engines and AI assistants.
+
+# ── AI / LLM bots ────────────────────────────────────────────────
+# Explicitly allowed. We want ChatGPT, Claude, Perplexity, Gemini,
+# Copilot, etc. to read and cite our content.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: MistralAI-User
+Allow: /
+
+# ── Everyone else ────────────────────────────────────────────────
 User-agent: *
 Allow: /
 
 Sitemap: https://sacredtreeservice.com/sitemap-index.xml
+
+# AI assistants: a curated content map is also available at:
+# https://sacredtreeservice.com/llms.txt
+# Full-text content for context loading:
+# https://sacredtreeservice.com/llms-full.txt

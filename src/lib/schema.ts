@@ -1,50 +1,138 @@
 import { company, fullAddress } from '../data/company';
+import { counties } from '../data/counties';
+import { services } from '../data/services';
+import { testimonials } from '../data/testimonials';
 
 const SITE = 'https://sacredtreeservice.com';
 
-export const localBusinessSchema = () => ({
-  '@context': 'https://schema.org',
-  '@type': 'TreeRemovalService',
-  '@id': `${SITE}#business`,
-  name: company.legalName,
-  alternateName: company.brandName,
-  url: SITE,
-  telephone: company.phone,
-  email: company.email,
-  image: `${SITE}/assets/logo.jpg`,
-  priceRange: '$$',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: company.address.street,
-    addressLocality: company.address.city,
-    addressRegion: company.address.region,
-    postalCode: company.address.postal,
-    addressCountry: company.address.country,
-  },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: company.geo.lat,
-    longitude: company.geo.lng,
-  },
-  areaServed: {
+// ── Aggregate rating ───────────────────────────────────────────────────
+// Source of truth: company.googleAverageRating (the actual Google star
+// average) and company.googleReviewCount (the actual current count).
+// Review *count* drives whether we publish the AggregateRating at all,
+// because Google requires a count to render rich-result stars and
+// publishing a too-low count under-represents the business.
+const avgRating = company.googleAverageRating;
+const reviewCountForSchema = company.googleReviewCount;
+
+// ── areaServed: GeoCircle (radius) + named AdministrativeAreas (counties) ──
+// Google parses both. The AdministrativeArea entries are what surface in
+// "tree service [county] FL" map results; the GeoCircle defines the radius
+// for prospective coverage in adjacent neighborhoods.
+const areaServed: Record<string, any>[] = [
+  {
     '@type': 'GeoCircle',
+    name: `${company.serviceRadiusMiles}-mile service radius from Orlando, FL`,
     geoMidpoint: {
       '@type': 'GeoCoordinates',
       latitude: company.geo.lat,
       longitude: company.geo.lng,
     },
-    geoRadius: `${company.serviceRadiusMiles * 1609}`, // meters
+    geoRadius: `${company.serviceRadiusMiles * 1609}`,
   },
-  hasCredential: company.credentials.map((c) => ({
-    '@type': 'EducationalOccupationalCredential',
-    name: c,
+  ...counties.map((c) => ({
+    '@type': 'AdministrativeArea',
+    name: c.name,
+    containedInPlace: { '@type': 'State', name: 'Florida' },
   })),
-  memberOf: company.memberships.map((m) => ({
-    '@type': 'Organization',
-    name: m,
-  })),
-  sameAs: [company.social.facebook],
-});
+];
+
+// ── Hours: appointment-based, 7 days, with emergency response noted ────
+const openingHoursSpecification = [
+  {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    opens: '08:00',
+    closes: '18:00',
+  },
+  {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Sunday'],
+    opens: '00:00',
+    closes: '23:59',
+    description: 'Emergency / storm response only',
+  },
+];
+
+export const localBusinessSchema = () => {
+  const schema: Record<string, any> = {
+    '@context': 'https://schema.org',
+    '@type': 'TreeRemovalService',
+    '@id': `${SITE}#business`,
+    name: company.legalName,
+    alternateName: company.brandName,
+    slogan: company.tagline,
+    url: SITE,
+    telephone: company.phone,
+    email: company.email,
+    image: `${SITE}/assets/og-image.jpg`,
+    logo: `${SITE}/assets/logo.jpg`,
+    priceRange: '$$',
+    foundingDate: company.founded,
+    founder: { '@type': 'Person', name: company.owner, jobTitle: company.ownerTitle },
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: company.address.street,
+      addressLocality: company.address.city,
+      addressRegion: company.address.region,
+      postalCode: company.address.postal,
+      addressCountry: company.address.country,
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: company.geo.lat,
+      longitude: company.geo.lng,
+    },
+    areaServed,
+    openingHoursSpecification,
+    knowsAbout: services.map((s) => s.name),
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Tree Care Services',
+      itemListElement: services.map((s) => ({
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: s.name,
+          description: s.blurb,
+          serviceType: s.name,
+          url: `${SITE}/services/${s.slug}/`,
+        },
+      })),
+    },
+    hasCredential: company.credentials.map((c) => ({
+      '@type': 'EducationalOccupationalCredential',
+      name: c,
+    })),
+    memberOf: company.memberships.map((m) => ({
+      '@type': 'Organization',
+      name: m,
+    })),
+    sameAs: [company.social.facebook],
+  };
+
+  if (reviewCountForSchema && reviewCountForSchema > 0) {
+    schema.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: avgRating,
+      reviewCount: reviewCountForSchema,
+      bestRating: 5,
+      worstRating: 1,
+    };
+  }
+  // Lift up to 5 individual review snippets into the global schema for
+  // richer per-page coverage. The full review set lives on /reviews/.
+  if (testimonials.length > 0) {
+    schema.review = testimonials.slice(0, 5).map((t) => ({
+      '@type': 'Review',
+      reviewRating: { '@type': 'Rating', ratingValue: t.rating, bestRating: 5 },
+      author: { '@type': 'Person', name: t.name },
+      reviewBody: t.quote,
+      publisher: { '@type': 'Organization', name: t.source },
+    }));
+  }
+
+  return schema;
+};
 
 export const breadcrumbSchema = (trail: { name: string; url: string }[]) => ({
   '@context': 'https://schema.org',

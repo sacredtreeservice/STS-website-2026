@@ -1,4 +1,5 @@
 ---
+import { Picture } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import Base from '../layouts/Base.astro';
 import JobberForm from '../components/JobberForm.astro';
@@ -8,13 +9,81 @@ import Process from '../components/Process.astro';
 import Gallery from '../components/Gallery.astro';
 import Testimonials from '../components/Testimonials.astro';
 import LatestPosts from '../components/LatestPosts.astro';
+import QuickFacts from '../components/QuickFacts.astro';
 import CtaBand from '../components/CtaBand.astro';
+import heroImage from '../assets/hero.jpg';
 import { services } from '../data/services';
 import { cities } from '../data/cities';
 import { company } from '../data/company';
 
 const featuredServices = services.slice(0, 6);
-const cityShortlist = cities.slice(0, 12);
+
+const cityBySlug = new Map(cities.map((c) => [c.slug, c]));
+const pick = (...slugs: string[]) =>
+  slugs.map((s) => cityBySlug.get(s)).filter((c): c is (typeof cities)[number] => Boolean(c));
+
+const regions = [
+  {
+    name: 'Orlando Metro',
+    subtitle: 'Orange County · core service ring',
+    countyHref: '/service-area/orange-county/',
+    cities: pick(
+      'orlando',
+      'winter-park',
+      'maitland',
+      'apopka',
+      'ocoee',
+      'winter-garden',
+      'windermere',
+      'dr-phillips',
+      'hunters-creek',
+      'lake-nona',
+    ),
+  },
+  {
+    name: 'North Metro · Seminole County',
+    subtitle: 'Lake Mary · Sanford · Oviedo',
+    countyHref: '/service-area/seminole-county/',
+    cities: pick(
+      'altamonte-springs',
+      'longwood',
+      'casselberry',
+      'lake-mary',
+      'sanford',
+      'oviedo',
+    ),
+  },
+  {
+    name: 'South Metro · Osceola County',
+    subtitle: 'Kissimmee · Celebration · St. Cloud',
+    countyHref: '/service-area/osceola-county/',
+    cities: pick('kissimmee', 'celebration', 'st-cloud'),
+  },
+  {
+    name: 'Lake County (Northwest)',
+    subtitle: 'Clermont · Mount Dora · the lakes region',
+    countyHref: '/service-area/lake-county/',
+    cities: pick('clermont', 'mount-dora', 'eustis', 'tavares', 'leesburg', 'minneola', 'groveland', 'four-corners'),
+  },
+  {
+    name: 'Volusia County (Northeast)',
+    subtitle: 'Deltona · DeBary · DeLand',
+    countyHref: '/service-area/volusia-county/',
+    cities: pick('deltona', 'debary', 'deland', 'orange-city'),
+  },
+  {
+    name: 'Space Coast — Brevard County',
+    subtitle: 'Titusville · Cocoa · Indian River corridor',
+    countyHref: '/service-area/brevard-county/',
+    cities: pick('titusville', 'cocoa'),
+  },
+  {
+    name: 'Polk County (Four Corners)',
+    subtitle: 'Davenport · Haines City',
+    countyHref: '/service-area/polk-county/',
+    cities: pick('davenport', 'haines-city'),
+  },
+];
 ---
 
 <Base
@@ -22,7 +91,18 @@ const cityShortlist = cities.slice(0, 12);
   description="ISA Certified Arborists in Orlando. Proactive tree care, pruning, plant health, and thoughtful removals across Central Florida. Family-owned, licensed & insured."
 >
   <section class="hero">
-    <div class="hero-bg" aria-hidden="true"></div>
+    <Picture
+      src={heroImage}
+      alt=""
+      widths={[768, 1280, 1920]}
+      sizes="100vw"
+      formats={['avif', 'webp']}
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      pictureAttributes={{ class: 'hero-bg', 'aria-hidden': 'true' }}
+    />
+    <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-vignette" aria-hidden="true"></div>
 
     <div class="hero-inner">
@@ -98,25 +178,39 @@ const cityShortlist = cities.slice(0, 12);
 
   <LatestPosts />
 
+  <QuickFacts />
+
   <section class="container area-section">
     <div class="area-grid">
-      <div class="area-text" data-reveal>
+      <header class="area-text" data-reveal>
         <span class="kicker">Service area</span>
-        <h2>50 miles around Orlando</h2>
+        <h2>ISA Certified Arborists across Greater Orlando &amp; Central Florida</h2>
         <p>
-          We work across <strong>Orange, Seminole, Lake, Osceola, Volusia,
-          Brevard, and Polk</strong> counties. Same crew, same standards, no
-          out-of-area surcharges.
+          From our Orlando headquarters we serve homeowners, HOAs, and
+          commercial properties across the seven-county Central Florida
+          region — Orange, Seminole, Osceola, Lake, Volusia, Brevard, and
+          northern Polk. Same crew, same ISA-credentialed standards, no
+          out-of-area surcharges anywhere inside our 50-mile radius.
         </p>
-        <a class="btn ghost" href="/service-area/">
-          <Icon name="lucide:map" /> See all cities
-        </a>
-      </div>
-      <ul class="cloud" data-reveal data-reveal-stagger>
-        {cityShortlist.map((c) => (
-          <li><a href={`/service-area/${c.slug}/`}>{c.name}</a></li>
+      </header>
+
+      <div class="region-grid" data-reveal data-reveal-stagger>
+        {regions.map((r) => (
+          <article class="region">
+            <h3><a href={r.countyHref}>{r.name}</a></h3>
+            <p class="region-meta" set:html={r.subtitle} />
+            <ul class="region-cities">
+              {r.cities.map((c) => (
+                <li><a href={`/service-area/${c.slug}/`}>{c.name}</a></li>
+              ))}
+            </ul>
+          </article>
         ))}
-      </ul>
+      </div>
+
+      <a class="btn ghost" href="/service-area/">
+        <Icon name="lucide:map" /> Browse all cities &amp; neighborhoods
+      </a>
     </div>
   </section>
 
@@ -141,11 +235,22 @@ const cityShortlist = cities.slice(0, 12);
   .hero-bg {
     position: absolute;
     inset: -8%;
-    background:
-      linear-gradient(180deg, rgba(20, 30, 15, 0.45) 0%, rgba(20, 30, 15, 0.7) 60%, rgba(20, 30, 15, 0.92) 100%),
-      url('/assets/hero.jpg') center/cover no-repeat;
     z-index: -2;
+    display: block;
     animation: heroFloat 22s ease-in-out infinite alternate;
+  }
+  .hero-bg :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(20, 30, 15, 0.45) 0%, rgba(20, 30, 15, 0.7) 60%, rgba(20, 30, 15, 0.92) 100%);
+    pointer-events: none;
   }
   .hero-vignette {
     position: absolute;
@@ -344,42 +449,76 @@ const cityShortlist = cities.slice(0, 12);
 
   .area-section { padding: 5rem 1.25rem; }
   .area-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: 3rem;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    gap: 2.5rem;
+    text-align: center;
   }
+  .area-text { max-width: 70ch; }
   .area-text h2 { font-size: clamp(1.8rem, 3.6vw, 2.4rem); margin: 0 0 1rem; }
-  .area-text p { color: var(--muted); margin: 0 0 1.5rem; max-width: 40ch; }
-  .area-text .btn { display: inline-flex; gap: 0.4rem; }
-  .area-text .btn [data-icon] { width: 16px; height: 16px; }
-  .cloud {
+  .area-text p { color: var(--muted); margin: 0 auto; max-width: 65ch; }
+  .area-grid > .btn { display: inline-flex; gap: 0.4rem; }
+  .area-grid > .btn [data-icon] { width: 16px; height: 16px; }
+
+  .region-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+    width: 100%;
+    text-align: left;
+  }
+  .region {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem 1.4rem;
+    transition: border-color 0.2s ease, box-shadow 0.25s ease, transform 0.2s var(--easing);
+  }
+  .region:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+  }
+  .region h3 {
+    font-size: 1.1rem;
+    margin: 0 0 0.3rem;
+  }
+  .region h3 a {
+    color: var(--green-dark);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+  .region h3 a:hover { border-bottom-color: var(--green); }
+  .region-meta {
+    margin: 0 0 0.85rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .region-cities {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.4rem;
   }
-  .cloud li a {
+  .region-cities li a {
     display: inline-block;
-    padding: 0.5rem 1rem;
+    padding: 0.3rem 0.75rem;
     border: 1px solid var(--border-strong);
     border-radius: 999px;
     text-decoration: none;
     color: var(--green-dark);
-    background: var(--surface);
-    font-size: 0.9rem;
+    background: transparent;
+    font-size: 0.82rem;
     transition: all 0.2s var(--easing);
   }
-  .cloud li a:hover {
+  .region-cities li a:hover {
     background: var(--green);
     color: var(--ink-strong);
     border-color: var(--green);
-    transform: translateY(-2px);
   }
   .form-block { margin: 2rem auto 4rem; }
-  @media (max-width: 800px) {
-    .area-grid { grid-template-columns: 1fr; }
-  }
 </style>

@@ -114,9 +114,9 @@ export const faqs: Faq[] = [
     ],
   },
   {
-    q: 'Are you a real arborist who actually cares about the trees?',
+    q: 'Are your arborists real arborists who actually care about the trees?',
     answer:
-      'Yes. Sacred Tree Service is run by ISA Certified Arborists who genuinely care about plant health and long-term care. We’re also members of ISA and TCIA.',
+      'Yes. Sacred Tree Service has ISA Certified Arborists on staff who genuinely care about plant health and long-term care. We’re also members of ISA and TCIA, and operate under ANSI A300 pruning standards on every job.',
     quotes: [
       { quote: 'Sacred Tree Service goes above and beyond! They really care about the trees, your property and others property!', name: 'Erica Hall' },
       { quote: 'They actually care for their work and the organisms they are working on.', name: 'Jaylon Hamer' },

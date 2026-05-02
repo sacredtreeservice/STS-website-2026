@@ -9,7 +9,7 @@ export interface Props {
   noindex?: boolean;
 }
 
-const { title, description, canonical, ogImage = '/assets/hero.jpg', noindex = false } = Astro.props;
+const { title, description, canonical, ogImage = '/assets/og-image.jpg', noindex = false } = Astro.props;
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site ?? 'https://sacredtreeservice.com').toString();
 const fullTitle = title.includes(company.brandName) ? title : `${title} | ${company.brandName}`;
 ---

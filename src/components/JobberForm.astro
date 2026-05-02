@@ -48,13 +48,19 @@ const JOBBER_CSS =
 
 <script is:inline define:vars={{ JOBBER_SCRIPT_SRC, JOBBER_CLIENTHUB_ID, JOBBER_FORM_URL }}>
   // Mount (or remount) the Jobber embed. Survives Astro view transitions:
-  // each navigation re-fires astro:page-load, and we re-inject the script if
-  // the new page's mount node is still empty.
+  // each navigation re-fires astro:page-load, and we re-inject the loader
+  // script if the new page's mount node is still empty.
   const initJobber = () => {
     const mount = document.getElementById(JOBBER_CLIENTHUB_ID);
     if (!mount) return;
-    if (mount.querySelector('iframe')) return; // already mounted on this page
+    if (mount.querySelector('iframe')) return; // already mounted
+    // Loader script may already be in flight from a prior call. Without this
+    // guard, the inline call + astro:page-load listener can both fire before
+    // the iframe is mounted, racing to inject two loaders → two iframes.
+    const loaderId = `jobber-loader-${JOBBER_CLIENTHUB_ID}`;
+    if (document.getElementById(loaderId)) return;
     const s = document.createElement('script');
+    s.id = loaderId;
     s.src = JOBBER_SCRIPT_SRC;
     s.setAttribute('clienthub_id', JOBBER_CLIENTHUB_ID);
     s.setAttribute('form_url', JOBBER_FORM_URL);
@@ -91,8 +97,14 @@ const JOBBER_CSS =
   }
   .jobber-mount {
     margin: 1.25rem 0 0.75rem;
-    min-height: 320px;
-    /* Jobber's iframe maxes at 760px and centers itself. */
+    /* Reserve close to the rendered iframe height so the form's late
+       arrival doesn't push everything below it (CLS). Jobber's iframe
+       maxes at 760px wide and centers itself; on narrow screens the
+       fields stack and the form gets noticeably taller. */
+    min-height: 820px;
+  }
+  @media (max-width: 600px) {
+    .jobber-mount { min-height: 1080px; }
   }
   .fallback-call {
     margin: 1rem 0 0;

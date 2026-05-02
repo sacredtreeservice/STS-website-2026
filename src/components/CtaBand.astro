@@ -1,6 +1,8 @@
 ---
+import { getImage } from 'astro:assets';
 import { company } from '../data/company';
 import { Icon } from 'astro-icon/components';
+import heroImage from '../assets/hero.jpg';
 
 export interface Props {
   heading?: string;
@@ -10,9 +12,11 @@ const {
   heading = 'Ready to take care of your trees?',
   subheading = 'Free in-person estimates across Central Florida. Real arborists, no high-pressure sales.',
 } = Astro.props;
+
+const bg = await getImage({ src: heroImage, format: 'webp', width: 1600, quality: 70 });
 ---
 
-<section class="cta-band" data-reveal>
+<section class="cta-band" data-reveal style={`--cta-bg: url(${bg.src})`}>
   <div class="container">
     <div class="inner">
       <div class="text">
@@ -37,7 +41,7 @@ const {
     padding: 3.5rem 0;
     background:
       linear-gradient(135deg, rgba(50, 74, 22, 0.92), rgba(75, 112, 33, 0.92)),
-      url('/assets/hero.jpg') center/cover no-repeat;
+      var(--cta-bg) center/cover no-repeat;
     color: #fff;
   }
   .inner {

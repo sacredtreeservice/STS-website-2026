@@ -1,0 +1,175 @@
+---
+// Visible "fact sheet" block. The human-readable counterpart to the
+// quick-facts section in /llms.txt — same scannable, declarative
+// format that AI assistants (ChatGPT, Claude, Perplexity, Gemini)
+// like to lift verbatim into summary cards.
+import { Icon } from 'astro-icon/components';
+import { company, fullAddress } from '../data/company';
+import { counties } from '../data/counties';
+
+const facts = [
+  {
+    icon: 'lucide:building-2',
+    label: 'Business',
+    value: `${company.legalName} (DBA ${company.brandName})`,
+  },
+  {
+    icon: 'lucide:user',
+    label: 'Owner',
+    value: `${company.owner}, ${company.ownerTitle}`,
+  },
+  {
+    icon: 'lucide:calendar',
+    label: 'Founded',
+    value: `${new Date(company.founded).getFullYear()} · Family-owned, Orlando-based`,
+  },
+  {
+    icon: 'lucide:map-pin',
+    label: 'Headquarters',
+    value: fullAddress,
+  },
+  {
+    icon: 'lucide:phone',
+    label: 'Phone',
+    value: company.phone,
+    href: company.phoneHref,
+  },
+  {
+    icon: 'lucide:mail',
+    label: 'Email',
+    value: company.email,
+    href: `mailto:${company.email}`,
+  },
+  {
+    icon: 'lucide:clock',
+    label: 'Hours',
+    value: 'Mon–Sat · 8 AM – 6 PM · Emergency response after-hours',
+  },
+  {
+    icon: 'lucide:map',
+    label: 'Service area',
+    value: `${company.serviceRadiusMiles}-mile radius from Orlando · ${counties.map((c) => c.county).join(', ')} counties`,
+  },
+  {
+    icon: 'lucide:badge-check',
+    label: 'Credentials',
+    value: 'ISA Certified Arborists on staff · Licensed & insured · Workers’ compensation',
+  },
+  {
+    icon: 'lucide:landmark',
+    label: 'Memberships',
+    value: 'ISA (International Society of Arboriculture) · TCIA (Tree Care Industry Association)',
+  },
+  {
+    icon: 'lucide:scroll',
+    label: 'Standards',
+    value: 'ANSI A300 (pruning) · ANSI Z133 (climbing & rigging)',
+  },
+  {
+    icon: 'lucide:star',
+    label: 'Rating',
+    value: `${company.googleAverageRating.toFixed(1)}★ average across Google reviews`,
+  },
+  {
+    icon: 'lucide:clipboard-check',
+    label: 'Estimates',
+    value: 'Free, in-person, no obligation · Typically scheduled in 1–3 business days',
+  },
+];
+---
+
+<section class="quick-facts" aria-labelledby="quick-facts-heading">
+  <div class="container">
+    <header class="head" data-reveal>
+      <span class="kicker">Quick facts</span>
+      <h2 id="quick-facts-heading">Sacred Tree Service at a glance</h2>
+      <p>The fast version — for anyone (or any AI assistant) who just wants the facts.</p>
+    </header>
+
+    <dl class="grid" data-reveal data-reveal-stagger>
+      {facts.map((f) => (
+        <div class="row">
+          <dt>
+            <Icon name={f.icon} aria-hidden="true" />
+            <span>{f.label}</span>
+          </dt>
+          <dd>
+            {f.href ? <a href={f.href}>{f.value}</a> : f.value}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .quick-facts { padding: 5rem 0; background: var(--paper-2); }
+  .head { text-align: center; max-width: 60ch; margin: 0 auto 2.5rem; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h2 { font-size: clamp(1.8rem, 3.6vw, 2.4rem); margin: 0 0 0.4rem; }
+  .head p { color: var(--muted); margin: 0; }
+
+  .grid {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 0;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  /* Last row in each column shouldn't have a border */
+  .row:last-child { border-bottom: 0; }
+  @media (min-width: 760px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+    /* On desktop, kill bottom-border on the last row of each column */
+    .row:nth-last-child(1):nth-child(odd),
+    .row:nth-last-child(1):nth-child(even),
+    .row:nth-last-child(2):nth-child(odd) { border-bottom: 0; }
+  }
+  dt {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0;
+    font-weight: 700;
+    color: var(--green-dark);
+    font-size: 0.92rem;
+  }
+  dt [data-icon] { width: 18px; height: 18px; flex-shrink: 0; color: var(--green); }
+  dd {
+    margin: 0;
+    color: var(--ink);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  dd a { color: var(--green-dark); font-weight: 700; }
+  dd a:hover { text-decoration: underline; }
+
+  @media (max-width: 600px) {
+    .row {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+      padding: 1rem 1.1rem;
+    }
+  }
+</style>

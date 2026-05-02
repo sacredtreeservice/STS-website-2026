@@ -4,6 +4,7 @@ export const company = {
   tagline: 'Central Florida tree care, done right.',
   founded: '2023-01-13',
   owner: 'Alexander Satoski',
+  ownerTitle: 'ISA Tree Service Operator',
   phone: '(321) 204-8459',
   phoneHref: 'tel:+13212048459',
   email: 'sacredtreeservice@gmail.com',
@@ -17,6 +18,11 @@ export const company = {
   // HQ approx geo, used for LocalBusiness schema & service-area circle
   geo: { lat: 28.5567, lng: -81.4731 },
   serviceRadiusMiles: 50,
+  // Public-facing review aggregate. Set this to the actual current Google
+  // review count when known; otherwise schema/UI will show the 5-star
+  // rating without a specific count (better than under-counting).
+  googleReviewCount: undefined as number | undefined,
+  googleAverageRating: 5.0,
   memberships: ['ISA — International Society of Arboriculture', 'TCIA — Tree Care Industry Association'],
   credentials: ['ISA Certified Arborists on Staff', 'Licensed', 'Insured', 'Workers’ Comp'],
   social: {

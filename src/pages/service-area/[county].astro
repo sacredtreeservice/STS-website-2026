@@ -1,0 +1,285 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import JobberForm from '../../components/JobberForm.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { counties } from '../../data/counties';
+import { cities } from '../../data/cities';
+import { services } from '../../data/services';
+import { faqSchema } from '../../lib/schema';
+import { company } from '../../data/company';
+
+export async function getStaticPaths() {
+  return counties.map((c) => ({ params: { county: c.slug }, props: { county: c } }));
+}
+
+const { county } = Astro.props;
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Service Area', url: '/service-area/' },
+  { name: county.name, url: `/service-area/${county.slug}/` },
+];
+
+const countyCities = cities
+  .filter((c) => c.county === county.county)
+  .sort((a, b) => a.miles - b.miles);
+
+const cityList = countyCities.map((c) => c.name).join(', ');
+const closestMi = countyCities[0]?.miles ?? null;
+
+const faqs = [
+  {
+    q: `Does Sacred Tree Service work in ${county.name}?`,
+    a: `Yes. ${county.name} is fully inside our 50-mile service radius from Orlando. We serve ${countyCities.length} cities and communities in ${county.county} County, including ${cityList}.`,
+  },
+  {
+    q: `What tree services are available in ${county.county} County?`,
+    a: `We provide the full range of tree care across ${county.county} County: tree removal, structural and crown pruning, plant health care, palm tree services, stump grinding, cabling and bracing, crane-assisted removal, land clearing, arborist consulting, and emergency / storm response.`,
+  },
+  {
+    q: `Are your arborists certified?`,
+    a: `Yes — every job in ${county.county} County is assessed by an ISA Certified Arborist. We are members of the International Society of Arboriculture (ISA) and the Tree Care Industry Association (TCIA), and our crews are licensed, insured, and carry workers' compensation coverage.`,
+  },
+  {
+    q: `How fast can you get to ${county.county} County?`,
+    a: `Routine free estimates in ${county.county} County are typically scheduled within 1–3 business days. During active storm events we triage by hazard — call ${company.phone} for emergencies.`,
+  },
+];
+
+// Service schema specific to this county
+const countyServiceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: `Tree Service in ${county.name}`,
+  description: county.blurb,
+  provider: { '@id': 'https://sacredtreeservice.com#business' },
+  serviceType: 'Tree care, pruning, removal, and emergency response',
+  areaServed: {
+    '@type': 'AdministrativeArea',
+    name: county.name,
+    containedInPlace: { '@type': 'State', name: 'Florida' },
+  },
+  url: `https://sacredtreeservice.com/service-area/${county.slug}/`,
+};
+
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: `Cities served in ${county.name}`,
+  itemListElement: countyCities.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: `https://sacredtreeservice.com/service-area/${c.slug}/`,
+    name: `${c.name}, FL`,
+  })),
+};
+---
+
+<Base
+  title={`Tree Service in ${county.name} — ISA Certified Arborists`}
+  description={`ISA Certified Arborists serving ${county.name}. ${county.region}. Tree removal, pruning, palm care, and emergency response across ${countyCities.length} cities. Licensed & insured. Free estimates.`}
+  breadcrumbs={trail}
+  jsonLd={[faqSchema(faqs), countyServiceSchema, itemList]}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head">
+      <span class="kicker">Service area · {county.region}</span>
+      <h1>Tree Service in {county.name}</h1>
+      <p class="lede">{county.blurb}</p>
+      {closestMi !== null && (
+        <p class="meta">
+          Closest community to our Orlando HQ:
+          <strong>{countyCities[0].name}</strong> (~{closestMi} mi).
+          Coverage: <strong>{countyCities.length}</strong> cities &amp; communities across {county.county} County.
+        </p>
+      )}
+    </header>
+
+    <div class="layout">
+      <article>
+        <section class="callout">
+          <h2>Cities &amp; communities we serve in {county.county} County</h2>
+          <ul class="city-grid">
+            {countyCities.map((c) => (
+              <li>
+                <a href={`/service-area/${c.slug}/`}>
+                  <Icon name="lucide:map-pin" />
+                  <span>{c.name}</span>
+                  <em>{c.miles} mi</em>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <h2>Tree care services in {county.county} County</h2>
+        <p>
+          The full Sacred Tree Service catalog is available across {county.name} —
+          same crew, same ISA-credentialed standards, same equipment. Pick the
+          service you need to see scope, examples, and pricing context.
+        </p>
+        <ul class="services">
+          {services.map((s) => (
+            <li>
+              <a href={`/services/${s.slug}/`}>
+                <span class="ico" aria-hidden="true"><Icon name={s.icon} /></span>
+                <span class="text">
+                  <strong>{s.name}</strong>
+                  <em>{s.shortName}</em>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <h2>Why {county.county} County property owners choose us</h2>
+        <ul class="checks">
+          <li><strong>ISA Certified Arborists on every job</strong> — assessed and signed off by a credentialed pro before the chainsaw starts.</li>
+          <li><strong>ISA &amp; TCIA member</strong> — bound by the national best-practice standards (ANSI A300, ANSI Z133).</li>
+          <li><strong>Local, family-owned, Orlando-based</strong> — no out-of-area surcharges anywhere in {county.county} County.</li>
+          <li><strong>Licensed, insured, workers' comp</strong> — full coverage so the homeowner is never on the hook.</li>
+          <li><strong>50-mile radius covers the whole county</strong> — including the more remote corners other Orlando companies skip.</li>
+        </ul>
+
+        <FaqBlock faqs={faqs} />
+      </article>
+
+      <aside>
+        <JobberForm
+          heading={`Free Estimate in ${county.county} County`}
+          context={`${county.name} — general tree service estimate`}
+        />
+      </aside>
+    </div>
+  </div>
+
+  <CtaBand
+    heading={`Ready for honest tree work in ${county.county} County?`}
+    subheading={`Free in-person estimates across ${county.name}. Call ${company.phone} or request below.`}
+  />
+</Base>
+
+<style>
+  .head { text-align: center; max-width: 70ch; margin: 1rem auto 2.5rem; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  h1 { font-size: clamp(2rem, 4.5vw, 2.8rem); margin: 0 0 0.6rem; }
+  .lede { color: var(--muted); font-size: 1.1rem; margin: 0 auto 1rem; max-width: 65ch; }
+  .meta { color: var(--muted); font-size: 0.95rem; margin: 0 auto; max-width: 60ch; }
+  .meta strong { color: var(--ink); }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .callout {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    padding: 1.5rem 1.5rem 1rem;
+    margin: 0 0 2rem;
+  }
+  .callout h2 { font-size: 1.25rem; margin: 0 0 1rem; }
+
+  .city-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.5rem;
+  }
+  .city-grid li a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.85rem;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--green-dark);
+    font-size: 0.9rem;
+    transition: all 0.2s var(--easing);
+  }
+  .city-grid li a:hover {
+    background: var(--green);
+    color: #fff;
+    border-color: var(--green);
+    transform: translateY(-2px);
+  }
+  .city-grid li a [data-icon] { width: 14px; height: 14px; opacity: 0.7; }
+  .city-grid li a span { flex: 1; }
+  .city-grid li a em { font-style: normal; font-size: 0.78rem; opacity: 0.7; }
+
+  article h2 { font-size: 1.5rem; margin: 2rem 0 0.85rem; }
+  .services {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .services a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--ink);
+    transition: all 0.2s var(--easing);
+  }
+  .services a:hover { border-color: rgba(75, 112, 33, 0.4); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+  .services .ico {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(75, 112, 33, 0.1);
+    color: var(--green-dark);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .services .ico [data-icon] { width: 18px; height: 18px; }
+  .services .text { display: flex; flex-direction: column; min-width: 0; }
+  .services strong { color: var(--green-dark); }
+  .services em {
+    font-style: normal;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .checks { list-style: none; padding: 0; }
+  .checks li { padding-left: 1.5rem; position: relative; margin-bottom: 0.6rem; }
+  .checks li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-weight: 700;
+  }
+  aside { position: sticky; top: 100px; }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .services { grid-template-columns: 1fr; }
+    aside { position: static; }
+  }
+</style>

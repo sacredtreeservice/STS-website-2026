@@ -11,7 +11,6 @@ export interface Props {
 
 const { variant = 'home', heading, sub } = Astro.props;
 const list = variant === 'all' ? testimonials : featuredTestimonials;
-const totalCount = testimonials.length;
 
 const defaultHeading = variant === 'all' ? 'What our neighbors say' : 'The kind of work people remember.';
 const defaultSub =
@@ -53,7 +52,7 @@ const defaultSub =
     {variant === 'home' && (
       <div class="more-link" data-reveal>
         <a class="btn ghost" href="/reviews/">
-          Read all {totalCount} reviews <Icon name="lucide:arrow-right" />
+          Read more reviews <Icon name="lucide:arrow-right" />
         </a>
       </div>
     )}

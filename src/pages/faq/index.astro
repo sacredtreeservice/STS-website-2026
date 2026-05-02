@@ -4,6 +4,7 @@ import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import { faqs } from '../../data/faqs';
+import { llmFaqs } from '../../data/llm-faqs';
 import { faqSchema } from '../../lib/schema';
 
 const trail = [
@@ -11,11 +12,16 @@ const trail = [
   { name: 'FAQ', url: '/faq/' },
 ];
 
-// Build FAQPage schema with a synthesized answer that includes a representative customer quote.
-const schemaItems = faqs.map((f) => ({
-  q: f.q,
-  a: `${f.answer} Customer review: "${f.quotes[0].quote}" — ${f.quotes[0].name}.`,
-}));
+// Build FAQPage schema combining both FAQ sets so all Q&A is indexable.
+// Customer-voiced answers add a representative review quote; LLM-targeted
+// answers stay direct and self-contained.
+const schemaItems = [
+  ...llmFaqs.map((f) => ({ q: f.q, a: f.a })),
+  ...faqs.map((f) => ({
+    q: f.q,
+    a: `${f.answer} Customer review: "${f.quotes[0].quote}" — ${f.quotes[0].name}.`,
+  })),
+];
 ---
 
 <Base
@@ -35,10 +41,29 @@ const schemaItems = faqs.map((f) => ({
       </p>
     </header>
 
+    <section class="section-head" data-reveal>
+      <h2 class="section-title">About our company &amp; services</h2>
+      <p class="section-sub">Direct answers to the questions people most often ask about Sacred Tree Service.</p>
+    </section>
+
+    <div class="faqs">
+      {llmFaqs.map((f) => (
+        <article class="faq direct" data-reveal>
+          <h3>{f.q}</h3>
+          <p class="answer">{f.a}</p>
+        </article>
+      ))}
+    </div>
+
+    <section class="section-head" data-reveal>
+      <h2 class="section-title">In our customers' own words</h2>
+      <p class="section-sub">Common questions about how we work, with answers backed by real Google reviews.</p>
+    </section>
+
     <div class="faqs">
       {faqs.map((f) => (
         <article class="faq" data-reveal>
-          <h2>{f.q}</h2>
+          <h3>{f.q}</h3>
           <p class="answer">{f.answer}</p>
           <ul class="quotes">
             {f.quotes.map((q) => (
@@ -76,7 +101,15 @@ const schemaItems = faqs.map((f) => ({
   h1 { font-size: clamp(2rem, 4.5vw, 2.8rem); margin: 0 0 0.85rem; line-height: 1.15; }
   .lede { color: var(--muted); font-size: 1.05rem; max-width: 60ch; margin: 0 auto; }
 
-  .faqs { display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 4rem; }
+  .section-head { margin: 2.5rem 0 1.25rem; text-align: center; }
+  .section-title {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    margin: 0 0 0.4rem;
+    color: var(--green-dark);
+  }
+  .section-sub { color: var(--muted); margin: 0; max-width: 60ch; margin-left: auto; margin-right: auto; }
+
+  .faqs { display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 2rem; }
   .faq {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -85,8 +118,9 @@ const schemaItems = faqs.map((f) => ({
     transition: border-color 0.25s ease;
   }
   .faq:hover { border-color: var(--border-strong); }
-  .faq h2 {
-    font-size: 1.3rem;
+  .faq.direct { background: var(--surface-2); }
+  .faq h3 {
+    font-size: 1.2rem;
     margin: 0 0 0.65rem;
     color: var(--green-dark);
   }
