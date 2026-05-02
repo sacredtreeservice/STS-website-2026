@@ -1,15 +1,36 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { safeFetch, sanityIsConfigured, urlFor } from '../../lib/sanity-helpers';
 
 const trail = [
   { name: 'Home', url: '/' },
   { name: 'Blog', url: '/blog/' },
 ];
 
-// Sanity wiring goes here. Until then, this is a clean stub so the route
-// exists, the nav works, and SEO indexing won't 404 on /blog/.
-const posts: { slug: string; title: string; excerpt: string; published: string }[] = [];
+type PostSummary = {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  excerpt: string;
+  publishedAt: string;
+  mainImage?: any;
+  author?: { name: string; isaCertified?: boolean };
+  categories?: { title: string }[];
+};
+
+const posts = await safeFetch<PostSummary[]>(
+  `*[_type == "post" && defined(slug.current)] | order(publishedAt desc) {
+    _id, title, slug, excerpt, publishedAt, mainImage,
+    author->{name, isaCertified},
+    categories[]->{title}
+  }`,
+  {},
+  []
+);
+
+const fmt = (iso: string) =>
+  new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
 
 <Base
@@ -25,26 +46,39 @@ const posts: { slug: string; title: string; excerpt: string; published: string }
       Florida — from the people climbing the trees.
     </p>
 
-    {posts.length === 0 ? (
+    {!sanityIsConfigured() ? (
       <div class="empty">
-        <p><strong>The blog is being wired up.</strong></p>
+        <p><strong>Sanity isn’t configured yet.</strong></p>
         <p>
-          Posts will live in <strong>Sanity</strong> and pull into this page
-          automatically. Configure your Sanity project, add the env vars, and
-          drop posts will show up here without code changes.
+          Set <code>PUBLIC_SANITY_PROJECT_ID</code> and <code>PUBLIC_SANITY_DATASET</code> in
+          <code>.env</code>, then visit <code>/studio</code> to start publishing.
+          See <code>SANITY_SETUP.md</code> for the full walkthrough.
         </p>
-        <p class="setup">
-          <em>Setup pending — see <code>SANITY_SETUP.md</code> in the repo.</em>
-        </p>
+      </div>
+    ) : posts.length === 0 ? (
+      <div class="empty">
+        <p><strong>No posts yet.</strong></p>
+        <p>Head to <a href="/studio">/studio</a> to write the first one — it’ll appear here automatically.</p>
       </div>
     ) : (
       <ul class="posts">
         {posts.map((p) => (
           <li>
-            <a href={`/blog/${p.slug}/`}>
-              <h2>{p.title}</h2>
-              <p>{p.excerpt}</p>
-              <time>{p.published}</time>
+            <a href={`/blog/${p.slug.current}/`}>
+              {p.mainImage && (
+                <img src={urlFor(p.mainImage).width(800).height(450).fit('crop').url()} alt={p.title} loading="lazy" />
+              )}
+              <div class="meta">
+                {p.categories && p.categories.length > 0 && (
+                  <span class="cat">{p.categories.map((c) => c.title).join(' · ')}</span>
+                )}
+                <h2>{p.title}</h2>
+                <p>{p.excerpt}</p>
+                <footer>
+                  {p.author && <span>{p.author.name}{p.author.isaCertified ? ' · ISA Certified Arborist' : ''}</span>}
+                  <time>{fmt(p.publishedAt)}</time>
+                </footer>
+              </div>
             </a>
           </li>
         ))}
@@ -69,18 +103,29 @@ const posts: { slug: string; title: string; excerpt: string; published: string }
     border-radius: 4px;
     font-size: 0.85em;
   }
-  .setup { margin-top: 0.6rem; }
-  .posts { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.25rem; }
+  .posts { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
   .posts a {
     display: block;
-    padding: 1.5rem;
     background: #fff;
     border: 1px solid rgba(0,0,0,0.06);
     border-radius: 12px;
     text-decoration: none;
     color: var(--ink);
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
   }
-  .posts h2 { font-size: 1.3rem; margin: 0 0 0.4rem; }
-  .posts p { color: var(--muted); margin: 0 0 0.5rem; }
-  .posts time { color: var(--muted); font-size: 0.85rem; }
+  .posts a:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(0,0,0,0.07); }
+  .posts img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+  .meta { padding: 1.25rem; }
+  .cat { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--green); font-weight: 700; }
+  .posts h2 { font-size: 1.3rem; margin: 0.4rem 0 0.5rem; }
+  .posts p { color: var(--muted); margin: 0 0 1rem; }
+  .meta footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--muted);
+    border-top: 1px solid rgba(0,0,0,0.06);
+    padding-top: 0.75rem;
+  }
 </style>

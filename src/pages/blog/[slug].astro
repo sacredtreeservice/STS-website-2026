@@ -1,0 +1,158 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { sanityClient } from 'sanity:client';
+import { sanityIsConfigured, urlFor } from '../../lib/sanity-helpers';
+import { toHTML } from '@portabletext/to-html';
+import { articleSchema } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  // Skip path generation if Sanity isn't configured — site still builds.
+  try {
+    const cfg = sanityClient.config();
+    if (!cfg.projectId || cfg.projectId === 'placeholder') return [];
+    const slugs: { slug: { current: string } }[] = await sanityClient.fetch(
+      `*[_type == "post" && defined(slug.current)]{slug}`
+    );
+    return slugs.map((s) => ({ params: { slug: s.slug.current } }));
+  } catch (err) {
+    console.warn('[sanity] getStaticPaths skipped:', (err as Error).message);
+    return [];
+  }
+}
+
+const { slug } = Astro.params;
+
+const post = await sanityClient
+  .fetch(
+    `*[_type == "post" && slug.current == $slug][0]{
+      _id, title, excerpt, publishedAt, _updatedAt, body, mainImage, seoTitle, seoDescription,
+      author->{name, role, image, isaCertified, bio},
+      categories[]->{title, slug}
+    }`,
+    { slug }
+  )
+  .catch(() => null);
+
+if (!post) {
+  return Astro.redirect('/blog/');
+}
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Blog', url: '/blog/' },
+  { name: post.title, url: `/blog/${slug}/` },
+];
+
+const fmt = (iso: string) =>
+  new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const bodyHtml = post.body ? toHTML(post.body, {
+  components: {
+    types: {
+      image: ({ value }: any) =>
+        `<figure><img src="${urlFor(value).width(1200).url()}" alt="${value.alt ?? ''}" loading="lazy" />${value.caption ? `<figcaption>${value.caption}</figcaption>` : ''}</figure>`,
+    },
+    marks: {
+      link: ({ children, value }: any) =>
+        `<a href="${value?.href ?? '#'}" rel="${(value?.href ?? '').startsWith('http') ? 'noopener nofollow' : ''}">${children}</a>`,
+    },
+  },
+}) : '';
+
+const jsonLd = articleSchema({
+  title: post.title,
+  description: post.seoDescription ?? post.excerpt,
+  url: `/blog/${slug}/`,
+  published: post.publishedAt,
+  modified: post._updatedAt,
+  author: post.author?.name,
+});
+---
+
+<Base
+  title={post.seoTitle ?? post.title}
+  description={post.seoDescription ?? post.excerpt}
+  ogImage={post.mainImage ? urlFor(post.mainImage).width(1200).height(630).fit('crop').url() : undefined}
+  breadcrumbs={trail}
+  jsonLd={jsonLd}
+>
+  <article class="post">
+    <div class="container narrow-post">
+      <Breadcrumbs trail={trail} />
+
+      <header>
+        {post.categories && post.categories.length > 0 && (
+          <p class="cats">{post.categories.map((c: any) => c.title).join(' · ')}</p>
+        )}
+        <h1>{post.title}</h1>
+        <p class="lede">{post.excerpt}</p>
+        <p class="byline">
+          {post.author && (
+            <>
+              <span>By <strong>{post.author.name}</strong>{post.author.role && <em> — {post.author.role}</em>}</span>
+              {post.author.isaCertified && <span class="badge">ISA Certified Arborist</span>}
+              <span class="sep">·</span>
+            </>
+          )}
+          <time>{fmt(post.publishedAt)}</time>
+        </p>
+      </header>
+
+      {post.mainImage && (
+        <img class="hero" src={urlFor(post.mainImage).width(1400).url()} alt={post.title} />
+      )}
+
+      <div class="body" set:html={bodyHtml} />
+
+      {post.author?.bio && (
+        <aside class="author-card">
+          {post.author.image && <img src={urlFor(post.author.image).width(120).height(120).fit('crop').url()} alt={post.author.name} />}
+          <div>
+            <strong>{post.author.name}</strong>
+            {post.author.role && <em>{post.author.role}</em>}
+            <p>{post.author.bio}</p>
+          </div>
+        </aside>
+      )}
+    </div>
+  </article>
+</Base>
+
+<style>
+  .narrow-post { max-width: 760px; }
+  .post header { margin: 1rem 0 2rem; }
+  .cats { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--green); font-weight: 700; margin: 0; }
+  h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0.4rem 0 0.6rem; }
+  .lede { color: var(--muted); font-size: 1.2rem; }
+  .byline { color: var(--muted); font-size: 0.9rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+  .byline em { font-style: normal; }
+  .badge { background: rgba(75, 112, 33, 0.12); color: var(--green-dark); padding: 0.15rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
+  .sep { opacity: 0.5; }
+  .hero { width: 100%; border-radius: 12px; margin: 1rem 0 2rem; }
+  .body { font-size: 1.1rem; line-height: 1.7; }
+  .body :global(h2) { font-size: 1.6rem; margin: 2.5rem 0 0.85rem; color: var(--green-dark); }
+  .body :global(h3) { font-size: 1.25rem; margin: 2rem 0 0.6rem; }
+  .body :global(p) { margin: 0 0 1.1rem; }
+  .body :global(figure) { margin: 1.5rem 0; }
+  .body :global(figure img) { width: 100%; border-radius: 8px; }
+  .body :global(figcaption) { color: var(--muted); font-size: 0.9rem; text-align: center; margin-top: 0.4rem; }
+  .body :global(ul), .body :global(ol) { margin: 0 0 1.1rem 1.2rem; }
+  .body :global(li) { margin-bottom: 0.4rem; }
+  .body :global(blockquote) { border-left: 3px solid var(--green); margin: 1.5rem 0; padding: 0.5rem 1rem; color: var(--muted); font-style: italic; }
+  .body :global(a) { color: var(--green-dark); text-decoration: underline; }
+  .author-card {
+    margin-top: 3rem;
+    padding: 1.5rem;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 12px;
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+  }
+  .author-card img { border-radius: 50%; flex-shrink: 0; }
+  .author-card strong { font-family: 'Marcellus', Georgia, serif; font-size: 1.1rem; color: var(--green-dark); display: block; }
+  .author-card em { font-style: normal; color: var(--muted); font-size: 0.9rem; }
+  .author-card p { margin: 0.5rem 0 0; color: var(--muted); font-size: 0.95rem; }
+</style>
