@@ -4,8 +4,8 @@ export const company = {
   tagline: 'Central Florida tree care, done right.',
   founded: '2023-01-13',
   owner: 'Alexander Satoski',
-  phone: '(407) 452-8779',
-  phoneHref: 'tel:+14074528779',
+  phone: '(321) 204-8459',
+  phoneHref: 'tel:+13212048459',
   email: 'sacredtreeservice@gmail.com',
   address: {
     street: '7421 Grovewood Court',
