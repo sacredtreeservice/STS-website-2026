@@ -1,50 +1,62 @@
 ---
 import { Icon } from 'astro-icon/components';
-import { testimonials } from '../data/testimonials';
+import { featuredTestimonials, testimonials } from '../data/testimonials';
 
-const fmt = (iso: string) => {
-  try {
-    return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
-  } catch {
-    return iso;
-  }
-};
+export interface Props {
+  /** "home" shows the 6 featured reviews; "all" shows everything. */
+  variant?: 'home' | 'all';
+  heading?: string;
+  sub?: string;
+}
+
+const { variant = 'home', heading, sub } = Astro.props;
+const list = variant === 'all' ? testimonials : featuredTestimonials;
+const totalCount = testimonials.length;
+
+const defaultHeading = variant === 'all' ? 'What our neighbors say' : 'The kind of work people remember.';
+const defaultSub =
+  variant === 'all'
+    ? `Real Google reviews from across Central Florida.`
+    : `A few words from neighbors across Central Florida.`;
 ---
 
 <section class="reviews">
   <div class="container">
     <header class="head" data-reveal>
-      <span class="kicker">What folks say</span>
-      <h2>The kind of work people remember.</h2>
-      <p class="sub">A few words from neighbors across Central Florida.</p>
+      <span class="kicker">5★ on Google</span>
+      <h2>{heading ?? defaultHeading}</h2>
+      <p class="sub">{sub ?? defaultSub}</p>
     </header>
 
     <ul class="grid" data-reveal data-reveal-stagger>
-      {testimonials.map((t) => (
+      {list.map((t) => (
         <li class="card">
-          <div class="stars" aria-label={`${t.rating} out of 5 stars`}>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Icon name={i < t.rating ? 'lucide:star' : 'lucide:star'} class:list={[i < t.rating ? 'on' : 'off']} />
-            ))}
+          <div class="row">
+            <div class="stars" aria-label={`${t.rating} out of 5 stars`}>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Icon name="lucide:star" class:list={[i < t.rating ? 'on' : 'off']} />
+              ))}
+            </div>
+            <span class="src">
+              <Icon name="lucide:badge-check" /> {t.source}
+            </span>
           </div>
           <blockquote>“{t.quote}”</blockquote>
           <footer>
-            <div class="who">
-              <strong>{t.name}</strong>
-              <em>{t.location}</em>
-            </div>
-            <div class="src">
-              <span class="badge">
-                <Icon name={t.source === 'Google' ? 'lucide:badge-check' : 'lucide:thumbs-up'} />
-                {t.source}
-              </span>
-              <time>{fmt(t.date)}</time>
-            </div>
+            <strong>— {t.name}</strong>
+            <span class="topic">{t.topic}</span>
           </footer>
-          {t.job && <span class="job">{t.job}</span>}
         </li>
       ))}
     </ul>
+
+    {variant === 'home' && (
+      <div class="more-link" data-reveal>
+        <a class="btn ghost" href="/reviews/">
+          Read all {totalCount} reviews <Icon name="lucide:arrow-right" />
+        </a>
+      </div>
+    )}
   </div>
 </section>
 
@@ -68,75 +80,78 @@ const fmt = (iso: string) => {
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1.25rem;
   }
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 16px;
-    padding: 1.5rem 1.5rem 1.25rem;
+    padding: 1.5rem;
     box-shadow: var(--shadow-sm);
     display: flex;
     flex-direction: column;
     gap: 0.85rem;
-    position: relative;
-    transition: transform 0.25s var(--easing), box-shadow 0.25s ease;
+    transition: transform 0.25s var(--easing), box-shadow 0.25s ease, border-color 0.2s ease;
   }
-  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
-  .stars { display: flex; gap: 2px; color: #f5b94a; }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-strong);
+  }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .stars { display: flex; gap: 2px; }
   .stars [data-icon] { width: 16px; height: 16px; }
-  .stars .on { fill: #f5b94a; }
-  .stars .off { color: var(--border); fill: transparent; }
+  .stars .on { color: #f5b94a; fill: #f5b94a; }
+  .stars .off { color: var(--border-strong); fill: transparent; }
+  .src {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--green-dark);
+    background: var(--green-tint);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+  }
+  .src [data-icon] { width: 12px; height: 12px; }
+
   blockquote {
     margin: 0;
     font-size: 0.98rem;
-    line-height: 1.55;
+    line-height: 1.6;
     color: var(--ink-soft);
+    flex: 1;
   }
   footer {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
-    gap: 1rem;
+    align-items: center;
+    gap: 0.75rem;
     padding-top: 0.85rem;
     border-top: 1px solid var(--border);
     flex-wrap: wrap;
   }
-  .who strong { display: block; font-weight: 700; color: var(--ink); }
-  .who em {
-    font-style: normal;
-    font-size: 0.85rem;
+  footer strong { font-weight: 700; color: var(--ink); font-size: 0.95rem; }
+  .topic {
+    font-size: 0.72rem;
     color: var(--muted);
-  }
-  .src {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.25rem;
-    font-size: 0.75rem;
-    color: var(--muted);
-  }
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    background: var(--green-tint);
-    color: var(--green-dark);
-    padding: 0.2rem 0.6rem;
-    border-radius: 999px;
-    font-weight: 700;
-  }
-  .badge [data-icon] { width: 12px; height: 12px; }
-  .job {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    font-size: 0.7rem;
     background: var(--paper-2);
-    color: var(--muted);
-    padding: 0.15rem 0.55rem;
-    border-radius: 999px;
     border: 1px solid var(--border);
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
+
+  .more-link { text-align: center; margin-top: 2.5rem; }
+  .more-link .btn { display: inline-flex; gap: 0.4rem; }
+  .more-link .btn [data-icon] { width: 16px; height: 16px; transition: transform 0.2s var(--easing); }
+  .more-link .btn:hover [data-icon] { transform: translateX(3px); }
 </style>

@@ -1,0 +1,133 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { faqs } from '../../data/faqs';
+import { faqSchema } from '../../lib/schema';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'FAQ', url: '/faq/' },
+];
+
+// Build FAQPage schema with a synthesized answer that includes a representative customer quote.
+const schemaItems = faqs.map((f) => ({
+  q: f.q,
+  a: `${f.answer} Customer review: "${f.quotes[0].quote}" — ${f.quotes[0].name}.`,
+}));
+---
+
+<Base
+  title="Frequently Asked Questions — Sacred Tree Service"
+  description="Real answers to common tree service questions, backed by Google reviews from Central Florida customers — pricing, scheduling, oak care, palms, emergencies, and more."
+  breadcrumbs={trail}
+  jsonLd={faqSchema(schemaItems)}
+>
+  <div class="container narrow">
+    <Breadcrumbs trail={trail} />
+    <header class="head" data-reveal>
+      <span class="kicker">Frequently asked</span>
+      <h1>Honest answers, in our customers' own words.</h1>
+      <p class="lede">
+        Every answer below is backed by a real Google review. We're proud of how
+        our customers describe us — so we're letting them do most of the talking.
+      </p>
+    </header>
+
+    <div class="faqs">
+      {faqs.map((f) => (
+        <article class="faq" data-reveal>
+          <h2>{f.q}</h2>
+          <p class="answer">{f.answer}</p>
+          <ul class="quotes">
+            {f.quotes.map((q) => (
+              <li>
+                <Icon name="lucide:quote" />
+                <div>
+                  <p>"{q.quote}"</p>
+                  <cite>— {q.name}</cite>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <CtaBand
+    heading="Have a question we didn't cover?"
+    subheading="Reach out — we'd rather give you a real answer than have you guess."
+  />
+</Base>
+
+<style>
+  .head { text-align: center; margin: 2rem auto 3rem; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  h1 { font-size: clamp(2rem, 4.5vw, 2.8rem); margin: 0 0 0.85rem; line-height: 1.15; }
+  .lede { color: var(--muted); font-size: 1.05rem; max-width: 60ch; margin: 0 auto; }
+
+  .faqs { display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 4rem; }
+  .faq {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem 1.85rem;
+    transition: border-color 0.25s ease;
+  }
+  .faq:hover { border-color: var(--border-strong); }
+  .faq h2 {
+    font-size: 1.3rem;
+    margin: 0 0 0.65rem;
+    color: var(--green-dark);
+  }
+  .faq .answer {
+    margin: 0 0 1.1rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .quotes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .quotes li {
+    display: flex;
+    gap: 0.8rem;
+    background: var(--paper-2);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    border-left: 3px solid var(--green);
+  }
+  .quotes [data-icon] {
+    width: 16px;
+    height: 16px;
+    color: var(--green);
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+  }
+  .quotes p {
+    margin: 0 0 0.25rem;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .quotes cite {
+    font-style: normal;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+</style>

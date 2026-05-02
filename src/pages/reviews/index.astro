@@ -1,0 +1,100 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Testimonials from '../../components/Testimonials.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { testimonials } from '../../data/testimonials';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Reviews', url: '/reviews/' },
+];
+
+const total = testimonials.length;
+const avg = (testimonials.reduce((s, t) => s + t.rating, 0) / total).toFixed(1);
+
+// Aggregate rating schema → highlights in Google rich results when wired with
+// LocalBusiness elsewhere.
+const aggregateRatingLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': 'https://sacredtreeservice.com#business',
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: avg,
+    reviewCount: total,
+    bestRating: 5,
+    worstRating: 1,
+  },
+  review: testimonials.map((t) => ({
+    '@type': 'Review',
+    reviewRating: { '@type': 'Rating', ratingValue: t.rating, bestRating: 5 },
+    author: { '@type': 'Person', name: t.name },
+    reviewBody: t.quote,
+    publisher: { '@type': 'Organization', name: t.source },
+  })),
+};
+---
+
+<Base
+  title={`Reviews — ${avg}★ from ${total}+ Google Reviews`}
+  description="Real Google reviews of Sacred Tree Service from customers across Central Florida — tree removal, pruning, palm care, emergency response, and more."
+  breadcrumbs={trail}
+  jsonLd={aggregateRatingLd}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+    <header class="head" data-reveal>
+      <span class="kicker">Customer reviews</span>
+      <h1>What our neighbors say</h1>
+      <div class="agg">
+        <span class="stars" aria-label={`${avg} out of 5 stars average`}>
+          {Array.from({ length: 5 }).map(() => <Icon name="lucide:star" class:list={['on']} />)}
+        </span>
+        <strong>{avg}</strong>
+        <span class="sub">average from <strong>{total}+</strong> Google reviews</span>
+      </div>
+      <p class="lede">
+        Every quote on this page is a real review from a real Central Florida
+        customer. We didn't write any of these. We just tried our best on each job.
+      </p>
+    </header>
+  </div>
+
+  <Testimonials variant="all" heading="Every review, in their words" sub="Tap a card to read the full review on the next visit." />
+
+  <CtaBand
+    heading="Want to be the next one?"
+    subheading="Free in-person estimates, real arborists, no high-pressure sales — just honest tree care."
+  />
+</Base>
+
+<style>
+  .head { text-align: center; max-width: 60ch; margin: 2rem auto 3rem; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  h1 { font-size: clamp(2.2rem, 5vw, 3rem); margin: 0 0 1rem; }
+  .agg {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    padding: 0.6rem 1.1rem;
+    border-radius: 999px;
+    margin-bottom: 1rem;
+  }
+  .agg strong { font-size: 1.4rem; color: var(--green-dark); font-family: 'Marcellus', Georgia, serif; }
+  .agg .sub { color: var(--muted); font-size: 0.9rem; }
+  .stars { display: inline-flex; gap: 2px; color: #f5b94a; }
+  .stars [data-icon] { width: 16px; height: 16px; fill: #f5b94a; }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0 auto; }
+</style>
