@@ -1,0 +1,568 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { Icon } from 'astro-icon/components';
+import { company } from '../data/company';
+
+// TODO: paste your Web3Forms access key here once you've signed up at
+// https://web3forms.com (free tier — 250 submissions/month). The key is a
+// public token by design (the form is exposed to the browser), so it's safe
+// to commit. Until this is set, submissions will fail with "Invalid Access Key".
+const WEB3FORMS_ACCESS_KEY = 'YOUR_WEB3FORMS_ACCESS_KEY';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Careers', url: '/careers/' },
+];
+
+const reasons = [
+  {
+    icon: 'lucide:trees',
+    title: 'Real arborists, real work',
+    body: 'You’ll work alongside ISA Certified Arborists doing tree care the right way — ANSI A300 pruning, careful rigging, no slash-and-burn jobs.',
+  },
+  {
+    icon: 'lucide:badge-check',
+    title: 'Grow into the cert',
+    body: 'New to the trade? We’ll back you toward ISA certification, TRAQ, and CDL endorsements. Come hungry, leave credentialed.',
+  },
+  {
+    icon: 'lucide:hard-hat',
+    title: 'Modern gear, safe crews',
+    body: 'Sharp saws, sound rope, working PPE, and Z133-trained foremen. We don’t cut corners on the things that keep people alive.',
+  },
+  {
+    icon: 'lucide:heart-handshake',
+    title: 'Honest pay, honest hours',
+    body: 'Fair wages, on-time pay, workers’ comp, and the kind of crew you actually want to ride with at 6am.',
+  },
+];
+
+const interestOptions = [
+  'Climber / aerial arborist',
+  'Ground crew / groundsperson',
+  'Crew lead / foreman',
+  'Sales / Estimator',
+  'Plant health care',
+  'Open to anything',
+];
+
+const heightLevels = [
+  { value: 'ground', label: 'Ground only — I’ll keep the chipper humming' },
+  { value: 'bucket', label: 'Bucket truck — comfortable working aloft on a platform' },
+  { value: 'climber', label: 'Climber — comfortable on rope and saddle' },
+  { value: 'any-tree', label: 'Anywhere, any tree — pines, oaks, palms, you name it' },
+];
+
+const credentialOptions = [
+  'ISA Certified Arborist',
+  'ISA TRAQ',
+  'TCIA CTSP',
+  'CDL Class A',
+  'CDL Class B',
+  'Working toward certification',
+  'None yet — eager to learn',
+];
+---
+
+<Base
+  title="Careers — Sacred Tree Service"
+  description="Apply to join Sacred Tree Service in Central Florida. Climbers, ground crew, crew leads, and estimators welcome. Real arborists, real work, honest pay."
+  breadcrumbs={trail}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head" data-reveal>
+      <span class="kicker">Careers</span>
+      <h1>Put down roots with Sacred Tree.</h1>
+      <p class="lede">
+        We’re a small, credentialed Central Florida tree care crew — and we
+        always have an eye out for tree people who care about the work. If
+        that sounds like you, tell us about yourself.
+      </p>
+    </header>
+
+    <section class="why" aria-labelledby="why-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">Why join us</span>
+        <h2 id="why-heading">Tree work, done the right way.</h2>
+      </header>
+      <div class="grid" data-reveal data-reveal-stagger>
+        {reasons.map((r) => (
+          <article class="tile">
+            <span class="ico"><Icon name={r.icon} /></span>
+            <h3>{r.title}</h3>
+            <p>{r.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="canopy" aria-labelledby="canopy-heading" data-reveal>
+      <header class="section-head">
+        <span class="kicker">A day in the canopy</span>
+        <h2 id="canopy-heading">What the work actually looks like.</h2>
+      </header>
+      <div class="prose">
+        <p>
+          Most days start early — 6:30 in the yard, gear loaded, coffee in
+          hand. We run two to three jobs a day across Orange, Seminole, Lake,
+          and surrounding counties. The work is real: pruning live oaks to
+          ANSI A300, taking down storm-damaged pines, rigging limbs over
+          screened pools, and replanting where it makes sense.
+        </p>
+        <p>
+          It’s physical. Florida weather doesn’t pull punches. But you’ll
+          finish the day knowing you did the tree, the homeowner, and the
+          crew right — and that’s the bar we hold ourselves to.
+        </p>
+      </div>
+    </section>
+
+    <section class="apply" aria-labelledby="apply-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">Apply</span>
+        <h2 id="apply-heading">Tell us about yourself.</h2>
+        <p>Takes about three minutes. We read every one.</p>
+      </header>
+
+      <form
+        id="careers-form"
+        class="apply-form"
+        data-reveal
+        novalidate
+        data-access-key={WEB3FORMS_ACCESS_KEY}
+      >
+        <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
+        <input type="hidden" name="subject" value="New application — Sacred Tree careers" />
+        <input type="hidden" name="from_name" value="Sacred Tree careers form" />
+        <input type="checkbox" name="botcheck" class="botcheck" tabindex="-1" autocomplete="off" />
+
+        <div class="row two">
+          <label class="field">
+            <span class="label">Your name <em>*</em></span>
+            <input type="text" name="name" required autocomplete="name" />
+          </label>
+          <label class="field">
+            <span class="label">Phone <em>*</em></span>
+            <input type="tel" name="phone" required autocomplete="tel" placeholder="(321) 555-0123" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span class="label">Email <em>*</em></span>
+          <input type="email" name="email" required autocomplete="email" />
+        </label>
+
+        <fieldset class="field">
+          <legend class="label">What kind of work interests you? <em>*</em></legend>
+          <p class="hint">Tick every one that fits — overlap is normal.</p>
+          <div class="checks">
+            {interestOptions.map((opt) => (
+              <label class="check">
+                <input type="checkbox" name="interests" value={opt} />
+                <span>{opt}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <div class="row two">
+          <label class="field">
+            <span class="label">Years in the trade <em>*</em></span>
+            <input
+              type="text"
+              name="years_in_trade"
+              required
+              placeholder="e.g. 3 years, or just starting out"
+            />
+          </label>
+          <div class="field">
+            <span class="label">Comfort with heights <em>*</em></span>
+            <div class="radios">
+              {heightLevels.map((lvl) => (
+                <label class="radio">
+                  <input type="radio" name="comfort_with_heights" value={lvl.value} required />
+                  <span>{lvl.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <fieldset class="field">
+          <legend class="label">Certifications &amp; licenses</legend>
+          <p class="hint">Held, in progress, or working toward — pick whatever fits.</p>
+          <div class="checks">
+            {credentialOptions.map((opt) => (
+              <label class="check">
+                <input type="checkbox" name="credentials" value={opt} />
+                <span>{opt}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <label class="field">
+          <span class="label">What tree would you climb on your day off — and why?</span>
+          <p class="hint">Optional, but we read these. Tells us a lot.</p>
+          <textarea name="favorite_tree" rows="3" placeholder="The 80ft live oak by my parents’ place — I learned to climb in it…"></textarea>
+        </label>
+
+        <label class="field">
+          <span class="label">Resume / portfolio link</span>
+          <p class="hint">LinkedIn, Google Drive, Instagram, anywhere we can see your work.</p>
+          <input type="url" name="portfolio_link" placeholder="https://" />
+        </label>
+
+        <label class="field">
+          <span class="label">Anything else we should know?</span>
+          <textarea name="notes" rows="3"></textarea>
+        </label>
+
+        <div class="actions">
+          <button type="submit" class="btn primary large" data-submit>
+            <Icon name="lucide:send" /> <span data-submit-label>Send application</span>
+          </button>
+          <p class="fallback">
+            Or email <a href={`mailto:${company.email}?subject=Job%20application`}>{company.email}</a>
+            — we’ll see it either way.
+          </p>
+        </div>
+
+        <p class="form-error" data-form-error hidden role="alert"></p>
+      </form>
+
+      <div class="success" data-form-success hidden>
+        <span class="success-ico"><Icon name="lucide:sprout" /></span>
+        <h3>Thanks — your application is in.</h3>
+        <p>
+          We read every one personally. Expect to hear back within a week. In
+          the meantime, climb safe.
+        </p>
+        <a class="btn ghost" href="/">Back to home</a>
+      </div>
+    </section>
+  </div>
+
+  <CtaBand
+    heading="Not the right fit today?"
+    subheading="Stay rooted with us — give us a call or send a note any time. The trade is small; we remember names."
+  />
+</Base>
+
+<script>
+  const setup = () => {
+    const form = document.getElementById('careers-form') as HTMLFormElement | null;
+    if (!form || form.dataset.bound === '1') return;
+    form.dataset.bound = '1';
+
+    const submitBtn = form.querySelector<HTMLButtonElement>('[data-submit]');
+    const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]');
+    const errorEl = form.querySelector<HTMLElement>('[data-form-error]');
+    const successEl = document.querySelector<HTMLElement>('[data-form-success]');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!submitBtn || !submitLabel || !errorEl || !successEl) return;
+
+      // Honeypot — Web3Forms also enforces this server-side, but bail early.
+      const botcheck = form.querySelector<HTMLInputElement>('input[name="botcheck"]');
+      if (botcheck && botcheck.checked) return;
+
+      // Native validation pass first.
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      errorEl.hidden = true;
+      errorEl.textContent = '';
+      submitBtn.disabled = true;
+      const originalLabel = submitLabel.textContent;
+      submitLabel.textContent = 'Sending…';
+
+      // Build a JSON payload, collapsing multi-value checkboxes into arrays.
+      const fd = new FormData(form);
+      const payload: Record<string, unknown> = {};
+      for (const key of new Set(fd.keys())) {
+        const all = fd.getAll(key);
+        payload[key] = all.length > 1 ? all : all[0];
+      }
+
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && (data.success === true || data.success === undefined)) {
+          form.hidden = true;
+          successEl.hidden = false;
+          successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+        throw new Error(data?.message || 'Submission failed');
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Submission failed';
+        errorEl.textContent = `Couldn’t send — ${msg}. Try again, or email us directly.`;
+        errorEl.hidden = false;
+        submitBtn.disabled = false;
+        submitLabel.textContent = originalLabel ?? 'Send application';
+      }
+    });
+  };
+
+  setup();
+  document.addEventListener('astro:page-load', setup);
+</script>
+
+<style>
+  .head {
+    text-align: center;
+    max-width: 60ch;
+    margin: 1rem auto 3rem;
+  }
+  .head h1 {
+    font-size: clamp(2rem, 4.5vw, 2.8rem);
+    margin: 0.4rem 0 0.6rem;
+  }
+  .lede { color: var(--muted); font-size: 1.15rem; margin: 0; }
+
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  .section-head {
+    text-align: center;
+    max-width: 60ch;
+    margin: 0 auto 2.25rem;
+  }
+  .section-head h2 {
+    font-size: clamp(1.6rem, 3.2vw, 2.1rem);
+    margin: 0.4rem 0 0.4rem;
+  }
+  .section-head p { color: var(--muted); margin: 0; }
+
+  /* Why join — tiles modeled on WhyUs.astro */
+  .why { padding: 4rem 0 3rem; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+  .tile {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: transform 0.25s var(--easing), border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .tile:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+  }
+  .ico {
+    display: inline-grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--green-tint), color-mix(in srgb, var(--teal) 18%, transparent));
+    color: var(--green-dark);
+    margin-bottom: 0.85rem;
+  }
+  .ico [data-icon] { width: 24px; height: 24px; }
+  .tile h3 { font-size: 1.05rem; margin: 0 0 0.3rem; }
+  .tile p { color: var(--muted); margin: 0; font-size: 0.93rem; line-height: 1.55; }
+
+  @media (max-width: 980px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .grid { grid-template-columns: 1fr; } }
+
+  /* Day in the canopy */
+  .canopy { padding: 3rem 0; max-width: 760px; margin: 0 auto; }
+  .prose p {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    margin: 0 0 1rem;
+  }
+
+  /* Application form */
+  .apply { padding: 3rem 0 5rem; }
+  .apply-form {
+    max-width: 720px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 2rem;
+    display: grid;
+    gap: 1.4rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .row.two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  .field { display: block; border: 0; padding: 0; margin: 0; }
+  .field .label,
+  .field legend.label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+    padding: 0;
+  }
+  .field .label em {
+    color: var(--green);
+    font-style: normal;
+    margin-left: 0.15rem;
+  }
+  .hint {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin: -0.2rem 0 0.6rem;
+  }
+  .field input[type='text'],
+  .field input[type='email'],
+  .field input[type='tel'],
+  .field input[type='url'],
+  .field textarea {
+    width: 100%;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-2);
+    color: var(--ink);
+    border-radius: 10px;
+    padding: 0.75rem 0.9rem;
+    font: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .field textarea { resize: vertical; min-height: 90px; }
+  .field input:focus,
+  .field textarea:focus {
+    outline: 0;
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px var(--green-tint);
+    background: var(--surface);
+  }
+
+  .checks,
+  .radios {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .checks { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 600px) { .checks { grid-template-columns: 1fr; } }
+
+  .check,
+  .radio {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-2);
+    cursor: pointer;
+    font-size: 0.93rem;
+    line-height: 1.4;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .check:hover,
+  .radio:hover {
+    border-color: var(--border-strong);
+    background: var(--green-tint);
+  }
+  .check input,
+  .radio input {
+    accent-color: var(--green);
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+  }
+
+  /* Honeypot — visually hidden, off-screen, but still checkable by bots */
+  .botcheck {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+  .actions .btn { justify-content: center; }
+  .actions .btn [data-icon] { width: 18px; height: 18px; }
+  .fallback {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+  .fallback a { color: var(--green-dark); }
+
+  .form-error {
+    color: var(--warning);
+    background: color-mix(in srgb, var(--warning) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--warning) 30%, transparent);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  /* Success state */
+  .success {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 3rem 2rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .success-ico {
+    display: inline-grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 999px;
+    background: var(--green-tint);
+    color: var(--green-dark);
+    margin-bottom: 1rem;
+  }
+  .success-ico [data-icon] { width: 32px; height: 32px; }
+  .success h3 {
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem;
+  }
+  .success p {
+    color: var(--muted);
+    max-width: 50ch;
+    margin: 0 auto 1.5rem;
+  }
+
+  @media (max-width: 600px) {
+    .row.two { grid-template-columns: 1fr; }
+    .apply-form { padding: 1.5rem; }
+  }
+</style>
