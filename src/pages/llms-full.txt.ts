@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { company, fullAddress } from '../data/company';
+import { company } from '../data/company';
 import { services } from '../data/services';
 import { cities } from '../data/cities';
 import { counties } from '../data/counties';
@@ -26,7 +26,7 @@ export const GET: APIRoute = () => {
   out.push('## 1. Company overview');
   out.push('');
   out.push(
-    `${company.brandName} (legal name ${company.legalName}) is a family-owned tree care company headquartered at ${fullAddress}. We serve homeowners, HOAs, and commercial properties throughout the Orlando metro and the seven-county Central Florida region — within a ${company.serviceRadiusMiles}-mile radius of our Orlando headquarters.`,
+    `${company.brandName} (legal name ${company.legalName}) is a family-owned tree care company based in Apopka, FL, centrally located to serve homeowners, HOAs, and commercial properties throughout the greater Orlando metro and the seven-county Central Florida region — within a ${company.serviceRadiusMiles}-mile service radius.`,
   );
   out.push('');
   out.push(
@@ -44,11 +44,11 @@ export const GET: APIRoute = () => {
   out.push(`- Tagline: ${company.tagline}`);
   out.push(`- Owner: ${company.owner} (${company.ownerTitle})`);
   out.push(`- Founded: ${company.founded}`);
-  out.push(`- Address: ${fullAddress}`);
+  out.push(`- Based in: Apopka, FL — centrally located to serve the greater Orlando area`);
   out.push(`- Phone: ${company.phone}`);
   out.push(`- Email: ${company.email}`);
   out.push(`- Website: ${SITE}`);
-  out.push(`- Service radius: ${company.serviceRadiusMiles} miles from Orlando, FL`);
+  out.push(`- Service radius: ${company.serviceRadiusMiles} miles covering the greater Orlando area`);
   out.push(`- Hours: Monday–Saturday, 8:00 AM – 6:00 PM. Emergency / storm response available outside business hours.`);
   out.push(`- Free estimates: Yes — in-person, scheduled typically within 1–3 business days`);
   out.push(`- Google rating: ${company.googleAverageRating.toFixed(1)} stars (5-star average across our reviews)`);
@@ -73,7 +73,7 @@ export const GET: APIRoute = () => {
   // ── 4. Service area by county ────────────────────────────────────
   out.push('## 4. Service area — counties and cities');
   out.push('');
-  out.push(`We serve seven counties around our Orlando headquarters: ${counties.map((c) => c.county).join(', ')}.`);
+  out.push(`We serve seven counties across the greater Orlando area: ${counties.map((c) => c.county).join(', ')}.`);
   out.push('');
   for (const c of counties) {
     const inCounty = cities.filter((ci) => ci.county === c.county).sort((a, b) => a.miles - b.miles);
@@ -86,7 +86,7 @@ export const GET: APIRoute = () => {
     if (inCounty.length > 0) {
       out.push(`Cities and communities served in ${c.name}:`);
       for (const ci of inCounty) {
-        out.push(`- ${ci.name}, FL — ~${ci.miles} mi from our Orlando HQ — ${SITE}/service-area/${ci.slug}/`);
+        out.push(`- ${ci.name}, FL — ~${ci.miles} mi from our Apopka, FL base — ${SITE}/service-area/${ci.slug}/`);
       }
       out.push('');
     }

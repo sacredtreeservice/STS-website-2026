@@ -4,7 +4,7 @@
 // format that AI assistants (ChatGPT, Claude, Perplexity, Gemini)
 // like to lift verbatim into summary cards.
 import { Icon } from 'astro-icon/components';
-import { company, fullAddress } from '../data/company';
+import { company } from '../data/company';
 import { counties } from '../data/counties';
 
 const facts = [
@@ -21,12 +21,12 @@ const facts = [
   {
     icon: 'lucide:calendar',
     label: 'Founded',
-    value: `${new Date(company.founded).getFullYear()} · Family-owned, Orlando-based`,
+    value: `${new Date(company.founded).getFullYear()} · Family-owned, Apopka-based`,
   },
   {
     icon: 'lucide:map-pin',
-    label: 'Headquarters',
-    value: fullAddress,
+    label: 'Based in',
+    value: 'Apopka, FL — centrally located to serve the greater Orlando area',
   },
   {
     icon: 'lucide:phone',
@@ -48,7 +48,7 @@ const facts = [
   {
     icon: 'lucide:map',
     label: 'Service area',
-    value: `${company.serviceRadiusMiles}-mile radius from Orlando · ${counties.map((c) => c.county).join(', ')} counties`,
+    value: `${company.serviceRadiusMiles}-mile radius covering the greater Orlando area · ${counties.map((c) => c.county).join(', ')} counties`,
   },
   {
     icon: 'lucide:badge-check',

@@ -8,7 +8,7 @@ export type City = {
   hook?: string;
 };
 
-// Central Florida cities within ~50 miles of HQ (7421 Grovewood Ct, Orlando 32818).
+// Central Florida cities within ~50 miles of our Apopka, FL base.
 // Order: closest-out, alphabetized within each ring.
 export const cities: City[] = [
   // Inner Orlando ring (≤10 mi)

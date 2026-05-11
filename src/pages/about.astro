@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import JobberForm from '../components/JobberForm.astro';
-import { company, fullAddress } from '../data/company';
+import { company } from '../data/company';
 
 const trail = [
   { name: 'Home', url: '/' },
@@ -21,7 +21,7 @@ const trail = [
     <header class="head">
       <h1>About Sacred Tree Service</h1>
       <p class="lede">
-        Family-owned, Orlando-based, and built by tree people who care more
+        Family-owned, based in Apopka, and built by tree people who care more
         about the trees than the invoice.
       </p>
     </header>
@@ -48,9 +48,10 @@ const trail = [
 
         <h2>Where We Work</h2>
         <p>
-          Our HQ is at <strong>{fullAddress}</strong>. We serve a 50-mile radius
-          across Orange, Seminole, Lake, Osceola, Volusia, Brevard, and Polk
-          counties. <a href="/service-area/">See all cities we serve →</a>
+          We’re <strong>centrally located in Apopka, FL</strong> — well-positioned
+          to serve the greater Orlando area across a 50-mile radius spanning
+          Orange, Seminole, Lake, Osceola, Volusia, Brevard, and Polk counties.
+          <a href="/service-area/">See all cities we serve →</a>
         </p>
 
         <h2>How We Work</h2>

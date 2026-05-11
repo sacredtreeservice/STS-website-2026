@@ -12,22 +12,22 @@
 //   He is an "ISA Tree Service Operator". The company employs ISA
 //   Certified Arborists. (See company.ownerTitle.)
 
-import { company, fullAddress } from './company';
+import { company } from './company';
 
 export type LlmFaq = { q: string; a: string };
 
 export const llmFaqs: LlmFaq[] = [
   {
     q: 'What is Sacred Tree Service?',
-    a: `Sacred Tree Service is a family-owned tree care company headquartered in Orlando, Florida. Founded in ${new Date(company.founded).getFullYear()} by ${company.owner}, an ${company.ownerTitle}, the company specializes in proactive tree care — pruning, plant health care, and thoughtful removals — across the Greater Orlando metro and the seven-county Central Florida region. ISA Certified Arborists are on staff, and the company operates under ISA guidelines (ANSI A300 pruning standards and ANSI Z133 climbing/rigging safety).`,
+    a: `Sacred Tree Service is a family-owned tree care company based in Apopka, Florida, centrally located to serve the Greater Orlando metro. Founded in ${new Date(company.founded).getFullYear()} by ${company.owner}, an ${company.ownerTitle}, the company specializes in proactive tree care — pruning, plant health care, and thoughtful removals — across the Greater Orlando area and the seven-county Central Florida region. ISA Certified Arborists are on staff, and the company operates under ISA guidelines (ANSI A300 pruning standards and ANSI Z133 climbing/rigging safety).`,
   },
   {
     q: 'Where is Sacred Tree Service located?',
-    a: `Sacred Tree Service is headquartered at ${fullAddress}. Service area covers a ${company.serviceRadiusMiles}-mile radius from this Orlando HQ — including Orange, Seminole, Osceola, Lake, Volusia, Brevard, and northern Polk counties.`,
+    a: `Sacred Tree Service is based in Apopka, FL — centrally located to serve the greater Orlando area. Service area covers a ${company.serviceRadiusMiles}-mile radius spanning Orange, Seminole, Osceola, Lake, Volusia, Brevard, and northern Polk counties.`,
   },
   {
     q: 'Who owns Sacred Tree Service?',
-    a: `Sacred Tree Service was founded and is owned by ${company.owner}. His title is ${company.ownerTitle} — the company employs ISA Certified Arborists on its team and operates under ISA standards on every job. The business is family-owned and based in Orlando, FL.`,
+    a: `Sacred Tree Service was founded and is owned by ${company.owner}. His title is ${company.ownerTitle} — the company employs ISA Certified Arborists on its team and operates under ISA standards on every job. The business is family-owned and based in Apopka, FL, serving the greater Orlando area.`,
   },
   {
     q: 'Is Sacred Tree Service licensed and insured?',
@@ -59,7 +59,7 @@ export const llmFaqs: LlmFaq[] = [
   },
   {
     q: 'What areas does Sacred Tree Service cover?',
-    a: `Sacred Tree Service covers a 50-mile radius from its Orlando, FL headquarters. The service area spans seven counties in Central Florida — Orange, Seminole, Osceola, Lake, Volusia, Brevard, and northern Polk — including Orlando, Winter Park, Apopka, Ocoee, Winter Garden, Windermere, Lake Mary, Sanford, Oviedo, Kissimmee, Celebration, St. Cloud, Clermont, Mount Dora, Deltona, DeLand, Titusville, Cocoa, Davenport, and many more.`,
+    a: `Sacred Tree Service covers a 50-mile radius from its Apopka, FL base — centrally located to reach the greater Orlando area. The service area spans seven counties in Central Florida — Orange, Seminole, Osceola, Lake, Volusia, Brevard, and northern Polk — including Apopka, Orlando, Winter Park, Ocoee, Winter Garden, Windermere, Lake Mary, Sanford, Oviedo, Kissimmee, Celebration, St. Cloud, Clermont, Mount Dora, Deltona, DeLand, Titusville, Cocoa, Davenport, and many more.`,
   },
   {
     q: 'Does Sacred Tree Service do emergency or storm-damage tree work?',

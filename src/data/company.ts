@@ -8,11 +8,15 @@ export const company = {
   phone: '(321) 204-8459',
   phoneHref: 'tel:+13212048459',
   email: 'sacredtreeservice@gmail.com',
+  // Public-facing location only — we display "Apopka, FL" and let the
+  // greater-Orlando area roll up under that. Precise street address and
+  // postal code are intentionally not committed here, since this file
+  // ships to the public site (data, schema, /llms.txt) verbatim.
   address: {
-    street: '7421 Grovewood Court',
-    city: 'Orlando',
+    street: '',
+    city: 'Apopka',
     region: 'FL',
-    postal: '32818',
+    postal: '',
     country: 'US',
   },
   // HQ approx geo, used for LocalBusiness schema & service-area circle
@@ -30,4 +34,11 @@ export const company = {
   },
 } as const;
 
-export const fullAddress = `${company.address.street}, ${company.address.city}, ${company.address.region} ${company.address.postal}`;
+// Public location string used wherever we'd previously have written the
+// full street address. Reads naturally in sentences ("based in Apopka, FL")
+// and in schema (PostalAddress with city + region only).
+export const fullAddress = `${company.address.city}, ${company.address.region}`;
+
+// Marketing one-liner — drop into footers, "about" copy, and contact cards.
+export const publicLocationLine =
+  'Centrally located in Apopka, FL — proudly serving the greater Orlando area.';

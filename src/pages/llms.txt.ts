@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { company, fullAddress } from '../data/company';
+import { company } from '../data/company';
 import { services } from '../data/services';
 import { cities } from '../data/cities';
 import { counties } from '../data/counties';
@@ -15,7 +15,7 @@ export const GET: APIRoute = () => {
   lines.push(`# ${company.brandName}`);
   lines.push('');
   lines.push(
-    `> Family-owned tree care company in Orlando, FL serving the seven-county Greater Orlando and Central Florida region. ISA Certified Arborists on staff. Operates under ISA guidelines (ANSI A300 pruning, ANSI Z133 climbing/rigging). 5-star rated on Google. Licensed and insured, with workers' compensation. Free in-person estimates within a 50-mile radius of our Orlando headquarters.`,
+    `> Family-owned tree care company based in Apopka, FL, centrally located to serve the seven-county Greater Orlando and Central Florida region. ISA Certified Arborists on staff. Operates under ISA guidelines (ANSI A300 pruning, ANSI Z133 climbing/rigging). 5-star rated on Google. Licensed and insured, with workers' compensation. Free in-person estimates within a 50-mile radius of the greater Orlando area.`,
   );
   lines.push('');
   lines.push(
@@ -30,11 +30,11 @@ export const GET: APIRoute = () => {
   lines.push(`- **Business name:** ${company.legalName} (doing business as ${company.brandName})`);
   lines.push(`- **Owner:** ${company.owner}, ${company.ownerTitle}`);
   lines.push(`- **Founded:** ${company.founded}`);
-  lines.push(`- **Headquarters:** ${fullAddress}`);
+  lines.push(`- **Based in:** Apopka, FL — centrally located to serve the greater Orlando area`);
   lines.push(`- **Phone:** ${company.phone}`);
   lines.push(`- **Email:** ${company.email}`);
   lines.push(`- **Hours:** Monday–Saturday, 8:00 AM – 6:00 PM. Emergency / storm response available outside business hours.`);
-  lines.push(`- **Service radius:** ${company.serviceRadiusMiles} miles from Orlando, FL`);
+  lines.push(`- **Service radius:** ${company.serviceRadiusMiles} miles covering the greater Orlando area`);
   lines.push(`- **Counties served:** ${counties.map((c) => c.county).join(', ')}`);
   lines.push(`- **Credentials:** ${company.credentials.join('; ')}`);
   lines.push(`- **Memberships:** ${company.memberships.join('; ')}`);
@@ -60,7 +60,7 @@ export const GET: APIRoute = () => {
   lines.push('## Cities served');
   lines.push('');
   for (const c of cities) {
-    lines.push(`- [${c.name}, FL](${SITE}/service-area/${c.slug}/) — ${c.county} County, ~${c.miles} mi from HQ`);
+    lines.push(`- [${c.name}, FL](${SITE}/service-area/${c.slug}/) — ${c.county} County, ~${c.miles} mi within our service area`);
   }
   lines.push('');
 

@@ -98,7 +98,7 @@ export const counties: County[] = [
     name: 'Polk County, FL',
     region: 'Southwest — Davenport, Haines City, the Four Corners area',
     blurb:
-      'Northern Polk County borders the Disney-area Four Corners region. We serve Davenport, Haines City, and the surrounding rural-residential mix from Orlando.',
+      'Northern Polk County borders the Disney-area Four Corners region. We serve Davenport, Haines City, and the surrounding rural-residential mix from our Apopka, FL base.',
     highlights: ['Davenport', 'Haines City'],
   },
 ];

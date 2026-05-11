@@ -33,7 +33,7 @@ const closestMi = countyCities[0]?.miles ?? null;
 const faqs = [
   {
     q: `Does Sacred Tree Service work in ${county.name}?`,
-    a: `Yes. ${county.name} is fully inside our 50-mile service radius from Orlando. We serve ${countyCities.length} cities and communities in ${county.county} County, including ${cityList}.`,
+    a: `Yes. ${county.name} is fully inside the 50-mile service radius we cover from our Apopka, FL base in the greater Orlando area. We serve ${countyCities.length} cities and communities in ${county.county} County, including ${cityList}.`,
   },
   {
     q: `What tree services are available in ${county.county} County?`,
@@ -93,7 +93,7 @@ const itemList = {
       <p class="lede">{county.blurb}</p>
       {closestMi !== null && (
         <p class="meta">
-          Closest community to our Orlando HQ:
+          Closest community to our Apopka base:
           <strong>{countyCities[0].name}</strong> (~{closestMi} mi).
           Coverage: <strong>{countyCities.length}</strong> cities &amp; communities across {county.county} County.
         </p>
@@ -141,9 +141,9 @@ const itemList = {
         <ul class="checks">
           <li><strong>ISA Certified Arborists on every job</strong> — assessed and signed off by a credentialed pro before the chainsaw starts.</li>
           <li><strong>ISA &amp; TCIA member</strong> — bound by the national best-practice standards (ANSI A300, ANSI Z133).</li>
-          <li><strong>Local, family-owned, Orlando-based</strong> — no out-of-area surcharges anywhere in {county.county} County.</li>
+          <li><strong>Local, family-owned, based in Apopka</strong> — no out-of-area surcharges anywhere in {county.county} County.</li>
           <li><strong>Licensed, insured, workers' comp</strong> — full coverage so the homeowner is never on the hook.</li>
-          <li><strong>50-mile radius covers the whole county</strong> — including the more remote corners other Orlando companies skip.</li>
+          <li><strong>50-mile radius covers the whole county</strong> — including the more remote corners other crews skip.</li>
         </ul>
 
         <FaqBlock faqs={faqs} />
