@@ -10,13 +10,13 @@
       ]
     },
     {
-      "source": "/(.*)\\.(?:woff|woff2|ttf|otf)",
+      "source": "/(.*).(woff|woff2|ttf|otf)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
-      "source": "/assets/(.*)\\.(?:jpg|jpeg|png|webp|avif|svg|ico)",
+      "source": "/assets/(.*).(jpg|jpeg|png|webp|avif|svg|ico)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=86400, must-revalidate" }
       ]
