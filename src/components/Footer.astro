@@ -1,5 +1,5 @@
 ---
-import { company, fullAddress } from '../data/company';
+import { company, publicLocationLine } from '../data/company';
 import { services } from '../data/services';
 import { cities } from '../data/cities';
 
@@ -11,7 +11,7 @@ const year = new Date().getFullYear();
   <div class="grid">
     <section>
       <h4>{company.brandName}</h4>
-      <p class="addr">{fullAddress}</p>
+      <p class="addr">{publicLocationLine}</p>
       <p>
         <a href={company.phoneHref}>{company.phone}</a><br />
         <a href={`mailto:${company.email}`}>{company.email}</a>

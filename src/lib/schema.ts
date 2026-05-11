@@ -21,7 +21,7 @@ const reviewCountForSchema = company.googleReviewCount;
 const areaServed: Record<string, any>[] = [
   {
     '@type': 'GeoCircle',
-    name: `${company.serviceRadiusMiles}-mile service radius from Orlando, FL`,
+    name: `${company.serviceRadiusMiles}-mile service radius covering the greater Orlando area`,
     geoMidpoint: {
       '@type': 'GeoCoordinates',
       latitude: company.geo.lat,
@@ -71,10 +71,12 @@ export const localBusinessSchema = () => {
     founder: { '@type': 'Person', name: company.owner, jobTitle: company.ownerTitle },
     address: {
       '@type': 'PostalAddress',
-      streetAddress: company.address.street,
+      // streetAddress + postalCode intentionally omitted — we publish city
+      // and region only to keep the precise HQ location off the public web.
+      ...(company.address.street ? { streetAddress: company.address.street } : {}),
       addressLocality: company.address.city,
       addressRegion: company.address.region,
-      postalCode: company.address.postal,
+      ...(company.address.postal ? { postalCode: company.address.postal } : {}),
       addressCountry: company.address.country,
     },
     geo: {

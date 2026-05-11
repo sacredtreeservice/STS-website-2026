@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import JobberForm from '../components/JobberForm.astro';
-import { company, fullAddress } from '../data/company';
+import { company } from '../data/company';
 
 const trail = [
   { name: 'Home', url: '/' },
@@ -37,8 +37,8 @@ const trail = [
           <a href={`mailto:${company.email}`}>{company.email}</a>
         </p>
         <p>
-          <strong>HQ</strong><br />
-          {fullAddress}
+          <strong>Based in</strong><br />
+          Apopka, FL — centrally located to serve the greater Orlando area.
         </p>
         <p class="hours">
           <strong>Hours</strong><br />
