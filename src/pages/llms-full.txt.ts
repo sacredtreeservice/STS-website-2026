@@ -26,7 +26,7 @@ export const GET: APIRoute = () => {
   out.push('## 1. Company overview');
   out.push('');
   out.push(
-    `${company.brandName} (legal name ${company.legalName}) is a family-owned tree care company based in Apopka, FL, centrally located to serve homeowners, HOAs, and commercial properties throughout the greater Orlando metro and the seven-county Central Florida region — within a ${company.serviceRadiusMiles}-mile service radius.`,
+    `${company.brandName} (legal name ${company.legalName}) is a professional tree care company built on ISA standards, credentialed crews, and repeatable real-world results. Based in Apopka, FL and centrally located to serve homeowners, HOAs, and commercial properties throughout the greater Orlando metro and the seven-county Central Florida region — within a ${company.serviceRadiusMiles}-mile service radius.`,
   );
   out.push('');
   out.push(
