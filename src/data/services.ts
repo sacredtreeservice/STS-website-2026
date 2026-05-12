@@ -25,10 +25,32 @@ export const services: Service[] = [
     slug: 'plant-health-care',
     name: 'Plant Health Care',
     shortName: 'Plant Health',
-    blurb: 'Fertilization, pest, and disease care to keep the trees you love thriving.',
+    blurb: 'Diagnose before you treat. Year-round monitoring, targeted pest and disease care, and fertilization built for Florida soils.',
     description:
-      'Healthy trees give back decades of shade, beauty, and property value. Our plant health care program includes deep-root fertilization, pest scouting, and disease treatment — with priority on Florida-specific concerns like lethal bronzing and oak decline.',
+      'Most plant health care is sold as a calendar of pre-paid sprays. Ours starts with an ISA Certified Arborist watching the tree. We scout, sample soil, identify the actual problem, and treat surgically — with priority on the threats that matter most in Central Florida: lethal bronzing in palms, oak decline, laurel wilt, scale and borers, and the chronic nutrient deficiencies sandy FL soils cause.',
     icon: 'lucide:leaf',
+    faqs: [
+      {
+        q: 'Is plant health care a one-time service or an ongoing program?',
+        a: 'Both work, but we strongly favor the annual program. Most plant health care is preventive, and a single visit can only solve what is already obvious. Our program runs on the FL seasonal calendar: spring scouting and soil sampling, summer monitoring (during the county fertilizer blackout), and fall fertilization once the rainy-season restrictions lift. One-time fertilization or targeted treatment is available when that is what the tree actually needs.',
+      },
+      {
+        q: 'What does plant health care cost?',
+        a: 'It depends on tree count, species, and what we find. Deep root fertilization is typically priced per tree; the annual program is priced per property based on the initial scout. We do free property walks and put everything in writing before any treatment — no surprises and no "you should pre-pay for the whole year of sprays."',
+      },
+      {
+        q: 'Can you save a tree that is already showing decline?',
+        a: 'Sometimes — and sometimes the honest answer is no. Many declines are reversible with the right intervention started early: oak decline driven by soil compaction, scale infestations, drought stress, manganese or iron deficiency. Others are not: advanced lethal bronzing in palms, Ganoderma butt rot, severe internal decay. An ISA Certified Arborist assessment will tell you which side of that line your tree is on, and we will not sell you treatment for a tree that cannot be saved.',
+      },
+      {
+        q: 'Do you offer organic or lower-chemical options?',
+        a: 'Yes. IPM-first means we treat only when scouting confirms a problem above threshold — and when we treat, we pick the targeted, lowest-impact option. Horticultural oils, biological controls, soil amendments, and systemic trunk injection (which uses roughly a tenth of the chemical of a foliar spray and stays inside the tree, with no drift) are part of our standard kit.',
+      },
+      {
+        q: 'What if my palm already has lethal bronzing?',
+        a: 'If a palm is symptomatic — bronzing fronds advancing up the crown, spear leaf collapse — it cannot be saved. UF/IFAS is unambiguous about this, and removal is the only way to stop the disease from spreading to nearby healthy palms. Those nearby palms, however, can be protected with oxytetracycline (OTC) trunk injections every 3–4 months for at least 2 years. That preventive protocol is one of the most common reasons Central Florida palm owners hire us.',
+      },
+    ],
   },
   {
     slug: 'arborist-consulting',
