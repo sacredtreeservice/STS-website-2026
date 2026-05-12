@@ -1,0 +1,514 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import JobberForm from '../../components/JobberForm.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import { getServiceBySlug } from '../../data/services';
+import { cities } from '../../data/cities';
+import { serviceSchema, faqSchema } from '../../lib/schema';
+
+const service = getServiceBySlug('plant-health-care')!;
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: service.name, url: `/services/${service.slug}/` },
+];
+
+const threats = [
+  {
+    icon: 'lucide:palmtree',
+    title: 'Lethal Bronzing (palms)',
+    body: 'Phytoplasma disease vectored by planthoppers. Confirmed in 36 FL counties. Queens, sabal palms, and Canary date palms are most vulnerable. Symptom: lowest fronds bronze and die upward, fruit drops early. Symptomatic palms cannot be saved — but nearby healthy palms can be protected.',
+  },
+  {
+    icon: 'lucide:trees',
+    title: 'Oak decline',
+    body: 'Stress-driven decline of mature live oaks — root damage, soil compaction, fill dirt over the root zone, or drought. Symptom: thinning upper canopy and dieback over multiple seasons. Often reversible if caught early.',
+  },
+  {
+    icon: 'lucide:bug',
+    title: 'Scale, borers, mites & aphids',
+    body: 'The workaday pests. Untreated, they weaken the tree until disease moves in. We scout for them, identify by species, and treat only when populations cross a threshold worth treating — not on a calendar.',
+  },
+  {
+    icon: 'lucide:shield-alert',
+    title: 'Ganoderma butt rot (palms)',
+    body: 'A trunk-base fungus that kills palms from the ground up. There is no cure. The job is correct ID, removal of infected palms before fruiting bodies (conks) release more spores, and protecting nearby palms by not moving infected debris.',
+  },
+  {
+    icon: 'lucide:droplet-off',
+    title: 'Laurel wilt',
+    body: 'Ambrosia-beetle-vectored fungus that kills red bays, swampbays, and avocados — sometimes in a single season. High-value trees in active areas can be protected with preventive systemic injection of propiconazole.',
+  },
+  {
+    icon: 'lucide:flask-conical',
+    title: 'Nutrient deficiency',
+    body: 'Florida sandy soils have near-zero capacity to hold nutrients — fertilizer leaches in days. Symptoms: pale or yellowed leaves, interveinal chlorosis on oaks, frizzletop on palms. The fix is targeted deep-root feeding on a cadence FL soil actually responds to.',
+  },
+];
+
+const phases = [
+  {
+    n: '01',
+    title: 'Spring scout & sample',
+    time: 'Feb – Apr',
+    body: 'ISA Certified Arborist walks the property, identifies every tree of value, scouts for pest and disease pressure, and pulls soil samples where the data will change the treatment plan. You get a written plan before anything is sprayed, injected, or invoiced.',
+  },
+  {
+    n: '02',
+    title: 'Targeted treatment',
+    time: 'as needed',
+    body: 'If — and only if — scouting confirms a problem worth treating, we apply the right intervention: deep root fertilization, systemic trunk injection, a precise foliar spray, soil amendment. We pick the lowest-impact tool that actually works.',
+  },
+  {
+    n: '03',
+    title: 'Summer monitoring',
+    time: 'Jun – Sep',
+    body: 'Many Central FL counties prohibit nitrogen and phosphorus fertilizer applications June 1 – Sept 30 to protect waterways from rainy-season runoff. We monitor enrolled trees during this window, catch problems before they escalate, and queue up the fall plan.',
+  },
+  {
+    n: '04',
+    title: 'Fall fertilization & winter prep',
+    time: 'Oct – Jan',
+    body: 'Once county ordinances allow it, we fertilize for root growth heading into the dormant season — the most productive feeding window for FL trees. Sanitation pruning of diseased wood, structural pruning where it benefits health, and an end-of-year property re-walk close out the year.',
+  },
+];
+
+const treatments = [
+  {
+    title: 'Deep root fertilization',
+    body: 'Liquid feed injected 6–8 inches below grade in a 2–3 foot grid pattern under and just past the dripline. Bypasses competing turf, breaks soil compaction, and delivers nutrients where the feeder roots actually live.',
+  },
+  {
+    title: 'Systemic trunk injection',
+    body: 'Small ports drilled into the trunk; formula moves up through the vascular system. Used for lethal bronzing prevention (OTC), borer/scale control, manganese or iron correction. Roughly a tenth of the chemical of a foliar spray, with no drift.',
+  },
+  {
+    title: 'IPM scouting',
+    body: 'Integrated Pest Management — the modern professional standard. Regular inspections, species-level ID, and treatment only when population density crosses a threshold worth treating. The opposite of a blanket spray calendar.',
+  },
+  {
+    title: 'Soil amendment & biology',
+    body: 'Compost, biochar, and mycorrhizal inoculants for compacted construction sites, fill-dirt root zones, and chronically depleted soils. Real soil chemistry, not a bag of generic granular fertilizer.',
+  },
+  {
+    title: 'Sanitation pruning',
+    body: 'Selective removal of diseased wood — anthracnose, fire blight, hypoxylon-cankered limbs — with tool disinfection between cuts. Stops the spread, keeps the tree.',
+  },
+];
+
+const flNotes = [
+  {
+    icon: 'lucide:waves',
+    title: 'Sandy soils leach fast',
+    body: 'Florida soils have low cation exchange capacity — nutrients flush through in days. The fix is more frequent, lighter feeding tuned to the species, not the "one big spring blast" of mainland landscaping.',
+  },
+  {
+    icon: 'lucide:calendar-off',
+    title: 'Summer fertilizer blackout',
+    body: 'Many Central FL counties (Orange, Seminole, and others) prohibit nitrogen and phosphorus applications June 1 – Sept 30 to protect waterways. We build the program around that — out-of-state corporate brands often miss it.',
+  },
+  {
+    icon: 'lucide:wind',
+    title: 'Hurricane stress is real',
+    body: 'Wind-damaged trees can decline 6–18 months after the storm passes. Post-storm structural pruning, deep watering, and monitoring through the next season catches that delayed decline before the tree is lost.',
+  },
+];
+
+const myth = {
+  title: 'And what does not hurt your tree',
+  body: 'Spanish moss and ball moss are epiphytes — they live on the tree without taking nutrients from it. They are not pathogens, they do not kill trees, and we will not sell you a treatment to remove them. (Mistletoe is the exception — it is parasitic, and that one we will address.)',
+};
+
+const cityList = cities.slice(0, 18);
+const jsonLd = [
+  serviceSchema({ name: service.name, description: service.description, slug: service.slug }),
+  faqSchema(service.faqs!),
+];
+---
+
+<Base
+  title="Plant Health Care for Florida Trees — Sacred Tree Service"
+  description="ISA Certified Arborists diagnose before they treat. Year-round monitoring, targeted pest and disease care, and deep root fertilization built for Florida sandy soils. Serving the greater Orlando area from Apopka."
+  breadcrumbs={trail}
+  jsonLd={jsonLd}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head" data-reveal>
+      <span class="icon-hero" aria-hidden="true"><Icon name={service.icon} /></span>
+      <span class="kicker">Plant health care</span>
+      <h1>Trees that thrive — not just survive.</h1>
+      <p class="lede">
+        Year-round monitoring, targeted pest and disease care, and
+        fertilization built for Florida sandy soils. Done by ISA Certified
+        Arborists who scout the tree before they sell you a treatment.
+      </p>
+    </header>
+
+    <section class="framing" data-reveal aria-labelledby="framing-heading">
+      <div class="framing-inner">
+        <span class="kicker">How we work</span>
+        <h2 id="framing-heading">Diagnose before you treat.</h2>
+        <p>
+          Most plant health care is sold as a calendar of pre-paid sprays —
+          show up, treat everything, send the bill. We do the opposite.
+          Every program starts with an ISA Certified Arborist walking the
+          property, identifying the trees, scouting for actual pest and
+          disease pressure, and pulling soil samples where the data will
+          change the plan.
+        </p>
+        <p>
+          Then — and only then — we treat. With the lowest-impact tool that
+          will actually solve the problem. Same ethos as the rest of what
+          we do: we will tell you when a tree does not need treatment, the
+          same way we tell you when one does not need to come down.
+        </p>
+      </div>
+    </section>
+
+    <section class="threats" aria-labelledby="threats-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">What we watch for</span>
+        <h2 id="threats-heading">The threats that matter in Central Florida.</h2>
+        <p>
+          The pests and diseases your trees actually face — named, with the
+          early symptoms our crew is trained to catch on the spring scout.
+        </p>
+      </header>
+      <div class="threat-grid" data-reveal data-reveal-stagger>
+        {threats.map((t) => (
+          <article class="threat">
+            <span class="ico"><Icon name={t.icon} /></span>
+            <h3>{t.title}</h3>
+            <p>{t.body}</p>
+          </article>
+        ))}
+      </div>
+      <aside class="myth" data-reveal>
+        <h3>{myth.title}</h3>
+        <p>{myth.body}</p>
+      </aside>
+    </section>
+
+    <section class="program" aria-labelledby="program-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">The annual program</span>
+        <h2 id="program-heading">Plant health care, on the Florida calendar.</h2>
+        <p>
+          Built around the seasons your trees actually live through — and
+          the county ordinances that shape when we can fertilize.
+        </p>
+      </header>
+      <ol class="phases" data-reveal data-reveal-stagger>
+        {phases.map((p) => (
+          <li class="phase">
+            <span class="phase-n">{p.n}</span>
+            <div class="phase-body">
+              <header>
+                <h3>{p.title}</h3>
+                <span class="phase-time">{p.time}</span>
+              </header>
+              <p>{p.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="treatments" aria-labelledby="treatments-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">Treatments we use</span>
+        <h2 id="treatments-heading">The tools, briefly.</h2>
+        <p>
+          What is in the truck, and when each one is the right call. Modern
+          arboriculture, no calendar-blast spraying.
+        </p>
+      </header>
+      <div class="treatment-grid" data-reveal data-reveal-stagger>
+        {treatments.map((t) => (
+          <article class="treatment">
+            <h3>{t.title}</h3>
+            <p>{t.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="fl-notes" aria-labelledby="fl-notes-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">Florida-specific notes</span>
+        <h2 id="fl-notes-heading">Three things national programs miss.</h2>
+      </header>
+      <div class="fl-grid" data-reveal data-reveal-stagger>
+        {flNotes.map((n) => (
+          <article class="fl-card">
+            <span class="ico"><Icon name={n.icon} /></span>
+            <h3>{n.title}</h3>
+            <p>{n.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <div class="layout">
+      <article class="cities-faq">
+        <h2>Cities we serve</h2>
+        <p>
+          We deliver plant health care from our Apopka, FL base across the
+          greater Orlando area:
+        </p>
+        <ul class="cities">
+          {cityList.map((c) => (
+            <li><a href={`/services/${service.slug}/${c.slug}/`}>Plant Health in {c.name}</a></li>
+          ))}
+        </ul>
+        <FaqBlock faqs={service.faqs!} />
+      </article>
+      <aside>
+        <JobberForm
+          heading="Book a property walk"
+          subheading="Free assessment from an ISA Certified Arborist. We will tell you what is actually wrong before we sell you anything."
+          context="Plant Health Care"
+        />
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .head { text-align: center; margin: 1rem 0 2.5rem; }
+  .icon-hero {
+    display: inline-grid;
+    place-items: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(75, 112, 33, 0.15), rgba(104, 204, 209, 0.12));
+    color: var(--green-dark);
+    margin-bottom: 1rem;
+  }
+  .icon-hero [data-icon] { width: 40px; height: 40px; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h1 {
+    font-size: clamp(2rem, 4.6vw, 2.8rem);
+    margin: 0.4rem 0 0.75rem;
+  }
+  .lede {
+    color: var(--muted);
+    max-width: 62ch;
+    margin: 0 auto;
+    font-size: 1.15rem;
+  }
+
+  .section-head {
+    text-align: center;
+    max-width: 62ch;
+    margin: 0 auto 2.25rem;
+  }
+  .section-head h2 {
+    font-size: clamp(1.6rem, 3.2vw, 2.1rem);
+    margin: 0.4rem 0 0.6rem;
+  }
+  .section-head p { color: var(--muted); margin: 0; }
+
+  /* Framing band */
+  .framing {
+    margin: 3rem auto 4rem;
+    max-width: 760px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 2.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .framing h2 {
+    font-size: clamp(1.5rem, 3vw, 1.9rem);
+    margin: 0.4rem 0 1rem;
+  }
+  .framing p {
+    margin: 0 0 0.85rem;
+    font-size: 1.02rem;
+    color: var(--ink-soft);
+    line-height: 1.65;
+  }
+  .framing p:last-child { margin-bottom: 0; }
+
+  /* Threat grid */
+  .threats { padding: 3rem 0; }
+  .threat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  .threat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: transform 0.25s var(--easing), border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .threat:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+  }
+  .ico {
+    display: inline-grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--green-tint), color-mix(in srgb, var(--teal) 18%, transparent));
+    color: var(--green-dark);
+    margin-bottom: 0.85rem;
+  }
+  .ico [data-icon] { width: 24px; height: 24px; }
+  .threat h3 { font-size: 1.05rem; margin: 0 0 0.35rem; }
+  .threat p { color: var(--muted); margin: 0; font-size: 0.93rem; line-height: 1.55; }
+  @media (max-width: 980px) { .threat-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .threat-grid { grid-template-columns: 1fr; } }
+
+  .myth {
+    margin: 2rem auto 0;
+    max-width: 760px;
+    background: var(--highlight-bg);
+    border: 1px solid var(--highlight-border);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+    color: var(--highlight-ink);
+  }
+  .myth h3 {
+    font-size: 1rem;
+    margin: 0 0 0.35rem;
+    color: var(--highlight-ink);
+  }
+  .myth p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  /* Program phases */
+  .program { padding: 3rem 0; }
+  .phases {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 880px;
+    display: grid;
+    gap: 1.25rem;
+  }
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem 1.75rem;
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  .phase-n {
+    font-family: 'Marcellus', Georgia, serif;
+    font-size: 2rem;
+    color: var(--green);
+    line-height: 1;
+  }
+  .phase-body header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: baseline;
+    margin-bottom: 0.4rem;
+  }
+  .phase-body h3 { font-size: 1.2rem; margin: 0; }
+  .phase-time {
+    font-size: 0.85rem;
+    color: var(--green-dark);
+    background: var(--green-tint);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+  .phase-body p { margin: 0; color: var(--ink-soft); line-height: 1.6; }
+  @media (max-width: 600px) {
+    .phase { grid-template-columns: 1fr; padding: 1.25rem; }
+    .phase-n { font-size: 1.5rem; }
+  }
+
+  /* Treatments grid */
+  .treatments { padding: 3rem 0; }
+  .treatment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+  }
+  .treatment {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+  }
+  .treatment h3 { font-size: 1.05rem; margin: 0 0 0.4rem; }
+  .treatment p {
+    color: var(--muted);
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+
+  /* Florida-specific notes */
+  .fl-notes { padding: 3rem 0 4rem; }
+  .fl-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  .fl-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.6rem;
+  }
+  .fl-card h3 { font-size: 1.1rem; margin: 0 0 0.4rem; }
+  .fl-card p { color: var(--muted); margin: 0; font-size: 0.95rem; line-height: 1.6; }
+  @media (max-width: 900px) { .fl-grid { grid-template-columns: 1fr; } }
+
+  /* Bottom layout: cities + FAQ + form */
+  .layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 3rem;
+    align-items: start;
+    margin-top: 2rem;
+  }
+  .cities-faq h2 { font-size: 1.5rem; margin: 2rem 0 0.85rem; }
+  .cities {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    columns: 2;
+    gap: 1rem;
+  }
+  .cities li { margin-bottom: 0.4rem; }
+  .cities a { color: var(--green-dark); text-decoration: none; }
+  .cities a:hover { text-decoration: underline; }
+  aside { position: sticky; top: 100px; }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { position: static; }
+    .cities { columns: 1; }
+  }
+</style>
