@@ -1,0 +1,493 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import JobberForm from '../../components/JobberForm.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import { getServiceBySlug } from '../../data/services';
+import { cities } from '../../data/cities';
+import { serviceSchema, faqSchema } from '../../lib/schema';
+
+const service = getServiceBySlug('large-tree-transplanting')!;
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: service.name, url: `/services/${service.slug}/` },
+];
+
+const useCases = [
+  {
+    icon: 'lucide:construction',
+    title: 'Construction in the dripline',
+    body: 'A pool, an addition, or grading work is about to land on top of a tree you’d rather keep. Move it before the contractor breaks ground.',
+  },
+  {
+    icon: 'lucide:layout-grid',
+    title: 'Landscape redesign',
+    body: 'A specimen tree planted in the wrong spot ten years ago is now blocking the new hardscape or shading the wrong place. Relocate, don’t remove.',
+  },
+  {
+    icon: 'lucide:trees',
+    title: 'Heritage tree at risk',
+    body: 'A mature live oak or magnolia is part of why you bought the property. Disease, declining soil, or a new build is threatening it — and we can move it.',
+  },
+  {
+    icon: 'lucide:sprout',
+    title: 'Replacement landscape',
+    body: 'You don’t want to wait twenty years for a sapling to mature. We source and install grown specimens from FL tree farms with care that survives the trip.',
+  },
+];
+
+const phases = [
+  {
+    n: '01',
+    title: 'Site walk & assessment',
+    time: '1 visit',
+    body: 'An ISA Certified Arborist looks at the tree, the route, the new site, and the access. We give you our honest read on whether the move is worth doing — and what the survival probability looks like before you spend a dollar.',
+  },
+  {
+    n: '02',
+    title: 'Root pruning',
+    time: '3–12+ months',
+    body: 'The single biggest predictor of survival. We trench around the tree at the correct distance for its caliper (UF/IFAS: 8–12 inches of root ball per inch of trunk diameter) so it grows compact, fibrous roots inside the future ball before we cut it free. Big trees often warrant a phased approach over several years.',
+  },
+  {
+    n: '03',
+    title: 'Move day',
+    time: '1–2 days',
+    body: 'Coordinated extraction with the right equipment for the tree — tree spade, hand-dig with crane, or a custom rig for the largest specimens. Root ball wrapped and kept moist. New hole prepared in advance, plant high (1–2 inches above grade) for drainage and settling.',
+  },
+  {
+    n: '04',
+    title: 'Aftercare year',
+    time: '12 months guided',
+    body: 'This is where most transplants succeed or fail. Daily irrigation for the first months, then three times a week for a year. We check in, watch for stress (water-potential monitoring on live oaks if needed), and adjust before small problems become dead trees.',
+  },
+];
+
+const survivalFactors = [
+  {
+    icon: 'lucide:calendar-clock',
+    title: 'Lead time on root pruning',
+    body: 'Trees that get 3–6 months (or longer for the largest specimens) of root-pruning lead time grow the dense, compact root system the move depends on. Rushed jobs — no matter how skilled the crew — lose trees.',
+  },
+  {
+    icon: 'lucide:ruler',
+    title: 'Root ball sized to the trunk',
+    body: 'UF/IFAS standard: 8–12 inches of root ball width for every inch of trunk caliper, with depth at least 60% of the ball’s diameter. Under-sized root balls are the most common reason mid-tier outfits lose mature trees.',
+  },
+  {
+    icon: 'lucide:droplets',
+    title: 'Aftercare commitment',
+    body: 'Daily water for months, then three times weekly for a year. UF/IFAS is unambiguous: most failures happen because aftercare gets dropped, not because the dig was wrong. We stay involved.',
+  },
+];
+
+const speciesNotes = [
+  {
+    name: 'Florida live oak',
+    body: 'The marquee tree for transplanting in Central Florida. Demands the most careful prep and the longest lead time, but transplants successfully when handled right — and often protected by local ordinance.',
+  },
+  {
+    name: 'Southern magnolia',
+    body: 'Slower-growing, dense root system. Excellent transplant candidates with appropriate root-pruning prep.',
+  },
+  {
+    name: 'Mature shade trees',
+    body: 'Maples, elms, sycamores in the residential caliper range. The bread-and-butter of mature relocation.',
+  },
+  {
+    name: 'Florida palms',
+    body: 'Sabal palmettos, queens, royals, washingtonias — different mechanics from broadleaf trees, but well within our crew’s wheelhouse.',
+  },
+];
+
+const cityList = cities.slice(0, 18);
+const jsonLd = [
+  serviceSchema({ name: service.name, description: service.description, slug: service.slug }),
+  faqSchema(service.faqs!),
+];
+---
+
+<Base
+  title="Large Tree Transplanting in Florida — Sacred Tree Service"
+  description="Mature-tree relocation for heritage live oaks, mature magnolias, and the specimen trees worth moving. ISA Certified Arborists, trained under a Florida tree-moving veteran. Serving the greater Orlando area from Apopka."
+  breadcrumbs={trail}
+  jsonLd={jsonLd}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head" data-reveal>
+      <span class="icon-hero" aria-hidden="true"><Icon name={service.icon} /></span>
+      <span class="kicker">Specialty service</span>
+      <h1>Some trees are worth moving.</h1>
+      <p class="lede">
+        Heritage live oaks, mature magnolias, and the specimen trees you’re
+        not ready to lose — relocated with the care this work demands.
+      </p>
+    </header>
+
+    <section class="mentor" data-reveal aria-labelledby="mentor-heading">
+      <div class="mentor-inner">
+        <span class="kicker">How we’re built for this</span>
+        <h2 id="mentor-heading">Trained by the pros doing it right now.</h2>
+        <p>
+          Large tree transplanting is the rare arboricultural specialty you
+          learn by doing — under someone who’s been doing it well for
+          decades. Alex is apprenticing under one of Florida’s veteran
+          tree-movers: training on active jobs, assisting on transplants
+          we wouldn’t otherwise touch, and running our own moves under his
+          eye. Sacred Tree is positioning to be the next generation of
+          large-tree work in Florida, and we want to be honest about where
+          we are on that journey.
+        </p>
+        <p>
+          What you get: the craft of our mentor’s decades, ISA Certified
+          Arborists assessing every move before we touch a saw, and a crew
+          actually invested in the long-term success of every tree we
+          relocate.
+        </p>
+      </div>
+    </section>
+
+    <section class="when" aria-labelledby="when-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">When transplanting is the right call</span>
+        <h2 id="when-heading">If you’re facing any of these, talk to us first.</h2>
+      </header>
+      <div class="tiles" data-reveal data-reveal-stagger>
+        {useCases.map((u) => (
+          <article class="tile">
+            <span class="ico"><Icon name={u.icon} /></span>
+            <h3>{u.title}</h3>
+            <p>{u.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="process" aria-labelledby="process-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">Our process</span>
+        <h2 id="process-heading">A real timeline — not a sales pitch.</h2>
+        <p>
+          A serious move takes months. We tell you that upfront so you can
+          plan around it — and so you can spot any crew claiming they’ll do
+          it next week.
+        </p>
+      </header>
+      <ol class="phases" data-reveal data-reveal-stagger>
+        {phases.map((p) => (
+          <li class="phase">
+            <span class="phase-n">{p.n}</span>
+            <div class="phase-body">
+              <header>
+                <h3>{p.title}</h3>
+                <span class="phase-time">{p.time}</span>
+              </header>
+              <p>{p.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="species" aria-labelledby="species-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">What we’ll move</span>
+        <h2 id="species-heading">Trees we transplant in Central Florida.</h2>
+        <p>
+          Trunk caliper from a few inches up into the mega-tree range (24"+),
+          depending on access and how much lead time we have for root
+          pruning. The species we see most:
+        </p>
+      </header>
+      <div class="species-grid" data-reveal data-reveal-stagger>
+        {speciesNotes.map((s) => (
+          <div class="species-card">
+            <h3>{s.name}</h3>
+            <p>{s.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="survival" aria-labelledby="survival-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">What actually keeps the tree alive</span>
+        <h2 id="survival-heading">The three things that decide survival.</h2>
+        <p>
+          Drawn from UF/IFAS research and our own field experience. If a
+          crew can’t talk fluently about these three, they’re not doing
+          large-tree work — they’re hoping.
+        </p>
+      </header>
+      <div class="survival-grid" data-reveal data-reveal-stagger>
+        {survivalFactors.map((f) => (
+          <article class="survival-card">
+            <span class="ico"><Icon name={f.icon} /></span>
+            <h3>{f.title}</h3>
+            <p>{f.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <div class="layout">
+      <article class="cities-faq">
+        <h2>Cities we serve</h2>
+        <p>
+          We provide large-tree transplanting from our Apopka, FL base across
+          the greater Orlando area:
+        </p>
+        <ul class="cities">
+          {cityList.map((c) => (
+            <li><a href={`/services/${service.slug}/${c.slug}/`}>Transplanting in {c.name}</a></li>
+          ))}
+        </ul>
+        <FaqBlock faqs={service.faqs!} />
+      </article>
+      <aside>
+        <JobberForm
+          heading="Book a site walk"
+          subheading="Free assessment. We’ll give you an honest read on whether the move makes sense — and what it’ll take to do it right."
+          context="Large Tree Transplanting"
+        />
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .head {
+    text-align: center;
+    margin: 1rem 0 2.5rem;
+  }
+  .icon-hero {
+    display: inline-grid;
+    place-items: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(75, 112, 33, 0.15), rgba(104, 204, 209, 0.12));
+    color: var(--green-dark);
+    margin-bottom: 1rem;
+  }
+  .icon-hero [data-icon] { width: 40px; height: 40px; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h1 {
+    font-size: clamp(2rem, 4.6vw, 2.8rem);
+    margin: 0.4rem 0 0.75rem;
+  }
+  .lede {
+    color: var(--muted);
+    max-width: 60ch;
+    margin: 0 auto;
+    font-size: 1.15rem;
+  }
+
+  .section-head {
+    text-align: center;
+    max-width: 62ch;
+    margin: 0 auto 2.25rem;
+  }
+  .section-head h2 {
+    font-size: clamp(1.6rem, 3.2vw, 2.1rem);
+    margin: 0.4rem 0 0.6rem;
+  }
+  .section-head p {
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* Mentor band */
+  .mentor {
+    margin: 3rem auto 4rem;
+    max-width: 760px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 2.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .mentor h2 {
+    font-size: clamp(1.5rem, 3vw, 1.9rem);
+    margin: 0.4rem 0 1rem;
+  }
+  .mentor p {
+    margin: 0 0 0.85rem;
+    font-size: 1.02rem;
+    color: var(--ink-soft);
+    line-height: 1.65;
+  }
+  .mentor p:last-child { margin-bottom: 0; }
+
+  /* Use-case tiles */
+  .when { padding: 3rem 0; }
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+  .tile {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: transform 0.25s var(--easing), border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .tile:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+  }
+  .ico {
+    display: inline-grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--green-tint), color-mix(in srgb, var(--teal) 18%, transparent));
+    color: var(--green-dark);
+    margin-bottom: 0.85rem;
+  }
+  .ico [data-icon] { width: 24px; height: 24px; }
+  .tile h3 { font-size: 1.05rem; margin: 0 0 0.3rem; }
+  .tile p { color: var(--muted); margin: 0; font-size: 0.93rem; line-height: 1.55; }
+  @media (max-width: 980px) { .tiles { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .tiles { grid-template-columns: 1fr; } }
+
+  /* Process phases */
+  .process { padding: 3rem 0; }
+  .phases {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-width: 880px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1.25rem;
+  }
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem 1.75rem;
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  .phase-n {
+    font-family: 'Marcellus', Georgia, serif;
+    font-size: 2rem;
+    color: var(--green);
+    line-height: 1;
+  }
+  .phase-body header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: baseline;
+    margin-bottom: 0.4rem;
+  }
+  .phase-body h3 {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  .phase-time {
+    font-size: 0.85rem;
+    color: var(--green-dark);
+    background: var(--green-tint);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+  .phase-body p { margin: 0; color: var(--ink-soft); line-height: 1.6; }
+  @media (max-width: 600px) {
+    .phase { grid-template-columns: 1fr; padding: 1.25rem; }
+    .phase-n { font-size: 1.5rem; }
+  }
+
+  /* Species grid */
+  .species { padding: 3rem 0; }
+  .species-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+  .species-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+  }
+  .species-card h3 {
+    font-size: 1.05rem;
+    margin: 0 0 0.4rem;
+  }
+  .species-card p {
+    color: var(--muted);
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  @media (max-width: 980px) { .species-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .species-grid { grid-template-columns: 1fr; } }
+
+  /* Survival factors */
+  .survival { padding: 3rem 0 4rem; }
+  .survival-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  .survival-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.6rem;
+  }
+  .survival-card h3 { font-size: 1.1rem; margin: 0 0 0.4rem; }
+  .survival-card p { color: var(--muted); margin: 0; font-size: 0.95rem; line-height: 1.6; }
+  @media (max-width: 900px) { .survival-grid { grid-template-columns: 1fr; } }
+
+  /* Bottom layout: cities + FAQ + form */
+  .layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 3rem;
+    align-items: start;
+    margin-top: 2rem;
+  }
+  .cities-faq h2 {
+    font-size: 1.5rem;
+    margin: 2rem 0 0.85rem;
+  }
+  .cities {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    columns: 2;
+    gap: 1rem;
+  }
+  .cities li { margin-bottom: 0.4rem; }
+  .cities a { color: var(--green-dark); text-decoration: none; }
+  .cities a:hover { text-decoration: underline; }
+  aside { position: sticky; top: 100px; }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { position: static; }
+    .cities { columns: 1; }
+  }
+</style>
