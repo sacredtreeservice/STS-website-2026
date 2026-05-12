@@ -49,6 +49,37 @@ export const services: Service[] = [
     icon: 'lucide:link-2',
   },
   {
+    slug: 'large-tree-transplanting',
+    name: 'Large Tree Transplanting',
+    shortName: 'Transplanting',
+    blurb: 'Save the tree — move it. Mature-tree relocation done with the patience and craft this work demands.',
+    description:
+      'Moving a mature tree is not a one-day job. Done right, it’s months of root pruning, a careful extraction, and a full year of guided aftercare. Sacred Tree is training under one of Florida’s veteran tree-movers to bring this specialty to homeowners who want to save a heritage tree instead of remove it — heritage live oaks, mature magnolias, and the specimen trees worth the effort.',
+    icon: 'lucide:move',
+    faqs: [
+      {
+        q: 'What does it cost to transplant a large tree?',
+        a: 'Wide range. Typical residential moves run $1,000–$5,000. Trees over 24 inches in trunk caliper or with hard access can run $3,500–$10,000 or more. Distance, crane needs, species, and soil disposal all swing the price significantly, so we quote every job in person rather than guess.',
+      },
+      {
+        q: 'What is the survival rate for a transplanted tree?',
+        a: 'With proper root-pruning lead time and a committed aftercare year, professional large-tree transplants can survive at rates near 95%. Rushed or under-watered transplants — even by competent crews — can drop into the 40–60% range (a published ISA study of red oaks dug with a tree spade saw only 42%). Before you commit, we will tell you our honest read on the survival probability for your specific tree.',
+      },
+      {
+        q: 'How far in advance do we need to start?',
+        a: 'Root pruning takes a minimum of 3–4 months of lead time. Six months is more realistic for medium-large trees, and the largest specimens deserve a phased approach over 1–4 years (UF/IFAS recommends pruning one quadrant per year for the biggest moves). If a crew tells you they can move a 100-year-old live oak next week, walk away.',
+      },
+      {
+        q: 'Can you move a protected live oak?',
+        a: 'Often yes — but Florida cities and counties (Orange, Seminole, and others) frequently protect mature live oaks under local tree ordinances. We help homeowners navigate the permit process, document the tree’s health, and submit what the municipality needs.',
+      },
+      {
+        q: 'Do you guarantee the tree will survive?',
+        a: 'We do not put a hollow warranty on a living thing whose success depends on factors a homeowner controls — irrigation, ground conditions, weather, and time. What we do: assess honestly before quoting, prep the tree the right way, execute the move under our mentor’s eye, and stay involved through the full aftercare year so problems get caught early.',
+      },
+    ],
+  },
+  {
     slug: 'palm-tree-services',
     name: 'Palm Tree Services',
     shortName: 'Palms',
