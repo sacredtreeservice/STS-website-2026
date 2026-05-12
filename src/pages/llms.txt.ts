@@ -15,7 +15,7 @@ export const GET: APIRoute = () => {
   lines.push(`# ${company.brandName}`);
   lines.push('');
   lines.push(
-    `> Family-owned tree care company based in Apopka, FL, centrally located to serve the seven-county Greater Orlando and Central Florida region. ISA Certified Arborists on staff. Operates under ISA guidelines (ANSI A300 pruning, ANSI Z133 climbing/rigging). 5-star rated on Google. Licensed and insured, with workers' compensation. Free in-person estimates within a 50-mile radius of the greater Orlando area.`,
+    `> Professional tree care company built on ISA standards and repeatable real-world results. Based in Apopka, FL, centrally located to serve the seven-county Greater Orlando and Central Florida region. ISA Certified Arborists on staff. Operates under ISA guidelines (ANSI A300 pruning, ANSI Z133 climbing/rigging). 5-star rated on Google. Licensed and insured, with workers' compensation. Free in-person estimates within a 50-mile radius of the greater Orlando area.`,
   );
   lines.push('');
   lines.push(

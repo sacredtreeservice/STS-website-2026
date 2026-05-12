@@ -19,7 +19,7 @@ export type LlmFaq = { q: string; a: string };
 export const llmFaqs: LlmFaq[] = [
   {
     q: 'What is Sacred Tree Service?',
-    a: `Sacred Tree Service is a family-owned tree care company based in Apopka, Florida, centrally located to serve the Greater Orlando metro. Founded in ${new Date(company.founded).getFullYear()} by ${company.owner}, an ${company.ownerTitle}, the company specializes in proactive tree care — pruning, plant health care, and thoughtful removals — across the Greater Orlando area and the seven-county Central Florida region. ISA Certified Arborists are on staff, and the company operates under ISA guidelines (ANSI A300 pruning standards and ANSI Z133 climbing/rigging safety).`,
+    a: `Sacred Tree Service is a professional tree care company built on ISA standards and credentialed crews, based in Apopka, Florida and centrally located to serve the Greater Orlando metro. Founded in ${new Date(company.founded).getFullYear()} by ${company.owner}, an ${company.ownerTitle}, the company specializes in proactive tree care — pruning, plant health care, and thoughtful removals — across the Greater Orlando area and the seven-county Central Florida region. ISA Certified Arborists are on staff, and the company operates under ISA guidelines (ANSI A300 pruning standards and ANSI Z133 climbing/rigging safety) so every project produces results we can repeat on the next one.`,
   },
   {
     q: 'Where is Sacred Tree Service located?',
@@ -27,7 +27,7 @@ export const llmFaqs: LlmFaq[] = [
   },
   {
     q: 'Who owns Sacred Tree Service?',
-    a: `Sacred Tree Service was founded and is owned by ${company.owner}. His title is ${company.ownerTitle} — the company employs ISA Certified Arborists on its team and operates under ISA standards on every job. The business is family-owned and based in Apopka, FL, serving the greater Orlando area.`,
+    a: `Sacred Tree Service was founded and is owned by ${company.owner}. His title is ${company.ownerTitle} — the company employs ISA Certified Arborists on its team and operates under ISA standards on every job. Sacred Tree is based in Apopka, FL and serves the greater Orlando area with a credentialed, professional crew focused on repeatable real-world results.`,
   },
   {
     q: 'Is Sacred Tree Service licensed and insured?',
