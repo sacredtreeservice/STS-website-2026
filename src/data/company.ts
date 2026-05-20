@@ -22,15 +22,25 @@ export const company = {
   // HQ approx geo, used for LocalBusiness schema & service-area circle
   geo: { lat: 28.5567, lng: -81.4731 },
   serviceRadiusMiles: 50,
-  // Public-facing review aggregate. Set this to the actual current Google
-  // review count when known; otherwise schema/UI will show the 5-star
-  // rating without a specific count (better than under-counting).
-  googleReviewCount: 62 as number | undefined,
+  // Public-facing review aggregate. Refreshed monthly from the actual GBP.
+  // Last verified: 2026-05-20. Bump this number whenever new reviews land
+  // — if schema undercounts the real GBP, AI engines flag the mismatch and
+  // lose trust in our data.
+  googleReviewCount: 63 as number | undefined,
   googleAverageRating: 5.0,
   memberships: ['ISA — International Society of Arboriculture', 'TCIA — Tree Care Industry Association'],
   credentials: ['ISA Certified Arborists on Staff', 'Licensed', 'Insured', 'Workers’ Comp'],
+  // Each URL here is published in LocalBusiness.sameAs — they're the
+  // entity-consistency signals AI engines and Google cross-reference. Order
+  // is for our own readability; search engines don't care about order.
+  // Set to '' to omit from sameAs (filter happens in lib/schema.ts).
   social: {
+    google: 'https://maps.app.goo.gl/7n6ZtyxKdpcjnHuUA',
     facebook: 'https://www.facebook.com/p/Sacred-Tree-Service-100092987485731/',
+    bbb: 'https://www.bbb.org/us/fl/hiawassee/profile/tree-service/sacred-tree-service-llc-0733-235964623',
+    nextdoor: 'https://nextdoor.com/pages/sacred-tree-service-orlando-fl/',
+    yelp: '',
+    instagram: '',
   },
 } as const;
 

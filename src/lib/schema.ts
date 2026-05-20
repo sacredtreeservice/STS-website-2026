@@ -68,7 +68,37 @@ export const localBusinessSchema = () => {
     logo: `${SITE}/assets/logo.jpg`,
     priceRange: '$$',
     foundingDate: company.founded,
-    founder: { '@type': 'Person', name: company.owner, jobTitle: company.ownerTitle },
+    // Person schema for the founder — gives AI engines a real human entity
+    // with credentials and a domain of expertise, which is one of the main
+    // E-E-A-T signals AI Overviews look for in service-business citations.
+    founder: {
+      '@type': 'Person',
+      '@id': `${SITE}#alex-satoski`,
+      name: company.owner,
+      jobTitle: company.ownerTitle,
+      worksFor: { '@id': `${SITE}#business` },
+      url: `${SITE}/about/`,
+      description:
+        'ISA-trained arborist who founded Sacred Tree Service in 2023 to bring credentialed, standards-driven tree care to Central Florida property owners.',
+      knowsAbout: [
+        'Arboriculture',
+        'ANSI A300 pruning standards',
+        'ANSI Z133 climbing and rigging safety',
+        'Tree risk assessment',
+        'Plant health care',
+        'Florida palm care',
+        'Large tree transplanting',
+        'Storm and hurricane response',
+      ],
+      hasCredential: company.credentials.map((c) => ({
+        '@type': 'EducationalOccupationalCredential',
+        name: c,
+      })),
+      memberOf: company.memberships.map((m) => ({
+        '@type': 'Organization',
+        name: m,
+      })),
+    },
     address: {
       '@type': 'PostalAddress',
       // streetAddress + postalCode intentionally omitted — we publish city
@@ -109,7 +139,7 @@ export const localBusinessSchema = () => {
       '@type': 'Organization',
       name: m,
     })),
-    sameAs: [company.social.facebook],
+    sameAs: Object.values(company.social).filter((u): u is string => Boolean(u)),
   };
 
   if (reviewCountForSchema && reviewCountForSchema > 0) {

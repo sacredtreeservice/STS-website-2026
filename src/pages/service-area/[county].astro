@@ -117,6 +117,13 @@ const itemList = {
           </ul>
         </section>
 
+        {county.localContext && (
+          <>
+            <h2>Tree care in {county.county} County</h2>
+            <p>{county.localContext}</p>
+          </>
+        )}
+
         <h2>Tree care services in {county.county} County</h2>
         <p>
           The full Sacred Tree Service catalog is available across {county.name} —

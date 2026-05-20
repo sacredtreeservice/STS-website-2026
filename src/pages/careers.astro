@@ -5,11 +5,12 @@ import CtaBand from '../components/CtaBand.astro';
 import { Icon } from 'astro-icon/components';
 import { company } from '../data/company';
 
-// TODO: paste your Web3Forms access key here once you've signed up at
-// https://web3forms.com (free tier — 250 submissions/month). The key is a
-// public token by design (the form is exposed to the browser), so it's safe
-// to commit. Until this is set, submissions will fail with "Invalid Access Key".
-const WEB3FORMS_ACCESS_KEY = 'YOUR_WEB3FORMS_ACCESS_KEY';
+// Until a Web3Forms (or similar) key is wired up, the form submits via
+// the user's own mailto: client. Their email opens with all answers
+// pre-filled; they hit Send and it lands in our inbox. Works on every
+// platform with no external dependencies and no broken-form risk.
+// To upgrade later: paste a Web3Forms key into a constant here and swap
+// the submit handler in the <script> block back to a fetch() POST.
 
 const trail = [
   { name: 'Home', url: '/' },
@@ -132,12 +133,9 @@ const credentialOptions = [
         id="careers-form"
         class="apply-form"
         data-reveal
+        data-careers-email={company.email}
         novalidate
-        data-access-key={WEB3FORMS_ACCESS_KEY}
       >
-        <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
-        <input type="hidden" name="subject" value="New application — Sacred Tree careers" />
-        <input type="hidden" name="from_name" value="Sacred Tree careers form" />
         <input type="checkbox" name="botcheck" class="botcheck" tabindex="-1" autocomplete="off" />
 
         <div class="row two">
@@ -224,11 +222,11 @@ const credentialOptions = [
 
         <div class="actions">
           <button type="submit" class="btn primary large" data-submit>
-            <Icon name="lucide:send" /> <span data-submit-label>Send application</span>
+            <Icon name="lucide:send" /> <span data-submit-label>Draft application email</span>
           </button>
           <p class="fallback">
             Or email <a href={`mailto:${company.email}?subject=Job%20application`}>{company.email}</a>
-            — we’ll see it either way.
+            directly — we’ll see it either way.
           </p>
         </div>
 
@@ -237,10 +235,11 @@ const credentialOptions = [
 
       <div class="success" data-form-success hidden>
         <span class="success-ico"><Icon name="lucide:sprout" /></span>
-        <h3>Thanks — your application is in.</h3>
+        <h3>Almost there — check your email.</h3>
         <p>
-          We read every one personally. Expect to hear back within a week. In
-          the meantime, climb safe.
+          We’ve drafted your application from these answers. Click <strong>Send</strong>
+          in your email client to deliver it to <a href={`mailto:${company.email}`}>{company.email}</a>.
+          We read every one personally and expect to hear back within a week.
         </p>
         <a class="btn ghost" href="/">Back to home</a>
       </div>
@@ -264,58 +263,63 @@ const credentialOptions = [
     const errorEl = form.querySelector<HTMLElement>('[data-form-error]');
     const successEl = document.querySelector<HTMLElement>('[data-form-success]');
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
       if (!submitBtn || !submitLabel || !errorEl || !successEl) return;
 
-      // Honeypot — Web3Forms also enforces this server-side, but bail early.
+      // Honeypot — silent drop.
       const botcheck = form.querySelector<HTMLInputElement>('input[name="botcheck"]');
       if (botcheck && botcheck.checked) return;
 
-      // Native validation pass first.
       if (!form.checkValidity()) {
         form.reportValidity();
         return;
       }
 
-      errorEl.hidden = true;
-      errorEl.textContent = '';
-      submitBtn.disabled = true;
-      const originalLabel = submitLabel.textContent;
-      submitLabel.textContent = 'Sending…';
-
-      // Build a JSON payload, collapsing multi-value checkboxes into arrays.
-      const fd = new FormData(form);
-      const payload: Record<string, unknown> = {};
-      for (const key of new Set(fd.keys())) {
-        const all = fd.getAll(key);
-        payload[key] = all.length > 1 ? all : all[0];
-      }
-
-      try {
-        const res = await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-          body: JSON.stringify(payload),
-        });
-        const data = await res.json().catch(() => ({}));
-        if (res.ok && (data.success === true || data.success === undefined)) {
-          form.hidden = true;
-          successEl.hidden = false;
-          successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          return;
-        }
-        throw new Error(data?.message || 'Submission failed');
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Submission failed';
-        errorEl.textContent = `Couldn’t send — ${msg}. Try again, or email us directly.`;
+      const to = form.dataset.careersEmail || '';
+      if (!to) {
+        errorEl.textContent = 'No destination email configured. Email us directly instead.';
         errorEl.hidden = false;
-        submitBtn.disabled = false;
-        submitLabel.textContent = originalLabel ?? 'Send application';
+        return;
       }
+
+      const fd = new FormData(form);
+      const get = (k: string) => fd.getAll(k).filter((v) => String(v).trim().length > 0).join(', ');
+
+      const fields: Array<[string, string]> = [
+        ['Name', get('name')],
+        ['Phone', get('phone')],
+        ['Email', get('email')],
+        ['Interests', get('interests')],
+        ['Years in trade', get('years_in_trade')],
+        ['Comfort with heights', get('comfort_with_heights')],
+        ['Credentials', get('credentials')],
+        ['Favorite tree', get('favorite_tree')],
+        ['Resume / portfolio', get('portfolio_link')],
+        ['Notes', get('notes')],
+      ];
+
+      const body = fields
+        .filter(([, v]) => v.length > 0)
+        .map(([k, v]) => `${k}: ${v}`)
+        .join('\n');
+
+      const name = get('name') || 'new candidate';
+      const subject = `Job application — ${name}`;
+      const href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+      // Open the user's mail client. Some browsers block window.location
+      // assignment in this context — fall back to a synthetic <a> click.
+      const link = document.createElement('a');
+      link.href = href;
+      link.rel = 'noopener';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      form.hidden = true;
+      successEl.hidden = false;
+      successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   };
 
