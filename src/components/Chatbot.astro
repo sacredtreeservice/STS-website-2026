@@ -1,0 +1,50 @@
+---
+// GoHighLevel / LeadConnector website chat widget ("Clarissa").
+// Conversations land in the GHL Conversations inbox for this location and can
+// drive GHL workflows (auto follow-up, tagging, missed-chat text-back, etc.).
+//
+// To update this widget, grab a fresh snippet from GHL (Sites → Chat Widget)
+// and change the values below. The only one that ties the bubble to the
+// account is LOCATION_ID.
+const LOCATION_ID = 'BzsvoAjvPoZmnoC8JFFc';
+const SUB_HEADING =
+  'Enter your question below, and Clarissa, our representative, will get right back to you.';
+const PROMPT_MSG = 'Hey! Have a question? Chat with Clarissa here.';
+const AGENCY_NAME = 'Lantern Media';
+const AGENCY_WEBSITE = 'www.lanternmedia.net';
+
+const LOADER_SRC = 'https://widgets.leadconnectorhq.com/loader.js';
+const RESOURCES_URL = 'https://widgets.leadconnectorhq.com/chat-widget/loader.js';
+---
+
+{/*
+  transition:persist keeps the live widget (and any open chat) mounted across
+  Astro view-transition navigations instead of tearing it down and rebuilding
+  it on every page change.
+*/}
+<chat-widget
+  transition:persist
+  location-id={LOCATION_ID}
+  sub-heading={SUB_HEADING}
+  prompt-msg={PROMPT_MSG}
+  agency-name={AGENCY_NAME}
+  agency-website={AGENCY_WEBSITE}
+  chat-type="allInOneChat"
+  show-consent-checkbox="true"
+  source="WEB_USER"
+></chat-widget>
+
+<script is:inline define:vars={{ LOADER_SRC, RESOURCES_URL }}>
+  // Inject the LeadConnector loader exactly once. It registers the
+  // <chat-widget> custom element globally; once defined, the persisted
+  // element above upgrades itself and stays live across SPA navigations,
+  // so we never need to re-inject on astro:page-load.
+  (function () {
+    if (document.getElementById('ghl-chat-loader')) return;
+    const s = document.createElement('script');
+    s.id = 'ghl-chat-loader';
+    s.src = LOADER_SRC;
+    s.setAttribute('data-resources-url', RESOURCES_URL);
+    document.body.appendChild(s);
+  })();
+</script>

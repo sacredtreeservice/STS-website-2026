@@ -4,6 +4,7 @@ import Seo from '../components/Seo.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import StickyActionBar from '../components/StickyActionBar.astro';
+import Chatbot from '../components/Chatbot.astro';
 import JsonLd from '../components/JsonLd.astro';
 import { localBusinessSchema, breadcrumbSchema } from '../lib/schema';
 
@@ -64,6 +65,7 @@ const allSchema = [...baseSchema, ...extra];
     </main>
     <Footer />
     <StickyActionBar />
+    <Chatbot />
 
     <script>
       // Scroll-reveal: any element with [data-reveal] fades up when it enters the viewport.
