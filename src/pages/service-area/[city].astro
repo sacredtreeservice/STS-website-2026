@@ -2,7 +2,7 @@
 import { Icon } from 'astro-icon/components';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import JobberForm from '../../components/JobberForm.astro';
+import BookingForm from '../../components/BookingForm.astro';
 import FaqBlock from '../../components/FaqBlock.astro';
 import { cities } from '../../data/cities';
 import { services } from '../../data/services';
@@ -94,7 +94,7 @@ const county = getCountyByName(city.county);
       </article>
 
       <aside>
-        <JobberForm
+        <BookingForm
           heading={`Free Estimate in ${city.name}`}
           context={`${city.name}, FL — general tree service estimate`}
         />

@@ -2,7 +2,7 @@
 import { Icon } from 'astro-icon/components';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import JobberForm from '../../components/JobberForm.astro';
+import BookingForm from '../../components/BookingForm.astro';
 import FaqBlock from '../../components/FaqBlock.astro';
 import { services } from '../../data/services';
 import { cities } from '../../data/cities';
@@ -74,7 +74,7 @@ const jsonLd = [serviceSchema({ name: service.name, description: service.descrip
       </article>
 
       <aside>
-        <JobberForm context={service.name} />
+        <BookingForm context={service.name} />
       </aside>
     </div>
   </div>

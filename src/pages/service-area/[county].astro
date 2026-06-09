@@ -2,7 +2,7 @@
 import { Icon } from 'astro-icon/components';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import JobberForm from '../../components/JobberForm.astro';
+import BookingForm from '../../components/BookingForm.astro';
 import FaqBlock from '../../components/FaqBlock.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import { counties } from '../../data/counties';
@@ -157,7 +157,7 @@ const itemList = {
       </article>
 
       <aside>
-        <JobberForm
+        <BookingForm
           heading={`Free Estimate in ${county.county} County`}
           context={`${county.name} — general tree service estimate`}
         />

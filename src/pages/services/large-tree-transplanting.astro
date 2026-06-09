@@ -2,7 +2,7 @@
 import { Icon } from 'astro-icon/components';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import JobberForm from '../../components/JobberForm.astro';
+import BookingForm from '../../components/BookingForm.astro';
 import FaqBlock from '../../components/FaqBlock.astro';
 import { getServiceBySlug } from '../../data/services';
 import { cities } from '../../data/cities';
@@ -250,8 +250,8 @@ const jsonLd = [
         <FaqBlock faqs={service.faqs!} />
       </article>
       <aside>
-        <JobberForm
-          heading="Book a site walk"
+        <BookingForm
+          heading="Request a site walk"
           subheading="Free assessment. We’ll give you an honest read on whether the move makes sense — and what it’ll take to do it right."
           context="Large Tree Transplanting"
         />

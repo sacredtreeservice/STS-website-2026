@@ -1,0 +1,146 @@
+---
+import { company } from '../data/company';
+
+// ── Website lead-request form (GoHighLevel / LeadConnector) ───────────────
+// Source: Lantern Media, form "Website Booking STS - Live"
+// (form id a92AgmBcmmq31EUdytME). On submit, GHL captures the lead, tags it
+// "Website" source, syncs it into Jobber for scheduling, and fires instant
+// team notifications + an automated confirmation email/SMS to the client.
+//
+// IMPORTANT: this is a GHL *Form* (/widget/form/), i.e. a lead-REQUEST form —
+// NOT a self-scheduling calendar. Customers submit their details; the team
+// follows up to schedule. It must NOT contain a live time-slot picker; that's
+// configured on the GHL side by Lantern. Keep on-page copy framed as a request.
+//
+// To swap forms, replace GHL_FORM_ID + the form name below with a fresh embed.
+const GHL_FORM_ID = 'a92AgmBcmmq31EUdytME';
+const GHL_FORM_NAME = 'Website Booking STS - Live';
+const GHL_FORM_SRC = `https://api.leadconnectorhq.com/widget/form/${GHL_FORM_ID}`;
+const GHL_EMBED_JS = 'https://link.msgsndr.com/js/form_embed.js';
+const mountId = `inline-${GHL_FORM_ID}`;
+
+export interface Props {
+  heading?: string;
+  subheading?: string;
+  /**
+   * Optional context label shown above the form (e.g. "Tree Removal in Winter Park").
+   * Visual aid so the visitor self-identifies on a shared form. To capture this
+   * into GHL for attribution, Lantern can add a hidden "source page" field.
+   */
+  context?: string;
+}
+
+const {
+  heading = 'Request a Free Estimate',
+  subheading = "Send us your details and we'll reach out to schedule — a real person confirms the timing with you.",
+  context,
+} = Astro.props;
+---
+
+<section class="lead-form">
+  <header>
+    <h2>{heading}</h2>
+    <p>{subheading}</p>
+    {context && <p class="context">For: <strong>{context}</strong></p>}
+  </header>
+
+  <div class="ghl-mount">
+    <iframe
+      src={GHL_FORM_SRC}
+      id={mountId}
+      title={GHL_FORM_NAME}
+      loading="lazy"
+      data-layout="{'id':'INLINE'}"
+      data-trigger-type="alwaysShow"
+      data-trigger-value=""
+      data-activation-type="alwaysActivated"
+      data-activation-value=""
+      data-deactivation-type="neverDeactivate"
+      data-deactivation-value=""
+      data-form-name={GHL_FORM_NAME}
+      data-height="719"
+      data-layout-iframe-id={mountId}
+      data-form-id={GHL_FORM_ID}
+    ></iframe>
+  </div>
+
+  <p class="fallback-call">
+    Prefer to talk? Call <a href={company.phoneHref}>{company.phone}</a>.
+  </p>
+</section>
+
+<script is:inline define:vars={{ GHL_EMBED_JS }}>
+  // Load GHL's form_embed.js once. It registers a global listener that
+  // auto-resizes any GHL form iframe to its content height (incl. iframes that
+  // mount on later Astro view-transition navigations). Guard by src so we never
+  // inject it twice; re-ensure on page-load in case a body swap removed it.
+  (function () {
+    function loadGhlForm() {
+      if (document.querySelector('script[src="' + GHL_EMBED_JS + '"]')) return;
+      var s = document.createElement('script');
+      s.src = GHL_EMBED_JS;
+      document.body.appendChild(s);
+    }
+    loadGhlForm();
+    if (!window.__ghlFormEmbedBound) {
+      window.__ghlFormEmbedBound = true;
+      document.addEventListener('astro:page-load', loadGhlForm);
+    }
+  })();
+</script>
+
+<style>
+  .lead-form {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    padding: 2rem 1.75rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .lead-form header { margin-bottom: 1.25rem; }
+  .lead-form h2 {
+    font-family: 'Marcellus', Georgia, serif;
+    font-weight: 400;
+    color: var(--green-dark);
+    margin: 0 0 0.4rem;
+    font-size: 1.4rem;
+  }
+  .lead-form p { margin: 0.25rem 0; color: var(--muted); }
+  .context {
+    background: var(--green-tint);
+    color: var(--green-dark);
+    padding: 0.5rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    display: inline-block;
+  }
+  .ghl-mount {
+    margin: 1.25rem 0 0.75rem;
+  }
+  .ghl-mount iframe {
+    width: 100%;
+    /* Reserve height so the form's late arrival doesn't shift layout (CLS);
+       form_embed.js adjusts the real height once the iframe reports it. */
+    min-height: 719px;
+    border: none;
+    border-radius: 8px;
+    display: block;
+  }
+  @media (max-width: 600px) {
+    .ghl-mount iframe { min-height: 820px; }
+  }
+  .fallback-call {
+    margin: 1rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.92rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  .fallback-call a {
+    color: var(--green-dark);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .fallback-call a:hover { text-decoration: underline; }
+</style>
