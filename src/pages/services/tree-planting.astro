@@ -1,0 +1,555 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import JobberForm from '../../components/JobberForm.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import { getServiceBySlug } from '../../data/services';
+import { cities } from '../../data/cities';
+import { serviceSchema, faqSchema } from '../../lib/schema';
+
+const service = getServiceBySlug('tree-planting')!;
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: service.name, url: `/services/${service.slug}/` },
+];
+
+const useCases = [
+  {
+    icon: 'lucide:repeat',
+    title: 'Same-day with a removal',
+    body: 'A tree just came out and you don’t want a bare spot. We replant where the old one stood on the same visit — one crew, one trip, one invoice. Pairs directly with our tree removal service.',
+  },
+  {
+    icon: 'lucide:sprout',
+    title: '“I just want trees planted”',
+    body: 'No removal involved — you simply want to add trees. Shade where there’s none, privacy along a line, a flowering accent by the entry. Planting is a full standalone service, not just an add-on.',
+  },
+  {
+    icon: 'lucide:home',
+    title: 'New build or fresh sod',
+    body: 'A new home or a cleared lot is a blank canvas. We help you place the right trees from the start — before roots and canopies have to fight a layout that was never planned for them.',
+  },
+  {
+    icon: 'lucide:flower-2',
+    title: 'Filling out a landscape',
+    body: 'You love your yard but it’s missing something — a specimen tree, an understory layer, a row of natives. We round out the planting with species that suit the site and the look you’re after.',
+  },
+];
+
+const phases = [
+  {
+    n: '01',
+    title: 'Site walk & plan',
+    time: '1 visit',
+    body: 'We look at your soil, sun, drainage, overhead lines, and how you actually use the space. Then we recommend species using right-tree-right-place principles — the right tree for the spot, not whatever happens to be on the truck. You get the plan before you commit.',
+  },
+  {
+    n: '02',
+    title: 'Source from local growers',
+    time: 'days',
+    body: 'We hand-pick healthy, locally grown specimens from Central Florida growers we know personally. Trees raised in our own climate and soils transplant with far less shock than stock trucked in from out of state — and we choose the actual trees, not a catalog number.',
+  },
+  {
+    n: '03',
+    title: 'Delivery & installation',
+    time: '1 day',
+    body: 'Our own crew delivers and plants. Hole dug to the right width, tree set at the proper depth (planted high for FL drainage), backfilled with native soil, mulched, and staked only where it’s actually needed. The same people who chose the tree are the ones who put it in the ground.',
+  },
+  {
+    n: '04',
+    title: 'Establishment & years of care',
+    time: 'ongoing',
+    body: 'This is where young trees live or die — so we stay involved. Establishment watering guidance, monitoring for transplant stress, deep-root feeding for sandy soils, and pest scouting, folded into our Plant Health Care program for years, not just install day.',
+  },
+];
+
+const paletteNotes = [
+  {
+    name: 'Florida-native foundation',
+    body: 'Live oak, southern magnolia, bald cypress, red maple, dahoon holly, sabal palm. Tough, well-adapted, low-maintenance once established — the backbone of a resilient Central Florida landscape.',
+  },
+  {
+    name: 'Flowering & accent trees',
+    body: 'Crape myrtle, redbud, fringe tree, and other ornamentals that earn their keep with bloom and form. A little more attention than a native oak, and worth it in the right spot.',
+  },
+  {
+    name: 'Shade & canopy trees',
+    body: 'The trees that change how a property feels — cooling a west wall, sheltering a patio, framing a drive. We size the mature canopy and root spread to the space before we plant.',
+  },
+  {
+    name: 'Palms, placed right',
+    body: 'Sabal palmetto and other well-suited palms for the look many Florida landscapes want — chosen for the site and spaced for the canopy they’ll actually grow into.',
+  },
+];
+
+const reasons = [
+  {
+    icon: 'lucide:map-pin',
+    title: 'Locally grown, locally sourced',
+    body: 'We know the growers. Trees raised in Central Florida’s climate and soils — Apopka is the “Indoor Foliage Capital” for a reason — transplant with less shock and establish faster than stock shipped in from out of state.',
+  },
+  {
+    icon: 'lucide:calendar-check',
+    title: 'A near year-round season',
+    body: 'Central Florida’s growing season runs almost all year, which opens up a wider, more interesting plant palette and a far longer planting window than up north. The cooler, drier months are the sweet spot — we’ll tell you the ideal time for your species.',
+  },
+  {
+    icon: 'lucide:heart-handshake',
+    title: 'We plant — and maintain',
+    body: 'Most companies plant and leave. We don’t. New trees fold into our Plant Health Care program for years afterward, because getting a tree established is the part that actually decides whether it makes it.',
+  },
+];
+
+const cityList = cities.slice(0, 18);
+const jsonLd = [
+  serviceSchema({ name: service.name, description: service.description, slug: service.slug }),
+  faqSchema(service.faqs!),
+];
+---
+
+<Base
+  title="Tree Planting & Installation in Florida — Sacred Tree Service"
+  description="Locally grown, locally sourced trees delivered and installed by our own crew — same-day with a removal or as a standalone planting. Florida natives to ornamentals, planted right and maintained for years. Serving the greater Orlando area from Apopka."
+  breadcrumbs={trail}
+  jsonLd={jsonLd}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head" data-reveal>
+      <span class="icon-hero" aria-hidden="true"><Icon name={service.icon} /></span>
+      <span class="kicker">Tree planting & installation</span>
+      <h1>Plant the right tree, the right way.</h1>
+      <p class="lede">
+        Locally grown trees we deliver and install ourselves — same day
+        alongside a removal, or as a standalone planting. Then we keep them
+        healthy for years, not just install day.
+      </p>
+    </header>
+
+    <section class="framing" data-reveal aria-labelledby="framing-heading">
+      <div class="framing-inner">
+        <span class="kicker">How we work</span>
+        <h2 id="framing-heading">We don’t just plant — we know the growers.</h2>
+        <p>
+          A lot of “tree planting” is a box-store sapling dropped in a hole
+          and forgotten. We work differently. The trees come from Central
+          Florida growers we know personally — locally grown, locally sourced
+          stock raised in the same climate and soils your yard has, so it
+          transplants with far less shock than a tree trucked in from out of
+          state. We pick the specimens, we deliver them, and our own crew puts
+          them in the ground.
+        </p>
+        <p>
+          And we don’t plant and leave. The first year or two is when a young
+          tree lives or dies, so every planting folds into our
+          <a href="/services/plant-health-care/">Plant Health Care</a> program —
+          establishment watering, monitoring for transplant stress, and
+          deep-root feeding tuned to Florida’s sandy soils. Planting the tree
+          is the easy part. Keeping it alive and thriving is the part we’re
+          built around.
+        </p>
+      </div>
+    </section>
+
+    <section class="when" aria-labelledby="when-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">When planting is the right call</span>
+        <h2 id="when-heading">Same-day with a removal, or all on its own.</h2>
+        <p>
+          Whether a tree just came out or you simply want more trees, we’ll
+          help you put the right ones in the right places.
+        </p>
+      </header>
+      <div class="tiles" data-reveal data-reveal-stagger>
+        {useCases.map((u) => (
+          <article class="tile">
+            <span class="ico"><Icon name={u.icon} /></span>
+            <h3>{u.title}</h3>
+            <p>{u.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="process" aria-labelledby="process-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">Our process</span>
+        <h2 id="process-heading">From the right tree to a tree that lasts.</h2>
+        <p>
+          Anyone can dig a hole. The difference is choosing the right tree for
+          the spot, sourcing it well, planting it correctly, and staying with
+          it through the years that decide whether it makes it.
+        </p>
+      </header>
+      <ol class="phases" data-reveal data-reveal-stagger>
+        {phases.map((p) => (
+          <li class="phase">
+            <span class="phase-n">{p.n}</span>
+            <div class="phase-body">
+              <header>
+                <h3>{p.title}</h3>
+                <span class="phase-time">{p.time}</span>
+              </header>
+              <p>{p.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="species" aria-labelledby="species-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">What we’ll plant</span>
+        <h2 id="species-heading">A palette as wide as Central Florida allows.</h2>
+        <p>
+          Central Florida’s near year-round growing season opens up a wide,
+          interesting range — from the foundational natives that anchor a
+          landscape to the more delicate ornamentals that finish it. We’ll
+          help you adapt your landscape as much as the environment around you
+          will allow:
+        </p>
+      </header>
+      <div class="species-grid" data-reveal data-reveal-stagger>
+        {paletteNotes.map((s) => (
+          <div class="species-card">
+            <h3>{s.name}</h3>
+            <p>{s.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="survival" aria-labelledby="survival-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">Why plant with us</span>
+        <h2 id="survival-heading">Three things that set our planting apart.</h2>
+        <p>
+          The difference between a tree that struggles and a tree that thrives
+          usually comes down to where it’s from, when it goes in, and what
+          happens after.
+        </p>
+      </header>
+      <div class="survival-grid" data-reveal data-reveal-stagger>
+        {reasons.map((f) => (
+          <article class="survival-card">
+            <span class="ico"><Icon name={f.icon} /></span>
+            <h3>{f.title}</h3>
+            <p>{f.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="rtrp" data-reveal aria-labelledby="rtrp-heading">
+      <div class="rtrp-inner">
+        <span class="kicker">Right tree, right place</span>
+        <h2 id="rtrp-heading">The principle behind every recommendation.</h2>
+        <p>
+          The most common planting mistake isn’t a bad tree — it’s a good tree
+          in the wrong spot. A canopy that will hit the power lines in ten
+          years. Roots crowding a foundation. A sun-lover planted in shade.
+          Right-tree-right-place means matching the species to your soil, sun,
+          drainage, overhead lines, and the room the mature canopy and roots
+          will actually need — so you’re not fighting the site for the next
+          thirty years.
+        </p>
+        <p>
+          It also pairs naturally with a removal. If a tree is coming out, the
+          same site walk is the perfect moment to plan what goes back in —
+          ask us about replanting on your <a href="/services/tree-removal/">tree removal</a> visit.
+        </p>
+      </div>
+    </section>
+
+    <div class="layout">
+      <article class="cities-faq">
+        <h2>Cities we serve</h2>
+        <p>
+          We deliver and install trees from our Apopka, FL base across the
+          greater Orlando area:
+        </p>
+        <ul class="cities">
+          {cityList.map((c) => (
+            <li><a href={`/services/${service.slug}/${c.slug}/`}>Tree Planting in {c.name}</a></li>
+          ))}
+        </ul>
+        <FaqBlock faqs={service.faqs!} />
+      </article>
+      <aside>
+        <JobberForm
+          heading="Plan your planting"
+          subheading="Free site walk. We’ll recommend the right trees for your spot, source them locally, and plant them — same-day with a removal or on their own."
+          context="Tree Planting & Installation"
+        />
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .head {
+    text-align: center;
+    margin: 1rem 0 2.5rem;
+  }
+  .icon-hero {
+    display: inline-grid;
+    place-items: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(75, 112, 33, 0.15), rgba(104, 204, 209, 0.12));
+    color: var(--green-dark);
+    margin-bottom: 1rem;
+  }
+  .icon-hero [data-icon] { width: 40px; height: 40px; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h1 {
+    font-size: clamp(2rem, 4.6vw, 2.8rem);
+    margin: 0.4rem 0 0.75rem;
+  }
+  .lede {
+    color: var(--muted);
+    max-width: 60ch;
+    margin: 0 auto;
+    font-size: 1.15rem;
+  }
+
+  .section-head {
+    text-align: center;
+    max-width: 62ch;
+    margin: 0 auto 2.25rem;
+  }
+  .section-head h2 {
+    font-size: clamp(1.6rem, 3.2vw, 2.1rem);
+    margin: 0.4rem 0 0.6rem;
+  }
+  .section-head p {
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* Framing band */
+  .framing {
+    margin: 3rem auto 4rem;
+    max-width: 760px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 2.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .framing h2 {
+    font-size: clamp(1.5rem, 3vw, 1.9rem);
+    margin: 0.4rem 0 1rem;
+  }
+  .framing p {
+    margin: 0 0 0.85rem;
+    font-size: 1.02rem;
+    color: var(--ink-soft);
+    line-height: 1.65;
+  }
+  .framing p:last-child { margin-bottom: 0; }
+  .framing a {
+    color: var(--green-dark);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  /* Use-case tiles */
+  .when { padding: 3rem 0; }
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+  .tile {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: transform 0.25s var(--easing), border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .tile:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+  }
+  .ico {
+    display: inline-grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--green-tint), color-mix(in srgb, var(--teal) 18%, transparent));
+    color: var(--green-dark);
+    margin-bottom: 0.85rem;
+  }
+  .ico [data-icon] { width: 24px; height: 24px; }
+  .tile h3 { font-size: 1.05rem; margin: 0 0 0.3rem; }
+  .tile p { color: var(--muted); margin: 0; font-size: 0.93rem; line-height: 1.55; }
+  @media (max-width: 980px) { .tiles { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .tiles { grid-template-columns: 1fr; } }
+
+  /* Process phases */
+  .process { padding: 3rem 0; }
+  .phases {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-width: 880px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1.25rem;
+  }
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem 1.75rem;
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  .phase-n {
+    font-family: 'Marcellus', Georgia, serif;
+    font-size: 2rem;
+    color: var(--green);
+    line-height: 1;
+  }
+  .phase-body header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: baseline;
+    margin-bottom: 0.4rem;
+  }
+  .phase-body h3 {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  .phase-time {
+    font-size: 0.85rem;
+    color: var(--green-dark);
+    background: var(--green-tint);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+  .phase-body p { margin: 0; color: var(--ink-soft); line-height: 1.6; }
+  @media (max-width: 600px) {
+    .phase { grid-template-columns: 1fr; padding: 1.25rem; }
+    .phase-n { font-size: 1.5rem; }
+  }
+
+  /* Species / palette grid */
+  .species { padding: 3rem 0; }
+  .species-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+  .species-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+  }
+  .species-card h3 {
+    font-size: 1.05rem;
+    margin: 0 0 0.4rem;
+  }
+  .species-card p {
+    color: var(--muted);
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  @media (max-width: 980px) { .species-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .species-grid { grid-template-columns: 1fr; } }
+
+  /* Reasons / why-us factors */
+  .survival { padding: 3rem 0 4rem; }
+  .survival-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  .survival-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.6rem;
+  }
+  .survival-card h3 { font-size: 1.1rem; margin: 0 0 0.4rem; }
+  .survival-card p { color: var(--muted); margin: 0; font-size: 0.95rem; line-height: 1.6; }
+  @media (max-width: 900px) { .survival-grid { grid-template-columns: 1fr; } }
+
+  /* Right-tree-right-place band */
+  .rtrp {
+    margin: 0 auto 4rem;
+    max-width: 760px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 2.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .rtrp h2 {
+    font-size: clamp(1.5rem, 3vw, 1.9rem);
+    margin: 0.4rem 0 1rem;
+  }
+  .rtrp p {
+    margin: 0 0 0.85rem;
+    font-size: 1.02rem;
+    color: var(--ink-soft);
+    line-height: 1.65;
+  }
+  .rtrp p:last-child { margin-bottom: 0; }
+  .rtrp a {
+    color: var(--green-dark);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  /* Bottom layout: cities + FAQ + form */
+  .layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 3rem;
+    align-items: start;
+    margin-top: 2rem;
+  }
+  .cities-faq h2 {
+    font-size: 1.5rem;
+    margin: 2rem 0 0.85rem;
+  }
+  .cities {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    columns: 2;
+    gap: 1rem;
+  }
+  .cities li { margin-bottom: 0.4rem; }
+  .cities a { color: var(--green-dark); text-decoration: none; }
+  .cities a:hover { text-decoration: underline; }
+  aside { position: sticky; top: 100px; }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { position: static; }
+    .cities { columns: 1; }
+  }
+</style>

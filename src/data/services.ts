@@ -217,7 +217,38 @@ export const services: Service[] = [
       },
       {
         q: 'Will you replant after a removal?',
-        a: 'Yes. Removals should be part of a healthy landscape cycle, not the end of it. If you’d like to replant, we can recommend appropriate species (right-tree-right-place principles), source the new tree, and plant it as part of the same visit or a follow-up. Replanting after a removal is one of the most overlooked parts of good tree care.',
+        a: 'Yes. Removals should be part of a healthy landscape cycle, not the end of it. If you’d like to replant, we can recommend appropriate species (right-tree-right-place principles), source the new tree, and plant it as part of the same visit or a follow-up — this is our dedicated Tree Planting & Installation service. Replanting after a removal is one of the most overlooked parts of good tree care.',
+      },
+    ],
+  },
+  {
+    slug: 'tree-planting',
+    name: 'Tree Planting & Installation',
+    shortName: 'Planting',
+    blurb: 'Locally grown trees, planted right and cared for for years — same-day with a removal or on their own.',
+    description:
+      'We plant trees the right way: locally grown, locally sourced specimens we deliver and install ourselves — same day alongside a removal, or as a standalone “I just want trees planted” job. The range runs from foundational Florida-native species to more delicate ornamentals, and Central Florida’s near year-round growing season opens up a wide, interesting palette. And we don’t plant and leave — we maintain your new trees for years afterward, tied directly into our Plant Health Care program, guided start to finish by right-tree-right-place principles.',
+    icon: 'lucide:sprout',
+    faqs: [
+      {
+        q: 'Can you plant a tree the same day you remove one — or do I have to book planting separately?',
+        a: 'Either works. Most of our planting happens the same day as a removal — the crew, equipment, and access are already on site, so a fresh tree goes in where the old one came out and you only pay for one visit. But planting is also a standalone service: plenty of customers call us simply because they want trees added to their landscape, with no removal involved at all. Same-visit planting after a removal typically runs $250–$1,200 per tree installed (size and species dependent); a standalone planting day is quoted on its own based on tree count, sizes, and access.',
+      },
+      {
+        q: 'Where do the trees come from — do you grow them or buy them from a big-box store?',
+        a: 'Neither a warehouse pallet nor a mystery shipment. We source locally grown, locally sourced trees from Central Florida growers we personally know — Apopka is the “Indoor Foliage Capital,” and this region is one of the best places in the country to source healthy nursery stock. Because the trees are grown in our climate and soils, they transplant with far less shock than stock trucked in from out of state. We pick the specimens, we deliver them, and our own crew installs them — so the same people who choose the tree are the ones who plant it correctly.',
+      },
+      {
+        q: 'What should I plant — native species or ornamentals? What actually thrives in Central Florida?',
+        a: 'Both have a place, and we help you adapt your landscape as much as the environment around you will allow. Florida-native species are the foundation — live oak, southern magnolia, bald cypress, red maple, dahoon holly, and sabal palm are tough, well-adapted, and low-maintenance once established. From there you can layer in more delicate ornamentals — flowering and accent trees that reward a little extra care. Every recommendation follows right-tree-right-place: we match the species to your soil, sun, drainage, overhead lines, and how much room the mature canopy and roots will actually need, so you’re not fighting the site for the next thirty years.',
+      },
+      {
+        q: 'Do you just plant the tree and leave, or do you take care of it afterward?',
+        a: 'We stay involved. The first year or two after planting is when a young tree lives or dies, so we don’t plant and walk away. New plantings fold directly into our Plant Health Care program — establishment watering guidance, monitoring for transplant stress, deep-root fertilization tuned to Florida’s sandy soils, and pest and disease scouting — for years afterward, not just the install day. Planting the tree is the easy part; getting it established and keeping it healthy is the part most companies skip, and it’s the part we’re built around.',
+      },
+      {
+        q: 'When is the best time of year to plant a tree in Central Florida?',
+        a: 'Central Florida’s growing season runs nearly year-round, so the planting window is far wider here than up north — one of the real advantages of this climate. That said, the sweet spot for most trees is the cooler, drier months from roughly October through March: the tree can settle its roots without the heat and water stress of peak summer, and the natural rains of the following wet season help it establish. We do plant in summer when it makes sense (especially same-day with a removal), with closer attention to irrigation while the tree takes hold. We’ll tell you the ideal window for your specific species rather than rush a planting that would do better a few weeks later.',
       },
     ],
   },

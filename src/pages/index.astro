@@ -12,11 +12,24 @@ import LatestPosts from '../components/LatestPosts.astro';
 import QuickFacts from '../components/QuickFacts.astro';
 import CtaBand from '../components/CtaBand.astro';
 import heroImage from '../assets/hero.jpg';
-import { services } from '../data/services';
+import { services, type Service } from '../data/services';
 import { cities } from '../data/cities';
 import { company } from '../data/company';
 
-const featuredServices = services.slice(0, 6);
+// Curated homepage feature set — tells the "every stage of a tree's life"
+// story (plant → prune → maintain → remove & replant) and surfaces the new
+// Tree Planting line up front, which slice(0,6) would otherwise bury.
+const featuredSlugs = [
+  'tree-pruning',
+  'tree-planting',
+  'plant-health-care',
+  'tree-removal',
+  'palm-tree-services',
+  'stump-grinding',
+];
+const featuredServices = featuredSlugs
+  .map((slug) => services.find((s) => s.slug === slug))
+  .filter((s): s is Service => Boolean(s));
 
 const cityBySlug = new Map(cities.map((c) => [c.slug, c]));
 const pick = (...slugs: string[]) =>

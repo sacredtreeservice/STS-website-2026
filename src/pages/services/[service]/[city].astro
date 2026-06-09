@@ -1,10 +1,12 @@
 ---
+import { Icon } from 'astro-icon/components';
 import Base from '../../../layouts/Base.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import JobberForm from '../../../components/JobberForm.astro';
 import FaqBlock from '../../../components/FaqBlock.astro';
 import { services } from '../../../data/services';
 import { cities } from '../../../data/cities';
+import { getCountyByName } from '../../../data/counties';
 import { serviceSchema, faqSchema } from '../../../lib/schema';
 
 export async function getStaticPaths() {
@@ -40,6 +42,11 @@ const faqs = [
 
 const localHook = city.hook ?? `Property owners in ${city.name} rely on us for safe, professional tree care across ${city.county} County.`;
 
+const county = getCountyByName(city.county);
+// Cross-links: other services available in this same city, to turn each
+// long-tail page into part of a real cluster instead of an orphan.
+const otherServices = services.filter((s) => s.slug !== service.slug).slice(0, 6);
+
 const jsonLd = [
   serviceSchema({ name: service.name, description: service.description, slug: service.slug, city: city.name }),
   faqSchema(faqs),
@@ -71,12 +78,25 @@ const jsonLd = [
         <h2>About {service.name.toLowerCase()} in {city.name}</h2>
         <p>{service.description}</p>
 
+        {city.intro && (
+          <>
+            <h2>Tree care in {city.name}</h2>
+            <p>{city.intro}</p>
+            {city.species && city.species.length > 0 && (
+              <p class="meta-line"><strong>Common trees &amp; palms here:</strong> {city.species.join(', ')}.</p>
+            )}
+            {city.landmarks && city.landmarks.length > 0 && (
+              <p class="meta-line"><strong>Areas we cover around {city.name}:</strong> {city.landmarks.join(', ')}.</p>
+            )}
+          </>
+        )}
+
         <h2>Serving {city.name} and nearby</h2>
         <p>
           Sacred Tree Service is based in Apopka, FL — centrally located to
-          reach {city.name} and the rest of the greater Orlando area. We work
-          across {city.county} County and the broader Central Florida region
-          within a 50-mile service radius.
+          reach {city.name} and the rest of the greater Orlando area{city.miles > 0 ? `, roughly ${city.miles} miles from our base` : ''}.
+          We work across {county ? <a href={`/service-area/${county.slug}/`}>{county.name}</a> : `${city.county} County`} and the
+          broader Central Florida region within a 50-mile service radius.
         </p>
 
         <h2>What to expect</h2>
@@ -88,6 +108,23 @@ const jsonLd = [
         </ol>
 
         <FaqBlock faqs={faqs} />
+
+        <nav class="related" aria-label={`More tree services in ${city.name}`}>
+          <h2>More tree services in {city.name}</h2>
+          <ul>
+            {otherServices.map((s) => (
+              <li>
+                <a href={`/services/${s.slug}/${city.slug}/`}>
+                  <Icon name={s.icon} aria-hidden="true" />
+                  <span>{s.shortName} in {city.name}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p class="related-foot">
+            See <a href={`/service-area/${city.slug}/`}>all tree services in {city.name}</a>{county && <>, part of our <a href={`/service-area/${county.slug}/`}>{county.name}</a> service area</>}.
+          </p>
+        </nav>
       </article>
 
       <aside>
@@ -120,6 +157,43 @@ const jsonLd = [
   article h2 { font-size: 1.5rem; margin: 2rem 0 0.85rem; }
   .steps { padding-left: 1.2rem; }
   .steps li { margin-bottom: 0.6rem; }
+  .meta-line {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    margin: 0.5rem 0;
+  }
+  .meta-line strong { color: var(--green-dark); }
+  .related {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .related h2 { font-size: 1.3rem; margin: 0 0 1rem; }
+  .related ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+  .related ul a {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.6rem 0.85rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--green-dark);
+    font-size: 0.92rem;
+    transition: all 0.2s var(--easing);
+  }
+  .related ul a:hover { border-color: var(--border-strong); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+  .related ul [data-icon] { width: 16px; height: 16px; opacity: 0.7; flex-shrink: 0; }
+  .related-foot { font-size: 0.92rem; color: var(--muted); margin: 0; }
+  @media (max-width: 520px) { .related ul { grid-template-columns: 1fr; } }
   aside { position: sticky; top: 100px; }
   @media (max-width: 900px) {
     .layout { grid-template-columns: 1fr; }

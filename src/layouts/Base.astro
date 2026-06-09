@@ -6,7 +6,7 @@ import Footer from '../components/Footer.astro';
 import StickyActionBar from '../components/StickyActionBar.astro';
 import Chatbot from '../components/Chatbot.astro';
 import JsonLd from '../components/JsonLd.astro';
-import { localBusinessSchema, breadcrumbSchema } from '../lib/schema';
+import { localBusinessSchema, breadcrumbSchema, websiteSchema } from '../lib/schema';
 
 export interface Props {
   title: string;
@@ -20,7 +20,7 @@ export interface Props {
 
 const { title, description, canonical, ogImage, noindex, breadcrumbs, jsonLd } = Astro.props;
 
-const baseSchema: Record<string, any>[] = [localBusinessSchema()];
+const baseSchema: Record<string, any>[] = [localBusinessSchema(), websiteSchema()];
 if (breadcrumbs && breadcrumbs.length > 1) baseSchema.push(breadcrumbSchema(breadcrumbs));
 const extra = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 const allSchema = [...baseSchema, ...extra];
@@ -43,20 +43,6 @@ const allSchema = [...baseSchema, ...extra];
     <Seo title={title} description={description} canonical={canonical} ogImage={ogImage} noindex={noindex} />
     <JsonLd data={allSchema} />
     <ClientRouter />
-
-    <script is:inline>
-      // Anti-FOUC theme bootstrap. Runs before paint, applies stored or system theme.
-      (function () {
-        try {
-          var stored = localStorage.getItem('sts-theme');
-          var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-          var theme = stored || (sysDark ? 'dark' : 'light');
-          document.documentElement.dataset.theme = theme;
-          var meta = document.querySelector('meta[name="theme-color"]');
-          if (meta) meta.setAttribute('content', theme === 'dark' ? '#0e1815' : '#324a16');
-        } catch (e) {}
-      })();
-    </script>
   </head>
   <body>
     <Header />
@@ -119,37 +105,6 @@ const allSchema = [...baseSchema, ...extra];
         color-scheme: light;
       }
 
-      /* ── Dark theme ────────────────────────────────────────────────── */
-      /* Cool forest / mint palette — not olive. Backgrounds lean blue-green */
-      /* slate, accents lean fresh mint. No yellow undertone. */
-      :root[data-theme='dark'] {
-        --green: #6dcaa3;             /* fresh forest mint, no yellow */
-        --green-dark: #b8e8cb;        /* heading color on dark — cool light mint */
-        --green-light: #4fb088;
-        --green-tint: rgba(109, 202, 163, 0.14);
-        --teal: #6ad9c8;
-        --ink: #e6ede9;               /* near-white with cool tint */
-        --ink-soft: #c8d3cd;
-        --ink-strong: #ffffff;
-        --paper: #0e1815;             /* deep slate-green, cool */
-        --paper-2: #14211e;
-        --surface: #19282a;           /* slightly blue-green surface */
-        --surface-2: #1f3134;
-        --border: rgba(255, 255, 255, 0.06);
-        --border-strong: rgba(109, 202, 163, 0.28);
-        --muted: #8a9a93;
-        --warning: #e07a5f;
-        --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.35);
-        --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
-        --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.55);
-        --hero-overlay-1: rgba(8, 14, 12, 0.65);
-        --hero-overlay-2: rgba(8, 14, 12, 0.88);
-        --highlight-bg: #1f2a26;
-        --highlight-border: rgba(109, 202, 163, 0.3);
-        --highlight-ink: #b8e8cb;
-        color-scheme: dark;
-      }
-
       * { box-sizing: border-box; }
       html { scroll-behavior: smooth; }
       html, body { margin: 0; padding: 0; }
@@ -160,11 +115,6 @@ const allSchema = [...baseSchema, ...extra];
         line-height: 1.6;
         -webkit-font-smoothing: antialiased;
         transition: background 0.3s ease, color 0.3s ease;
-      }
-      /* Suppress all transitions during a theme swap to avoid a paint storm
-         when every variable cascades. ThemeToggle adds/removes this class. */
-      :root.theme-flash, :root.theme-flash *, :root.theme-flash *::before, :root.theme-flash *::after {
-        transition: none !important;
       }
       h1, h2, h3, h4 {
         font-family: 'Marcellus', Georgia, serif;

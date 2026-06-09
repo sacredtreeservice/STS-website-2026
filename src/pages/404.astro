@@ -1,0 +1,102 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import { services } from '../data/services';
+import { company } from '../data/company';
+
+const topServices = services.slice(0, 6);
+---
+
+<Base
+  title="Page Not Found"
+  description="That page doesn't exist — but our tree care team is one click or call away. Browse our services or request a free estimate."
+  noindex={true}
+>
+  <section class="container notfound">
+    <span class="code">404</span>
+    <h1>This branch doesn't exist.</h1>
+    <p class="lede">
+      The page you were looking for has moved or never grew here. Let's get you
+      back to solid ground — here's where most people are headed.
+    </p>
+
+    <div class="cta">
+      <a class="btn primary large" href="/contact/">
+        <Icon name="lucide:clipboard-check" /> Free Estimate
+      </a>
+      <a class="btn ghost large" href={company.phoneHref}>
+        <Icon name="lucide:phone" /> {company.phone}
+      </a>
+    </div>
+
+    <h2>Popular pages</h2>
+    <ul class="links">
+      <li><a href="/services/">All services</a></li>
+      <li><a href="/service-area/">Service area &amp; cities</a></li>
+      <li><a href="/reviews/">Reviews</a></li>
+      <li><a href="/faq/">FAQ</a></li>
+      <li><a href="/emergency/">24/7 emergency</a></li>
+      <li><a href="/blog/">Field notes</a></li>
+    </ul>
+
+    <h2>Our services</h2>
+    <ul class="links">
+      {topServices.map((s) => (
+        <li><a href={`/services/${s.slug}/`}>{s.name}</a></li>
+      ))}
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .notfound {
+    max-width: 720px;
+    text-align: center;
+    padding: 4rem 1.25rem 2rem;
+  }
+  .code {
+    font-family: 'Marcellus', Georgia, serif;
+    font-size: clamp(3rem, 10vw, 5.5rem);
+    color: var(--green);
+    line-height: 1;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 0.75rem; }
+  .lede { color: var(--muted); font-size: 1.1rem; max-width: 52ch; margin: 0 auto 2rem; }
+  .cta {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+  h2 {
+    font-size: 1.2rem;
+    margin: 2rem 0 1rem;
+  }
+  .links {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    justify-content: center;
+  }
+  .links a {
+    display: inline-block;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    text-decoration: none;
+    color: var(--green-dark);
+    font-size: 0.9rem;
+    transition: all 0.2s var(--easing);
+  }
+  .links a:hover {
+    background: var(--green);
+    color: #fff;
+    border-color: var(--green);
+  }
+</style>

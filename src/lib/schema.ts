@@ -166,6 +166,22 @@ export const localBusinessSchema = () => {
   return schema;
 };
 
+// Top-level WebSite node. Consolidates the domain as an entity and links it
+// to the business as publisher — helps Google/AI engines tie pages, brand,
+// and organization together. No SearchAction: there is no on-site search
+// results page, so advertising one would be a false signal.
+export const websiteSchema = () => ({
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE}#website`,
+  url: SITE,
+  name: company.brandName,
+  alternateName: company.legalName,
+  description: company.tagline,
+  publisher: { '@id': `${SITE}#business` },
+  inLanguage: 'en-US',
+});
+
 export const breadcrumbSchema = (trail: { name: string; url: string }[]) => ({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',

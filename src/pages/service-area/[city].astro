@@ -6,6 +6,7 @@ import JobberForm from '../../components/JobberForm.astro';
 import FaqBlock from '../../components/FaqBlock.astro';
 import { cities } from '../../data/cities';
 import { services } from '../../data/services';
+import { getCountyByName } from '../../data/counties';
 import { faqSchema } from '../../lib/schema';
 
 export async function getStaticPaths() {
@@ -30,6 +31,8 @@ const faqs = [
 ];
 
 const localHook = city.hook ?? `Sacred Tree Service has worked across ${city.name} and ${city.county} County, helping homeowners and property managers care for the trees that define their landscapes.`;
+
+const county = getCountyByName(city.county);
 ---
 
 <Base
@@ -52,6 +55,17 @@ const localHook = city.hook ?? `Sacred Tree Service has worked across ${city.nam
     <div class="layout">
       <article>
         <p class="answer">{localHook}</p>
+
+        {city.intro && <p>{city.intro}</p>}
+        {city.species && city.species.length > 0 && (
+          <p class="meta-line"><strong>Common trees &amp; palms in {city.name}:</strong> {city.species.join(', ')}.</p>
+        )}
+        {city.landmarks && city.landmarks.length > 0 && (
+          <p class="meta-line"><strong>Areas we cover:</strong> {city.landmarks.join(', ')}.</p>
+        )}
+        {county && (
+          <p class="meta-line">{city.name} is part of our <a href={`/service-area/${county.slug}/`}>{county.name}</a> service area.</p>
+        )}
 
         <h2>Tree care services in {city.name}</h2>
         <ul class="services">
@@ -97,9 +111,15 @@ const localHook = city.hook ?? `Sacred Tree Service has worked across ${city.nam
     background: var(--surface);
     border-left: 4px solid var(--green);
     padding: 1rem 1.25rem;
-    margin: 0 0 2rem;
+    margin: 0 0 1.5rem;
     border-radius: 4px;
   }
+  .meta-line {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    margin: 0.5rem 0;
+  }
+  .meta-line strong { color: var(--green-dark); }
   .layout {
     display: grid;
     grid-template-columns: 1.6fr 1fr;
