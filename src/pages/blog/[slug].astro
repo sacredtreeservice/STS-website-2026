@@ -36,7 +36,7 @@ const jsonLd = articleSchema({
 <Base
   title={post.data.seoTitle ?? post.data.title}
   description={post.data.seoDescription ?? post.data.excerpt}
-  ogImage={post.data.coverImage?.src}
+  ogImage={post.data.ogImage ?? post.data.coverImage?.src}
   breadcrumbs={trail}
   jsonLd={jsonLd}
 >

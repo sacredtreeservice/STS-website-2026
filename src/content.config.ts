@@ -15,6 +15,10 @@ const blog = defineCollection({
       categories: z.array(z.string()).default([]),
       coverImage: image().optional(),
       coverAlt: z.string().optional(),
+      // Optional social-share image: absolute path to a 1200x630 JPG in /public
+      // (e.g. "/og/foo.jpg"). Used for og:image / twitter:image only — it does
+      // NOT render on-page or as a homepage thumbnail (that's coverImage).
+      ogImage: z.string().optional(),
       seoTitle: z.string().optional(),
       seoDescription: z.string().optional(),
       draft: z.boolean().default(false),

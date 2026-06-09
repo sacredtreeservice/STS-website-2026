@@ -1,0 +1,235 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { faqSchema } from '../../lib/schema';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Tree Care', url: '/tree-care/' },
+  { name: 'Florida Tree Species', url: '/tree-care/florida-tree-species/' },
+];
+
+type Species = {
+  name: string;
+  what: string;
+  id: string;
+  care: string;
+};
+
+// Shade & flowering trees common across Central Florida.
+const trees: Species[] = [
+  {
+    name: 'Live oak',
+    what: 'The classic Central Florida shade tree — long-lived, wide-spreading, evergreen.',
+    id: 'Broad rounded crown, often wider than it is tall; small leathery leaves; keeps its leaves year-round.',
+    care: 'Worth preserving. Light structural pruning when young, deadwood every few years when mature. Often protected by local tree ordinances.',
+  },
+  {
+    name: 'Laurel oak & water oak',
+    what: 'Fast-growing oaks you will see in many older neighborhoods.',
+    id: 'Taller and more upright than live oak, with thinner bark; both drop most of their leaves in late winter.',
+    care: 'Fast growth means weaker wood and shorter lives — they tend to develop decay and weak branch unions. Routine crown cleaning and structural pruning matters here.',
+  },
+  {
+    name: 'Southern magnolia',
+    what: 'A signature Southern evergreen with large white flowers in spring.',
+    id: 'Big glossy dark-green leaves with a rusty-brown felt underneath; large fragrant blooms.',
+    care: 'Low-maintenance. Prune lightly and only after flowering. Leave the lower skirt of branches if you can — it suits the tree.',
+  },
+  {
+    name: 'Bald cypress',
+    what: 'A native that thrives along lakes and wet ground — Florida’s wetland classic.',
+    id: 'Feathery needles that turn rusty and drop in winter (it is deciduous); often has “knees” poking up near water.',
+    care: 'Tough and storm-resistant once established. Very little pruning needed. Great choice for a wet or low spot.',
+  },
+  {
+    name: 'Slash & longleaf pine',
+    what: 'The tall native pines of Central Florida’s flatwoods and ridges.',
+    id: 'Straight trunks with long needles in bundles; bare lower trunk and a high green crown.',
+    care: 'Keep them healthy and watch for storm risk — tall pines can come down in high wind. Don’t over-thin; remove dead wood and assess leaners after storms.',
+  },
+  {
+    name: 'Crepe myrtle',
+    what: 'A small flowering tree planted for long-lasting summer color.',
+    id: 'Smooth peeling bark, multiple slim trunks, clusters of crinkled summer flowers.',
+    care: 'Never “top” it (sometimes called “crepe murder”) — just remove crossing twigs and spent seed heads. It blooms fine without being hacked back.',
+  },
+  {
+    name: 'Camphor',
+    what: 'A fast-growing shade tree you’ll see in older areas — but it is non-native and can spread.',
+    id: 'Glossy leaves with a strong camphor smell when crushed; dense rounded canopy.',
+    care: 'Considered weedy and invasive in Florida — it seeds itself into natural areas. Fine to keep an established one, but think twice before planting new ones.',
+  },
+];
+
+// Palms — pruned and cared for very differently from hardwoods.
+const palms: Species[] = [
+  {
+    name: 'Sabal palm (cabbage palm)',
+    what: 'Florida’s state tree and the most reliable native palm.',
+    id: 'Single trunk with a fan-shaped (not feathery) crown; old leaf bases often stay on the trunk.',
+    care: 'Tough, drought- and cold-hardy. Remove only dead or dying fronds. Can be affected by lethal bronzing — watch for older fronds browning upward.',
+  },
+  {
+    name: 'Queen palm',
+    what: 'A popular feather-leaved palm used widely in landscapes.',
+    id: 'Smooth gray trunk topped with graceful, arching feathery fronds.',
+    care: 'Grows well here but needs proper nutrition — it is prone to deficiencies in sandy soil. Also vulnerable to lethal bronzing.',
+  },
+  {
+    name: 'Washingtonia (Mexican fan palm)',
+    what: 'The very tall, skinny fan palm you see towering over rooflines.',
+    id: 'Slender trunk that gets extremely tall; fan-shaped crown, often with a “skirt” of old fronds.',
+    care: 'Fast but messy, and tall ones are prone to lightning strikes. Remove only dead fronds — don’t “hurricane cut.”',
+  },
+];
+
+const faqs = [
+  {
+    q: 'What is the most common shade tree in Central Florida?',
+    a: 'The live oak. It is long-lived, wide-spreading, evergreen, and well-suited to local soils, which is why it shades so many older neighborhoods. Many cities and counties protect mature live oaks under tree ordinances.',
+  },
+  {
+    q: 'What palm grows best in Central Florida?',
+    a: 'The sabal palm (cabbage palm) — Florida’s state tree. It is the most reliable native palm: drought-tolerant, cold-hardy, and well-adapted to local soils. Queen and washingtonia palms also grow well but need more attention.',
+  },
+  {
+    q: 'How do I know if my palm has lethal bronzing?',
+    a: 'Watch for the oldest, lowest fronds bronzing and dying first, then the problem moving up the canopy, often with early fruit drop. Once a palm is symptomatic it cannot be saved, but nearby healthy palms can be protected. Have it confirmed by an arborist before acting.',
+  },
+];
+
+const jsonLd = faqSchema(faqs);
+---
+
+<Base
+  title="Common Central Florida Tree & Palm Species — A Simple Field Guide"
+  description="A simple, scannable guide to the trees and palms you’ll see around Central Florida — live oak, magnolia, bald cypress, pine, sabal palm and more — with quick ID tips and care notes for homeowners."
+  breadcrumbs={trail}
+  jsonLd={jsonLd}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head" data-reveal>
+      <span class="kicker">Tree care guide</span>
+      <h1>Florida Tree Species</h1>
+      <p class="lede">
+        A quick field guide to the trees and palms you’ll see most around
+        Central Florida. For each one: what it is, how to spot it, and what to
+        watch for. No jargon — just the basics.
+      </p>
+    </header>
+
+    <section aria-labelledby="trees-heading">
+      <h2 id="trees-heading" class="section-title">Shade &amp; flowering trees</h2>
+      <div class="grid" data-reveal data-reveal-stagger>
+        {trees.map((s) => (
+          <article class="card">
+            <h3>{s.name}</h3>
+            <p class="what">{s.what}</p>
+            <p><span class="label">Spot it:</span> {s.id}</p>
+            <p><span class="label">Care note:</span> {s.care}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section aria-labelledby="palms-heading">
+      <h2 id="palms-heading" class="section-title">Palms</h2>
+      <p class="palm-note">
+        Palms are not hardwoods and should never be pruned like one. The rule
+        for all of them: remove only dead or dying fronds, and never do a
+        “hurricane cut.” See our <a href="/services/palm-tree-services/">palm tree
+        services</a> for how we care for them.
+      </p>
+      <div class="grid" data-reveal data-reveal-stagger>
+        {palms.map((s) => (
+          <article class="card palm">
+            <h3>{s.name}</h3>
+            <p class="what">{s.what}</p>
+            <p><span class="label">Spot it:</span> {s.id}</p>
+            <p><span class="label">Care note:</span> {s.care}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <aside class="cta" data-reveal>
+      <h2>Not sure what you’ve got — or whether it’s healthy?</h2>
+      <p>
+        An ISA Certified Arborist can identify your trees and tell you what they
+        need. If you’re worried about disease or decline, our plant health care
+        team can take a look.
+      </p>
+      <div class="cta-actions">
+        <a class="btn primary" href="/services/plant-health-care/">Plant health care</a>
+        <a class="btn ghost" href="/contact/">Ask us about your tree</a>
+      </div>
+    </aside>
+  </div>
+</Base>
+
+<style>
+  .head { text-align: center; max-width: 62ch; margin: 1rem auto 2.5rem; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h1 { font-size: clamp(2rem, 5vw, 2.8rem); margin: 0.3rem 0 0.75rem; }
+  .lede { color: var(--muted); font-size: 1.15rem; margin: 0 auto; }
+
+  .section-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin: 2.5rem 0 1rem;
+  }
+  .palm-note {
+    color: var(--ink-soft);
+    margin: 0 0 1.25rem;
+    max-width: 70ch;
+    line-height: 1.65;
+  }
+  .palm-note a { color: var(--green-dark); font-weight: 700; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: transform 0.25s var(--easing), border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+  }
+  .card.palm { background: var(--surface-2); }
+  .card h3 { font-size: 1.2rem; margin: 0 0 0.4rem; }
+  .card p { margin: 0 0 0.6rem; font-size: 0.93rem; line-height: 1.55; color: var(--ink-soft); }
+  .card p:last-child { margin-bottom: 0; }
+  .card .what { color: var(--muted); }
+  .label { font-weight: 700; color: var(--green-dark); }
+
+  .cta {
+    margin: 3.5rem 0 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .cta h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin: 0 0 0.5rem; }
+  .cta p { color: var(--muted); margin: 0 auto 1.25rem; max-width: 54ch; }
+  .cta-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+</style>

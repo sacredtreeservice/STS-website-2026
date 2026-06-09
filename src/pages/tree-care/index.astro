@@ -7,11 +7,12 @@ const trail = [
   { name: 'Tree Care', url: '/tree-care/' },
 ];
 
-// Placeholder topic clusters — these become the educational pillar pages.
+// Educational topic clusters. Pages with an `href` are live guides; the rest
+// are placeholders that render as plain "coming soon" cards.
 const pillars = [
-  { slug: 'florida-tree-species', title: 'Florida Tree Species', blurb: 'Live oak, sabal palm, magnolia, citrus, pine — care needs and ID.' },
+  { slug: 'florida-tree-species', title: 'Florida Tree Species', blurb: 'Live oak, sabal palm, magnolia, citrus, pine — care needs and ID.', href: '/tree-care/florida-tree-species/' },
   { slug: 'storm-prep', title: 'Storm & Hurricane Prep', blurb: 'How to prepare trees for hurricane season — and what to do after.' },
-  { slug: 'pruning-basics', title: 'Pruning Basics', blurb: 'When to prune, what topping does, and the ANSI A300 standard.' },
+  { slug: 'pruning-basics', title: 'Pruning Basics', blurb: 'When to prune, what topping does, and the ANSI A300 standard.', href: '/tree-care/pruning-basics/' },
   { slug: 'tree-removal-decisions', title: 'Should I Remove This Tree?', blurb: 'How arborists decide between removal, pruning, and preservation.' },
   { slug: 'cost-guides', title: 'Cost Guides', blurb: 'What tree work actually costs in Central Florida, and why prices vary.' },
   { slug: 'pests-and-diseases', title: 'Pests &amp; Diseases', blurb: 'Lethal bronzing, oak wilt, beetles — what to watch for in Florida.' },
@@ -36,11 +37,19 @@ const pillars = [
 
     <div class="pillars">
       {pillars.map((p) => (
-        <div class="card">
-          <h2>{p.title}</h2>
-          <p set:html={p.blurb} />
-          <span class="more">Coming soon</span>
-        </div>
+        p.href ? (
+          <a class="card card-link" href={p.href}>
+            <h2>{p.title}</h2>
+            <p set:html={p.blurb} />
+            <span class="more read">Read guide →</span>
+          </a>
+        ) : (
+          <div class="card">
+            <h2>{p.title}</h2>
+            <p set:html={p.blurb} />
+            <span class="more">Coming soon</span>
+          </div>
+        )
       ))}
     </div>
 
@@ -69,6 +78,15 @@ const pillars = [
   }
   .card h2 { font-size: 1.2rem; margin: 0 0 0.5rem; }
   .card p { color: var(--muted); margin: 0 0 0.85rem; font-size: 0.95rem; }
+  .card-link {
+    text-decoration: none;
+    transition: transform 0.25s var(--easing), border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .card-link:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+  }
   .more {
     display: inline-block;
     color: var(--muted);
@@ -80,6 +98,8 @@ const pillars = [
     padding: 0.25rem 0.7rem;
     border-radius: 999px;
   }
+  .more.read { color: var(--green-dark); }
+  .card-link:hover .more.read { background: var(--green-dark); color: #fff; }
   .todo a { color: var(--green-dark); font-weight: 700; }
   .todo {
     margin-top: 3rem;

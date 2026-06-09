@@ -55,7 +55,11 @@ const navLinks = [
 </header>
 
 <script>
-  const setup = () => {
+  // Bound once for the page's lifetime (module runs once; the astro:page-load
+  // listener persists across view-transition navigations).
+  let escBound = false;
+
+  const initMobileMenu = () => {
     const panel = document.querySelector<HTMLElement>('[data-menu-panel]');
     if (!panel) return;
     const toggles = document.querySelectorAll<HTMLButtonElement>('[data-menu-toggle]');
@@ -73,29 +77,47 @@ const navLinks = [
       toggles.forEach((b) => b.setAttribute('aria-expanded', 'false'));
     };
 
+    // Bind each control EXACTLY once. initMobileMenu runs on the initial load
+    // AND on every astro:page-load; without these per-element guards the toggle
+    // gets a second click listener and a tap opens-then-closes (menu "won't
+    // open"). After a navigation the header is re-rendered with fresh elements
+    // (no flag), so they bind correctly then too.
     toggles.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        if (panel.classList.contains('is-open')) close();
-        else open();
+      if (btn.dataset.menuBound) return;
+      btn.dataset.menuBound = 'true';
+      btn.addEventListener('click', () => (panel.classList.contains('is-open') ? close() : open()));
+    });
+
+    if (!panel.dataset.menuBound) {
+      panel.dataset.menuBound = 'true';
+      // Close on link click within the panel
+      panel.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+      // Close on backdrop click
+      panel.addEventListener('click', (e) => {
+        if (e.target === panel) close();
       });
-    });
+    }
 
-    // Close on link click within the panel
-    panel.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
-
-    // Close on backdrop click
-    panel.addEventListener('click', (e) => {
-      if (e.target === panel) close();
-    });
-
-    // Close on Escape
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && panel.classList.contains('is-open')) close();
-    });
+    // Close on Escape — attach to document once only.
+    if (!escBound) {
+      escBound = true;
+      document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        const p = document.querySelector<HTMLElement>('[data-menu-panel]');
+        if (p?.classList.contains('is-open')) {
+          p.classList.remove('is-open');
+          p.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          document
+            .querySelectorAll<HTMLButtonElement>('[data-menu-toggle]')
+            .forEach((b) => b.setAttribute('aria-expanded', 'false'));
+        }
+      });
+    }
   };
 
-  setup();
-  document.addEventListener('astro:page-load', setup);
+  initMobileMenu();
+  document.addEventListener('astro:page-load', initMobileMenu);
 </script>
 
 <style>

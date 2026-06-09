@@ -1,0 +1,276 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { faqSchema } from '../../lib/schema';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Tree Care', url: '/tree-care/' },
+  { name: 'Pruning Basics', url: '/tree-care/pruning-basics/' },
+];
+
+// Plain-English cut types. Kept short on purpose.
+const cuts = [
+  {
+    title: 'Crown cleaning',
+    body: 'Removing dead, broken, or diseased branches. The most common and most useful prune — safer tree, less mess in a storm.',
+  },
+  {
+    title: 'Thinning',
+    body: 'Selectively removing some live branches so light and air move through the canopy. Done lightly, not by stripping the inside out.',
+  },
+  {
+    title: 'Raising',
+    body: 'Removing the lowest branches to give clearance over a sidewalk, driveway, or roofline.',
+  },
+  {
+    title: 'Reduction',
+    body: 'Shortening a branch back to a healthy side branch to ease weight or shrink a tree that has outgrown its space. This is the right answer instead of topping.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'When is the best time to prune trees in Central Florida?',
+    a: 'Late winter through early spring (about January–March) is ideal for most hardwoods — the tree is dormant, problems are easy to see, and there is time to push new growth before summer. Oaks are best pruned in the cooler months to lower oak wilt risk. Dead or broken wood can come off any time of year.',
+  },
+  {
+    q: 'How often should my trees be pruned?',
+    a: 'Young trees benefit from light structural pruning every 1–2 years to set a strong shape. Healthy mature oaks usually need deadwood and structural pruning every 3–5 years. Palms are different — only dead or dying fronds, roughly once a year.',
+  },
+  {
+    q: 'Why is topping a tree so bad?',
+    a: 'Topping cuts big branches back to stubs. It opens the tree to decay, forces weak fast-growing regrowth, and often kills the tree within several years. The ANSI A300 standard prohibits it. If a tree is too big for its space, reduction pruning or removal is the right call — never topping.',
+  },
+];
+
+const jsonLd = faqSchema(faqs);
+---
+
+<Base
+  title="Tree Pruning Basics for Central Florida Homeowners — Sacred Tree Service"
+  description="A simple, beginner-friendly guide to pruning your trees in Central Florida: when to prune, why topping harms trees, the common types of cuts, how often to prune, and how palms are different."
+  breadcrumbs={trail}
+  jsonLd={jsonLd}
+>
+  <div class="container narrow">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head" data-reveal>
+      <span class="kicker">Tree care guide</span>
+      <h1>Pruning Basics</h1>
+      <p class="lede">
+        Good pruning keeps a tree healthy, safe, and beautiful. Here is the
+        plain-English version for Central Florida homeowners — what to do, when
+        to do it, and the one thing you should never let anyone do to your tree.
+      </p>
+    </header>
+
+    <div class="prose">
+      <h2>Why prune at all?</h2>
+      <p>
+        Pruning is not just tidying up. Done right, it removes dead and weak
+        wood before it falls, builds a strong branch structure that holds up in
+        summer storms, and lets light and air move through the canopy. A
+        well-pruned tree lives longer and causes fewer problems — that is the
+        whole point.
+      </p>
+
+      <h2>When to prune in Central Florida</h2>
+      <p>
+        For most hardwoods, the best window is <strong>late winter through
+        early spring</strong> (roughly January–March). The tree is dormant,
+        any defects are easy to spot, and there is time for new growth to come
+        on before the heat of summer.
+      </p>
+      <ul>
+        <li><strong>Oaks:</strong> prune in the cooler months to lower the risk of oak wilt.</li>
+        <li><strong>Dead or broken wood:</strong> remove it any time of year — waiting only adds risk.</li>
+        <li><strong>Flowering trees:</strong> a good rule is to prune them right after they finish blooming.</li>
+      </ul>
+
+      <h2>The one rule: never top a tree</h2>
+      <p>
+        Topping is cutting large branches back to bare stubs to make a tree
+        shorter fast. It looks drastic because it is. Topping opens the tree to
+        decay, starves it, and triggers a flush of weak, fast-growing shoots
+        that are poorly attached and prone to breaking later. Many topped trees
+        decline and die within several years.
+      </p>
+      <p>
+        The national <strong>ANSI A300</strong> standard — the rulebook
+        professional arborists follow — prohibits topping. If a tree is simply
+        too big for its spot, the honest answers are <em>reduction pruning</em>
+        or, when it truly doesn't fit, removal. Topping is never the answer, and
+        a good company will tell you so.
+      </p>
+
+      <h2>Common cuts, in plain English</h2>
+      <p>
+        You don't need the jargon, but it helps to recognize the four cuts a
+        pro will talk through with you:
+      </p>
+      <div class="grid">
+        {cuts.map((c) => (
+          <article class="card">
+            <h3>{c.title}</h3>
+            <p>{c.body}</p>
+          </article>
+        ))}
+      </div>
+
+      <h2>How often should you prune?</h2>
+      <ul>
+        <li><strong>Young trees (first 15 years):</strong> light structural pruning every 1–2 years sets a strong shape for life.</li>
+        <li><strong>Mature oaks:</strong> deadwood and structural pruning every 3–5 years keeps weak attachments from becoming failure points.</li>
+        <li><strong>Anytime:</strong> dead, broken, or storm-damaged limbs, the moment you notice them.</li>
+      </ul>
+      <p>
+        If your trees have never been looked at by an arborist, that first visit
+        is the one to schedule — it sets the baseline for everything after.
+      </p>
+
+      <h2>Palms are different</h2>
+      <p>
+        Palms are not hardwoods, and they should not be pruned like one. A palm
+        can't heal a cut the way an oak does, so every frond you remove is gone
+        for good. The rule is simple: <strong>remove only dead or dying
+        fronds</strong>, usually about once a year.
+      </p>
+      <p>
+        Avoid the so-called "hurricane cut" — stripping the canopy back to a
+        small upright tuft. It looks tidy but starves the palm, invites
+        nutrient problems, and actually makes it <em>more</em> vulnerable in a
+        real storm, not less.
+      </p>
+
+      <h2>Do it yourself, or call a pro?</h2>
+      <p>
+        Plenty of light pruning is a fine weekend job. Some is not. A good line
+        to draw:
+      </p>
+      <div class="two-col">
+        <div class="ok">
+          <h3><Icon name="lucide:check" aria-hidden="true" /> Fine to DIY</h3>
+          <ul>
+            <li>Small dead twigs and low branches you can reach from the ground</li>
+            <li>Light shaping of shrubs and young saplings</li>
+            <li>One or two clean cuts with hand tools</li>
+          </ul>
+        </div>
+        <div class="pro">
+          <h3><Icon name="lucide:phone" aria-hidden="true" /> Call a pro</h3>
+          <ul>
+            <li>Anything over your head or that needs a ladder or climbing</li>
+            <li>Branches near power lines — always</li>
+            <li>Large limbs, big oaks, or anything over a house, fence, or pool</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">
+        When in doubt, get an estimate first. A quick look from an arborist is
+        cheaper than fixing a torn limb — or a trip to the ER.
+      </p>
+    </div>
+
+    <aside class="cta" data-reveal>
+      <h2>Want a professional eye on your trees?</h2>
+      <p>
+        Our crews follow the ANSI A300 standard and never top trees. We'll tell
+        you what your trees actually need — and what they don't.
+      </p>
+      <div class="cta-actions">
+        <a class="btn primary" href="/services/tree-pruning/">See our pruning service</a>
+        <a class="btn ghost" href="/contact/">Request a free estimate</a>
+      </div>
+    </aside>
+  </div>
+</Base>
+
+<style>
+  .head { text-align: center; margin: 1rem 0 2rem; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h1 { font-size: clamp(2rem, 5vw, 2.8rem); margin: 0.3rem 0 0.75rem; }
+  .lede { color: var(--muted); font-size: 1.15rem; margin: 0 auto; max-width: 60ch; }
+
+  .prose h2 {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    margin: 2.25rem 0 0.6rem;
+  }
+  .prose h3 { font-size: 1.1rem; margin: 0 0 0.4rem; }
+  .prose p { margin: 0 0 1rem; color: var(--ink-soft); line-height: 1.7; }
+  .prose ul { margin: 0 0 1rem 1.2rem; color: var(--ink-soft); line-height: 1.7; }
+  .prose li { margin-bottom: 0.4rem; }
+  .prose strong { color: var(--ink); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 1.25rem 0 0.5rem;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+  }
+  .card h3 { font-size: 1.05rem; margin: 0 0 0.35rem; }
+  .card p { color: var(--muted); margin: 0; font-size: 0.93rem; line-height: 1.55; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.25rem 0;
+  }
+  .two-col > div {
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+    border: 1px solid var(--border);
+  }
+  .two-col .ok { background: var(--green-tint); }
+  .two-col .pro { background: var(--surface-2); }
+  .two-col h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 1.05rem;
+    margin: 0 0 0.6rem;
+  }
+  .two-col h3 [data-icon] { width: 18px; height: 18px; color: var(--green-dark); }
+  .two-col ul { margin: 0 0 0 1.1rem; }
+  .two-col li { font-size: 0.93rem; color: var(--ink-soft); }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+  .note {
+    background: var(--highlight-bg);
+    border: 1px solid var(--highlight-border);
+    color: var(--highlight-ink);
+    border-radius: 12px;
+    padding: 0.9rem 1.2rem;
+    font-size: 0.95rem;
+  }
+
+  .cta {
+    margin: 3rem 0 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .cta h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin: 0 0 0.5rem; }
+  .cta p { color: var(--muted); margin: 0 auto 1.25rem; max-width: 52ch; }
+  .cta-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+</style>

@@ -6,6 +6,7 @@ author: "Sacred Tree Service"
 authorRole: "Field Crew Notes"
 isaCertified: true
 categories: ["Tree Care", "Pruning"]
+ogImage: "/og/spikeless-live-oak.jpg"
 seoTitle: "Spikeless Live Oak Pruning Over a Campsite — A Central Florida Field Note"
 seoDescription: "How we pruned a heavy live oak lead reaching over a campsite: a spikeless single-rope climb, rigging and redirects, reduction cuts to ANSI A300 — plus a decayed second tree we flagged for the owner instead of removing the oak."
 ---
