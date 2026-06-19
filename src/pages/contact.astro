@@ -89,5 +89,9 @@ const trail = [
   .book-call-link a:hover { text-decoration: underline; }
   @media (max-width: 800px) {
     .layout { grid-template-columns: 1fr; }
+    /* On mobile the "Free estimate" CTA should land on the form, not on the
+       phone/hours info. Put the form first; info drops below it. */
+    .form { order: -1; }
+    .info { margin-top: 2rem; }
   }
 </style>
