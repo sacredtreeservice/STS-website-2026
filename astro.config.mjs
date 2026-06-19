@@ -47,6 +47,9 @@ export default defineConfig({
   server: { port: 1234, host: true },
   integrations: [
     sitemap({
+      // /book-a-call/ is a hidden ad landing page (noindex). Keep it out of the
+      // sitemap entirely so crawlers are never even pointed at it.
+      filter: (page) => !page.replace(SITE, '').replace(/\/+$/, '').endsWith('/book-a-call'),
       serialize(item) {
         const t = tier(item.url);
         item.priority = t.priority;

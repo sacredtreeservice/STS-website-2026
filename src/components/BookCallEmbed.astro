@@ -1,0 +1,121 @@
+---
+import { company } from '../data/company';
+
+// ── Self-scheduling CALL booking (GoHighLevel / LeadConnector Calendar) ────
+// Source: Lantern Media. This is a GHL *Calendar* widget (/widget/booking/),
+// i.e. a live self-scheduling time-slot picker — the visitor books their own
+// slot and GHL fires the reminders. This is DELIBERATELY different from
+// BookingForm.astro, which is a lead-REQUEST form (no calendar) used in the
+// site's main phone-first funnel.
+//
+// This calendar is intentionally NOT surfaced in the primary front-end CTAs.
+// It lives on the noindex /book-a-call/ landing page for ad traffic (per the
+// Lantern thread: "hidden page, share the link for the ads"), plus one low-key
+// link on /contact/ for testing. Keep it that way unless the owner says
+// otherwise — the live-call flow stays the priority.
+//
+// To swap calendars, replace GHL_CAL_ID below with a fresh booking widget id.
+const GHL_CAL_ID = '3qpPOE0Hhr2HNNDGCjT6';
+const GHL_CAL_SRC = `https://api.leadconnectorhq.com/widget/booking/${GHL_CAL_ID}`;
+const GHL_EMBED_JS = 'https://link.msgsndr.com/js/form_embed.js';
+const mountId = `${GHL_CAL_ID}_inline`;
+
+export interface Props {
+  heading?: string;
+  subheading?: string;
+}
+
+const {
+  heading = 'Book a Call',
+  subheading = 'Pick a time that works for you and we’ll call you then. Prefer to talk right now? Just call us.',
+} = Astro.props;
+---
+
+<section class="book-call">
+  <header>
+    <h2>{heading}</h2>
+    <p>{subheading}</p>
+  </header>
+
+  <div class="ghl-mount">
+    <iframe
+      src={GHL_CAL_SRC}
+      id={mountId}
+      title="Book a call with Sacred Tree Service"
+      loading="lazy"
+      scrolling="no"
+    ></iframe>
+  </div>
+
+  <p class="fallback-call">
+    Rather not wait? Call <a href={company.phoneHref}>{company.phone}</a> and a real person answers.
+  </p>
+</section>
+
+<script is:inline define:vars={{ GHL_EMBED_JS }}>
+  // Load GHL's form_embed.js once. It registers a global listener that
+  // auto-resizes any GHL form/calendar iframe to its content height (incl.
+  // iframes that mount on later Astro view-transition navigations). Guard by
+  // src so we never inject it twice; re-ensure on page-load in case a body
+  // swap removed it. (Mirrors BookingForm.astro's loader.)
+  (function () {
+    function loadGhlForm() {
+      if (document.querySelector('script[src="' + GHL_EMBED_JS + '"]')) return;
+      var s = document.createElement('script');
+      s.src = GHL_EMBED_JS;
+      document.body.appendChild(s);
+    }
+    loadGhlForm();
+    if (!window.__ghlFormEmbedBound) {
+      window.__ghlFormEmbedBound = true;
+      document.addEventListener('astro:page-load', loadGhlForm);
+    }
+  })();
+</script>
+
+<style>
+  .book-call {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    padding: 2rem 1.75rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .book-call header { margin-bottom: 1.25rem; text-align: center; }
+  .book-call h2 {
+    font-family: 'Marcellus', Georgia, serif;
+    font-weight: 400;
+    color: var(--green-dark);
+    margin: 0 0 0.4rem;
+    font-size: 1.6rem;
+  }
+  .book-call p { margin: 0.25rem auto; color: var(--muted); max-width: 52ch; }
+  .ghl-mount { margin: 1.25rem 0 0.75rem; }
+  .ghl-mount iframe {
+    width: 100%;
+    /* Reserve height so the calendar's late arrival doesn't shift layout (CLS);
+       form_embed.js adjusts the real height once the iframe reports it. */
+    min-height: 700px;
+    border: none;
+    overflow: hidden;
+    display: block;
+  }
+  @media (max-width: 600px) {
+    .book-call { padding: 1.5rem 1rem; }
+    .ghl-mount iframe { min-height: 820px; }
+  }
+  .fallback-call {
+    margin: 1rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.92rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  .fallback-call a {
+    color: var(--green-dark);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .fallback-call a:hover { text-decoration: underline; }
+</style>

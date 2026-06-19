@@ -48,6 +48,9 @@ const trail = [
         <p class="emergency">
           🌪 <a href="/emergency/">Storm or emergency?</a>
         </p>
+        <p class="book-call-link">
+          Prefer to pick a time? <a href="/book-a-call/">Book a call instead →</a>
+        </p>
       </aside>
 
       <main class="form">
@@ -78,6 +81,12 @@ const trail = [
     font-weight: 700;
     text-decoration: none;
   }
+  .book-call-link {
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+  .book-call-link a { font-weight: 700; text-decoration: none; }
+  .book-call-link a:hover { text-decoration: underline; }
   @media (max-width: 800px) {
     .layout { grid-template-columns: 1fr; }
   }
