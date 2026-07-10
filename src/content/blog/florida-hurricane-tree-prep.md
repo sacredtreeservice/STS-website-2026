@@ -14,7 +14,7 @@ Here's the prep work that actually matters, ranked by impact.
 
 ## Highest impact: Prune for wind, not for shape
 
-The single most important thing you can do is **structural pruning** — opening up the canopy so wind moves through it instead of pushing on it like a sail.
+The single most important thing you can do is [**structural pruning**](/services/tree-pruning/) — opening up the canopy so wind moves through it instead of pushing on it like a sail.
 
 That means:
 
@@ -29,7 +29,7 @@ If a tree service offers to "top your trees for hurricane season," walk away. Th
 
 ## High impact: Identify failure-prone trees early
 
-Some trees are not going to survive a serious hurricane regardless of pruning. Better to identify them in May and remove them on your timeline than in September on the insurance company's.
+Some trees are not going to survive a serious hurricane regardless of pruning. Better to identify them in May and [remove them](/services/tree-removal/) on your timeline than in September on the insurance company's.
 
 Look for:
 
@@ -61,4 +61,6 @@ Dead branches in the canopy become projectiles. Clogged gutters back water up ag
 
 **April-May** is the sweet spot for major pruning work. The trees are out of peak growth, the weather is workable, and tree services aren't overbooked yet. Don't wait until June.
 
-If you're inside our 50-mile service radius and want a pre-season inspection, [request a free estimate](/contact/) — we'll walk your property and give you a prioritized list.
+If you're inside our 50-mile service radius and want a pre-season inspection, [request a free estimate](/contact/) — we'll walk your property and give you a prioritized list. And if a storm beats you to it, our [emergency storm response](/emergency/) runs 24/7 during active events.
+
+*Want the evergreen version with the full prep calendar and insurance notes? Read the guide: [Preparing your trees for hurricane season](/tree-care/storm-prep/).*

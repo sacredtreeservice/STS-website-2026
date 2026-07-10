@@ -1,18 +1,13 @@
 import { company, fullAddress } from '../data/company';
 import { counties } from '../data/counties';
 import { services } from '../data/services';
-import { testimonials } from '../data/testimonials';
 
 const SITE = 'https://sacredtreeservice.com';
 
-// ── Aggregate rating ───────────────────────────────────────────────────
-// Source of truth: company.googleAverageRating (the actual Google star
-// average) and company.googleReviewCount (the actual current count).
-// Review *count* drives whether we publish the AggregateRating at all,
-// because Google requires a count to render rich-result stars and
-// publishing a too-low count under-represents the business.
-const avgRating = company.googleAverageRating;
-const reviewCountForSchema = company.googleReviewCount;
+// E.164 phone for machine consumption (schema.org best practice). The
+// display format stays human everywhere else — this is derived from the
+// tel: href so there is exactly one source of truth in company.ts.
+const phoneE164 = company.phoneHref.replace('tel:', '');
 
 // ── areaServed: GeoCircle (radius) + named AdministrativeAreas (counties) ──
 // Google parses both. The AdministrativeArea entries are what surface in
@@ -62,43 +57,34 @@ export const localBusinessSchema = () => {
     alternateName: company.brandName,
     slogan: company.tagline,
     url: SITE,
-    telephone: company.phone,
+    telephone: phoneE164,
     email: company.email,
-    image: `${SITE}/assets/og-image.jpg`,
-    logo: `${SITE}/assets/logo.jpg`,
+    image: {
+      '@type': 'ImageObject',
+      url: `${SITE}/assets/og-image.jpg`,
+      width: 1200,
+      height: 630,
+    },
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE}/assets/logo.jpg`,
+      width: 500,
+      height: 500,
+      caption: company.brandName,
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: phoneE164,
+      email: company.email,
+      contactType: 'customer service',
+      areaServed: 'US-FL',
+      availableLanguage: 'en',
+    },
+    hasMap: company.social.google,
     priceRange: '$$',
     foundingDate: company.founded,
-    // Person schema for the founder — gives AI engines a real human entity
-    // with credentials and a domain of expertise, which is one of the main
-    // E-E-A-T signals AI Overviews look for in service-business citations.
-    founder: {
-      '@type': 'Person',
-      '@id': `${SITE}#alex-satoski`,
-      name: company.owner,
-      jobTitle: company.ownerTitle,
-      worksFor: { '@id': `${SITE}#business` },
-      url: `${SITE}/about/`,
-      description:
-        'ISA-trained arborist who founded Sacred Tree Service in 2023 to bring credentialed, standards-driven tree care to Central Florida property owners.',
-      knowsAbout: [
-        'Arboriculture',
-        'ANSI A300 pruning standards',
-        'ANSI Z133 climbing and rigging safety',
-        'Tree risk assessment',
-        'Plant health care',
-        'Florida palm care',
-        'Large tree transplanting',
-        'Storm and hurricane response',
-      ],
-      hasCredential: company.credentials.map((c) => ({
-        '@type': 'EducationalOccupationalCredential',
-        name: c,
-      })),
-      memberOf: company.memberships.map((m) => ({
-        '@type': 'Organization',
-        name: m,
-      })),
-    },
+    // No founder node, deliberately — the brand leads with the company
+    // (professional service positioning), not the person.
     address: {
       '@type': 'PostalAddress',
       // streetAddress + postalCode intentionally omitted — we publish city
@@ -142,26 +128,13 @@ export const localBusinessSchema = () => {
     sameAs: Object.values(company.social).filter((u): u is string => Boolean(u)),
   };
 
-  if (reviewCountForSchema && reviewCountForSchema > 0) {
-    schema.aggregateRating = {
-      '@type': 'AggregateRating',
-      ratingValue: avgRating,
-      reviewCount: reviewCountForSchema,
-      bestRating: 5,
-      worstRating: 1,
-    };
-  }
-  // Lift up to 5 individual review snippets into the global schema for
-  // richer per-page coverage. The full review set lives on /reviews/.
-  if (testimonials.length > 0) {
-    schema.review = testimonials.slice(0, 5).map((t) => ({
-      '@type': 'Review',
-      reviewRating: { '@type': 'Rating', ratingValue: t.rating, bestRating: 5 },
-      author: { '@type': 'Person', name: t.name },
-      reviewBody: t.quote,
-      publisher: { '@type': 'Organization', name: t.source },
-    }));
-  }
+  // NOTE: no aggregateRating / review markup here, deliberately. Google's
+  // review-snippet guidelines treat LocalBusiness review markup about
+  // yourself, on your own site, sourced from Google's own platform, as
+  // "self-serving" — ignored for stars since 2019, and marked-up reviews
+  // must be visible on the page (they aren't on ~575 of ours). The rating
+  // facts still live where they're actually consumed: visible testimonials,
+  // the GBP link in sameAs, and llms.txt for AI engines.
 
   return schema;
 };
@@ -198,18 +171,35 @@ export const serviceSchema = (svc: {
   description: string;
   slug: string;
   city?: string;
-}) => ({
-  '@context': 'https://schema.org',
-  '@type': 'Service',
-  name: svc.city ? `${svc.name} in ${svc.city}, FL` : svc.name,
-  description: svc.description,
-  provider: { '@id': `${SITE}#business` },
-  serviceType: svc.name,
-  areaServed: svc.city
-    ? { '@type': 'City', name: svc.city, containedInPlace: { '@type': 'State', name: 'Florida' } }
-    : { '@type': 'State', name: 'Florida' },
-  url: svc.city ? `${SITE}/services/${svc.slug}/${svc.city.toLowerCase().replace(/\s+/g, '-')}/` : `${SITE}/services/${svc.slug}/`,
-});
+  // Optional named offers (e.g. care-plan tiers). Rendered as an
+  // OfferCatalog on the Service node. Deliberately no prices — plans are
+  // quoted per property, and schema.org Offers are valid without price.
+  offers?: { name: string; description: string }[];
+}) => {
+  const schema: Record<string, any> = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: svc.city ? `${svc.name} in ${svc.city}, FL` : svc.name,
+    description: svc.description,
+    provider: { '@id': `${SITE}#business` },
+    serviceType: svc.name,
+    areaServed: svc.city
+      ? { '@type': 'City', name: svc.city, containedInPlace: { '@type': 'State', name: 'Florida' } }
+      : { '@type': 'State', name: 'Florida' },
+    url: svc.city ? `${SITE}/services/${svc.slug}/${svc.city.toLowerCase().replace(/\s+/g, '-')}/` : `${SITE}/services/${svc.slug}/`,
+  };
+  if (svc.offers && svc.offers.length > 0) {
+    schema.hasOfferCatalog = {
+      '@type': 'OfferCatalog',
+      name: `${svc.name} — plans`,
+      itemListElement: svc.offers.map((o) => ({
+        '@type': 'Offer',
+        itemOffered: { '@type': 'Service', name: o.name, description: o.description },
+      })),
+    };
+  }
+  return schema;
+};
 
 export const faqSchema = (faqs: { q: string; a: string }[]) => ({
   '@context': 'https://schema.org',
@@ -221,16 +211,36 @@ export const faqSchema = (faqs: { q: string; a: string }[]) => ({
   })),
 });
 
-export const articleSchema = (a: { title: string; description: string; url: string; published?: string; modified?: string; author?: string }) => ({
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline: a.title,
-  description: a.description,
-  url: new URL(a.url, SITE).toString(),
-  datePublished: a.published,
-  dateModified: a.modified ?? a.published,
-  author: { '@type': 'Person', name: a.author ?? company.brandName },
-  publisher: { '@id': `${SITE}#business` },
-});
+export const articleSchema = (a: {
+  title: string;
+  description: string;
+  url: string;
+  published?: string;
+  modified?: string;
+  author?: string;
+  image?: string;
+}) => {
+  const url = new URL(a.url, SITE).toString();
+  // Entity-correct author: the brand is an Organization (linked by @id to
+  // the LocalBusiness node); human bylines are plain Person nodes.
+  const author =
+    !a.author || a.author === company.brandName || a.author === company.legalName
+      ? { '@type': 'Organization', '@id': `${SITE}#business`, name: company.brandName }
+      : { '@type': 'Person', name: a.author };
+  const schema: Record<string, any> = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: a.title,
+    description: a.description,
+    url,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    datePublished: a.published,
+    dateModified: a.modified ?? a.published,
+    author,
+    publisher: { '@id': `${SITE}#business` },
+  };
+  if (a.image) schema.image = [new URL(a.image, SITE).toString()];
+  return schema;
+};
 
 export { fullAddress };

@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
@@ -18,7 +19,7 @@ const fmt = (d: Date) =>
 
 <Base
   title="Field Notes — Florida Tree Care Blog"
-  description="Notes from the field on Florida tree care, storm prep, species ID, and what we’re learning on the job — written by ISA Certified Arborists."
+  description="Notes from the field on Florida tree care, storm prep, species ID, and what we’re learning on the job — from the Sacred Tree Service crew."
   breadcrumbs={trail}
 >
   <div class="container">
@@ -44,7 +45,14 @@ const fmt = (d: Date) =>
             <a href={`/blog/${p.id}/`}>
               {p.data.coverImage && (
                 <div class="img">
-                  <img src={p.data.coverImage.src} alt={p.data.coverAlt ?? p.data.title} loading="lazy" />
+                  <Image
+                    src={p.data.coverImage}
+                    alt={p.data.coverAlt ?? p.data.title}
+                    width={800}
+                    widths={[400, 800]}
+                    sizes="(max-width: 800px) 100vw, 400px"
+                    loading="lazy"
+                  />
                 </div>
               )}
               <div class="meta">
@@ -56,7 +64,7 @@ const fmt = (d: Date) =>
                 <footer>
                   <span class="byline">
                     {p.data.author}{p.data.isaCertified && (
-                      <span class="badge"><Icon name="lucide:badge-check" /> ISA Certified</span>
+                      <span class="badge"><Icon name="lucide:badge-check" /> Arborist-reviewed</span>
                     )}
                   </span>
                   <time>{fmt(p.data.publishedAt)}</time>

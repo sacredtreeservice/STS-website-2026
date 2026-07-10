@@ -1,0 +1,467 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import { faqSchema, articleSchema } from '../../lib/schema';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Tree Care', url: '/tree-care/' },
+  { name: 'How to Choose', url: '/tree-care/how-to-choose-a-tree-service/' },
+];
+
+// The verification checklist — the five things worth confirming before any
+// tree company touches your property. Neutral rubric, applies to anyone.
+const checklist = [
+  {
+    icon: 'lucide:shield-check',
+    title: 'A COI with workers’ comp',
+    body: 'Ask for a certificate of insurance covering both general liability AND workers’ compensation — sent to you directly from the insurance agent, not a printout from the company. This is the single most important check: without workers’ comp, an injured climber can become the homeowner’s liability, and tree work is one of the most dangerous jobs in America.',
+  },
+  {
+    icon: 'lucide:award',
+    title: 'ISA Certified Arborist on staff',
+    body: 'The ISA Certified Arborist credential requires documented experience, a proctored exam, and continuing education. You can verify any arborist by name or credential number at treesaregood.org — takes about a minute. A company doesn’t need every crew member credentialed, but someone credentialed should be behind the pruning and health decisions.',
+  },
+  {
+    icon: 'lucide:file-text',
+    title: 'A written, itemized quote',
+    body: 'Every tree, every task, cleanup, and the total price — on paper, before any work starts. A verbal number is not a quote. Legitimate companies in the Orlando area quote in person, in writing, and free; if getting that in writing feels like pulling teeth, the paperwork after a problem will be worse.',
+  },
+  {
+    icon: 'lucide:landmark',
+    title: 'Permit knowledge',
+    body: 'Many Central Florida municipalities — parts of Orange County, the City of Orlando, Winter Park, Maitland, Seminole County, and others — protect mature oaks and other species under local tree ordinances. A professional should know whether your tree needs a permit and be able to tell you who pulls it. “You don’t need one” without checking is a guess, and the fine lands on the property owner.',
+  },
+  {
+    icon: 'lucide:star',
+    title: 'References and reviews you can check',
+    body: 'Look for a real review trail — names, neighborhoods, specific jobs — on Google, the BBB, or Nextdoor, not just testimonials pasted on a website. A company should be able to show you its record in public. Our reviews page is one example of what that looks like; every company you consider should have an equivalent you can verify.',
+  },
+];
+
+// Red flags — any one of these should end the conversation.
+const redFlags = [
+  {
+    title: 'They recommend topping',
+    body: 'Topping — cutting major branches back to stubs — is prohibited by ANSI A300, the national pruning standard. It disfigures the tree, invites decay, and often kills it within years. Any company offering to top a tree is telling you it doesn’t follow the standard. Instant disqualifier.',
+  },
+  {
+    title: 'Spikes on a tree you’re keeping',
+    body: 'Climbing spikes punch a wound into the trunk every foot of the climb — each one a permanent entry point for decay and disease. Spikes are fine on a removal. On a tree that’s staying, they’re never acceptable; a professional climbs on ropes.',
+  },
+  {
+    title: 'Door-to-door after a storm',
+    body: 'Legitimate local companies are booked solid after a hurricane — they aren’t knocking on doors. Storm-chasing crews are typically uninsured, from out of the area, and gone before the damage or the dispute surfaces. Central Florida sees this every hurricane season, June through November.',
+  },
+  {
+    title: 'A large deposit up front',
+    body: 'An established company carries its own operating costs and gets paid when the work is done. A demand for a big deposit before any work starts — especially after a storm — is how homeowners end up funding a job that never happens.',
+  },
+  {
+    title: 'Cash only',
+    body: 'No paper trail usually means no insurance, no license, and no recourse when something goes wrong. Pay by a method that leaves a record.',
+  },
+  {
+    title: 'A firm price over the phone, sight unseen',
+    body: 'Nobody can price tree work they haven’t looked at — size, access, condition, and what’s underneath the tree all move the number. A sight-unseen quote is either padded to cover the unknowns or a foot in the door for a bigger number once the truck is parked.',
+  },
+  {
+    title: 'No address, vague insurance answers',
+    body: 'If “are you insured?” gets anything other than “yes — I’ll have my agent send you the certificate,” walk away. Same for a company with no physical address or a truck with no name on it. These questions have easy answers when the answers are good.',
+  },
+];
+
+// Questions to ask before signing — separates a tight operation from a
+// loose one, even after the paperwork checks out.
+const questions = [
+  {
+    q: 'Who exactly will do the work?',
+    a: 'Your own crew, or subcontractors? Subbing is common and not automatically bad — but the insurance you verified has to cover whoever is actually in the tree, not just the person who sold you the job.',
+  },
+  {
+    q: 'What happens if something breaks?',
+    a: 'A cracked driveway, a torn sprinkler line, a section of fence. Ask how damage is handled and get the answer in writing. A professional has broken things before and has a process; a “that never happens” answer means there is no process.',
+  },
+  {
+    q: 'Is cleanup included?',
+    a: '“Cleanup” means different things to different crews — full haul-away, or a pile of brush at the curb and sawdust in the pool. The quote should say exactly what leaves and what stays.',
+  },
+  {
+    q: 'What is the realistic timeline?',
+    a: 'Start date and expected duration, in the estimate — not a best-case number that slips. Multi-day jobs and crane work in particular should come with a schedule.',
+  },
+  {
+    q: 'Who pulls the permit?',
+    a: 'If your municipality requires one, the company should either pull it or walk you through it. A contractor who shrugs at the permit question is leaving the risk with you.',
+  },
+];
+
+const quoteItems = [
+  {
+    title: 'Scope, per tree',
+    body: 'Which trees, and what is being done to each — in standard language like “crown cleaning” or “reduction,” not “trim it up.” Vague scope is how two quotes for the “same job” end up describing different jobs.',
+  },
+  {
+    title: 'Debris and cleanup',
+    body: 'Hauling, chipping, raking, and what happens to the wood — spelled out, so “cleanup included” means the same thing to both of you.',
+  },
+  {
+    title: 'Stump handling',
+    body: 'Grinding included or excluded, at what depth, and at what price. Stumps are the most common “oh, that’s extra” surprise on a removal invoice.',
+  },
+  {
+    title: 'An access plan',
+    body: 'Where trucks and equipment go, and how the lawn, driveway, and irrigation get protected. If the crew has thought about access, it shows up in the quote.',
+  },
+  {
+    title: 'The total price, in writing',
+    body: 'One number, free, no obligation. In the Orlando market, an in-person written quote at no charge is the norm — anyone charging for an estimate or refusing to write it down is below the bar.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'How do I verify a tree service is insured?',
+    a: 'Ask the company for a certificate of insurance (COI) covering both general liability and workers’ compensation, and have it sent to you directly from their insurance agent or carrier — a PDF handed over by the company can be expired or altered. In Florida you can also confirm workers’ comp coverage through the state Division of Workers’ Compensation’s public proof-of-coverage database. If a tree service in the Orlando area hesitates at this request, that hesitation is your answer.',
+  },
+  {
+    q: 'What is an ISA Certified Arborist and does it matter?',
+    a: 'An ISA Certified Arborist has passed a proctored exam from the International Society of Arboriculture, documented years of hands-on experience, and keeps the credential current with continuing education. It matters because pruning and health decisions made this year determine what your tree looks like — and whether it survives — decades from now. You can verify any arborist’s credential by name at treesaregood.org. For tree work in Orlando and Central Florida, hire a company with ISA Certified Arborists on staff, even if not every crew member holds the credential.',
+  },
+  {
+    q: 'Should I get multiple quotes for tree work?',
+    a: 'Yes — two or three quotes is reasonable for any significant tree job in the Orlando area, and any professional company expects it. The key is to compare scope, not just price: two quotes hundreds of dollars apart often describe different jobs once you read what each includes for cleanup, stump handling, and the actual cuts. Our guide to tree service costs breaks down what typical Central Florida jobs run, so you know when a number is in the normal range.',
+  },
+  {
+    q: 'Is the cheapest tree service quote a bad sign?',
+    a: 'Not automatically — but a quote far below the others usually means something is missing: insurance, workers’ comp, cleanup, or proper technique. Coverage and safe equipment are real costs, and a bid that ignores them shifts the risk onto the homeowner. In Central Florida, a rock-bottom price often pairs with topping or spike-climbing — the two shortcuts that permanently damage a tree. Compare quotes line by line; the cheapest bid that covers the full scope with verified insurance is a fine choice.',
+  },
+];
+
+const description =
+  'A plain-English checklist for hiring a tree service in Orlando: verify insurance and ISA credentials, get a written itemized quote, and spot the red flags.';
+
+const jsonLd = [
+  faqSchema(faqs),
+  articleSchema({
+    title: 'How to Choose a Tree Service in Orlando (Checklist & Red Flags)',
+    description,
+    url: '/tree-care/how-to-choose-a-tree-service/',
+    published: '2026-07-08',
+  }),
+];
+---
+
+<Base
+  title="How to Choose an Orlando Tree Service: Checklist & Red Flags"
+  description={description}
+  breadcrumbs={trail}
+  jsonLd={jsonLd}
+>
+  <div class="container narrow">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head" data-reveal>
+      <span class="kicker">Tree care guide</span>
+      <h1>How to Choose a Tree Service</h1>
+      <p class="lede">
+        Tree work is dangerous, unlicensed at the state level in Florida, and
+        expensive to get wrong. Here is the neutral, plain-English rubric for vetting any
+        tree service in the Orlando area — the checks to run, the red flags
+        that end the conversation, and what a professional quote looks like.
+        It applies whether you ever call us or not.
+      </p>
+    </header>
+
+    <section class="sixty" data-reveal aria-labelledby="sixty-heading">
+      <span class="kicker">Answer first</span>
+      <h2 id="sixty-heading">The 60-second version</h2>
+      <p>
+        To choose a tree service in Orlando or anywhere in Central Florida,
+        run five checks before anyone touches a tree:
+      </p>
+      <ol>
+        <li>
+          <strong>Verify insurance.</strong> Ask for a certificate of insurance
+          (COI) covering general liability <em>and</em> workers’ compensation —
+          sent directly from the insurance agent, not handed to you by the
+          company.
+        </li>
+        <li>
+          <strong>Verify credentials.</strong> The company should have ISA
+          Certified Arborists on staff; you can confirm any arborist’s
+          credential in about a minute at treesaregood.org.
+        </li>
+        <li>
+          <strong>Demand a written, itemized quote.</strong> Every tree, every
+          task, cleanup, and one total number — on paper, before work starts.
+        </li>
+        <li>
+          <strong>Expect standards language.</strong> For pruning, a pro talks
+          in ANSI A300 terms — crown cleaning, thinning, reduction. Anyone
+          offering to “top” a tree is out.
+        </li>
+        <li>
+          <strong>Never hire a topper or a storm door-knocker.</strong> Both
+          are reliable signs of a crew that will cost you more than it saves.
+        </li>
+      </ol>
+    </section>
+
+    <div class="prose">
+      <h2>How do you verify a tree service is legitimate?</h2>
+      <p>
+        Florida has no state license specific to tree work, so the burden of
+        vetting falls on you — and the good news is that the vetting is fast.
+        Every item below takes minutes, and a legitimate company will make all
+        five easy:
+      </p>
+      <div class="check-grid" data-reveal data-reveal-stagger>
+        {checklist.map((c) => (
+          <article class="check-card">
+            <span class="ico"><Icon name={c.icon} /></span>
+            <h3>{c.title}</h3>
+            <p>{c.body}</p>
+          </article>
+        ))}
+      </div>
+      <p class="linknote">
+        For what a public review record should look like, see an example on
+        our <a href="/reviews/">reviews page</a> — then hold every company you
+        consider to the same standard.
+      </p>
+
+      <h2>Which red flags should disqualify a tree service?</h2>
+      <p>
+        Any single one of these is enough to end the conversation. None of
+        them are judgment calls — each is a well-documented pattern that ends
+        with a damaged tree, a damaged property, or a homeowner holding the
+        bill:
+      </p>
+      <div class="flag-grid" data-reveal data-reveal-stagger>
+        {redFlags.map((f) => (
+          <article class="flag-card">
+            <h3><Icon name="lucide:x" aria-hidden="true" /> {f.title}</h3>
+            <p>{f.body}</p>
+          </article>
+        ))}
+      </div>
+      <p>
+        If topping is new to you, our <a href="/tree-care/pruning-basics/">pruning
+        basics guide</a> explains why it is the one thing you should never let
+        anyone do to your tree — and what the right alternative looks like.
+      </p>
+
+      <h2>What questions should you ask before you sign?</h2>
+      <p>
+        Once the paperwork checks out, five questions separate a tight
+        operation from a loose one:
+      </p>
+      <ul class="qa-list">
+        {questions.map((item) => (
+          <li>
+            <strong>{item.q}</strong> {item.a}
+          </li>
+        ))}
+      </ul>
+
+      <h2>What does a professional tree service quote include?</h2>
+      <p>
+        A professional quote is a document, not a number. When you put two or
+        three side by side, these are the parts to compare — scope for scope,
+        not just the bottom line:
+      </p>
+      <div class="check-grid" data-reveal data-reveal-stagger>
+        {quoteItems.map((q) => (
+          <article class="check-card plain">
+            <h3>{q.title}</h3>
+            <p>{q.body}</p>
+          </article>
+        ))}
+      </div>
+      <p>
+        Not sure whether a number is in the normal range? Our
+        <a href="/tree-care/tree-service-costs/">guide to tree service costs</a>
+        covers what typical pruning, removal, and stump jobs run in the
+        Orlando area — useful context before you compare bids.
+      </p>
+    </div>
+
+    <FaqBlock faqs={faqs} />
+
+    <aside class="cta" data-reveal>
+      <h2>Hold us to this list.</h2>
+      <p>
+        We publish this checklist because it is the rubric we would want our
+        own families to use. If you are comparing companies in the greater
+        Orlando area, run Sacred Tree Service through it: COI on request, ISA
+        Certified Arborists on staff, written itemized quotes, ANSI A300
+        pruning — and we would rather save your tree than sell you a removal.
+        Based in Apopka, serving a 50-mile radius across Central Florida.
+      </p>
+      <div class="cta-actions">
+        <a class="btn primary" href="/contact/">Request a free written quote</a>
+        <a class="btn ghost" href="/reviews/">Read our reviews</a>
+      </div>
+      <p class="cta-phone">Or call <a href="tel:+13212048459">(321) 204-8459</a>.</p>
+    </aside>
+  </div>
+</Base>
+
+<style>
+  .head { text-align: center; margin: 1rem 0 2rem; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h1 { font-size: clamp(2rem, 5vw, 2.8rem); margin: 0.3rem 0 0.75rem; }
+  .lede { color: var(--muted); font-size: 1.15rem; margin: 0 auto; max-width: 62ch; }
+
+  /* Answer-first band */
+  .sixty {
+    margin: 2.5rem 0 3rem;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 2rem 2.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .sixty h2 {
+    font-size: clamp(1.5rem, 3vw, 1.9rem);
+    margin: 0.3rem 0 0.6rem;
+  }
+  .sixty p {
+    margin: 0 0 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.65;
+  }
+  .sixty ol {
+    margin: 0 0 0 1.2rem;
+    padding: 0;
+    color: var(--ink-soft);
+    line-height: 1.65;
+  }
+  .sixty li { margin-bottom: 0.6rem; }
+  .sixty li:last-child { margin-bottom: 0; }
+  .sixty strong { color: var(--ink); }
+  @media (max-width: 600px) { .sixty { padding: 1.5rem 1.25rem; } }
+
+  .prose h2 {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    margin: 2.5rem 0 0.6rem;
+  }
+  .prose p { margin: 0 0 1rem; color: var(--ink-soft); line-height: 1.7; }
+  .prose a {
+    color: var(--green-dark);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+  .prose strong { color: var(--ink); }
+
+  /* Verification checklist + quote-contents cards */
+  .check-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.25rem 0 1rem;
+  }
+  .check-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+  }
+  .check-card .ico {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--green-tint);
+    color: var(--green-dark);
+    margin-bottom: 0.7rem;
+  }
+  .check-card .ico [data-icon] { width: 22px; height: 22px; }
+  .check-card h3 { font-size: 1.05rem; margin: 0 0 0.35rem; }
+  .check-card p { color: var(--muted); margin: 0; font-size: 0.93rem; line-height: 1.6; }
+  @media (max-width: 640px) { .check-grid { grid-template-columns: 1fr; } }
+
+  .linknote { font-size: 0.98rem; }
+
+  /* Red flag cards */
+  .flag-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.25rem 0 1rem;
+  }
+  .flag-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--warning);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+  }
+  .flag-card h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 1.02rem;
+    margin: 0 0 0.35rem;
+  }
+  .flag-card h3 [data-icon] {
+    width: 17px;
+    height: 17px;
+    color: var(--warning);
+    flex-shrink: 0;
+  }
+  .flag-card p { color: var(--muted); margin: 0; font-size: 0.93rem; line-height: 1.6; }
+  @media (max-width: 640px) { .flag-grid { grid-template-columns: 1fr; } }
+
+  /* Questions list */
+  .qa-list {
+    list-style: none;
+    margin: 1.25rem 0 1rem;
+    padding: 0;
+  }
+  .qa-list li {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem 1.3rem;
+    margin-bottom: 0.6rem;
+    color: var(--ink-soft);
+    line-height: 1.65;
+    font-size: 0.97rem;
+  }
+  .qa-list strong {
+    display: block;
+    color: var(--ink);
+    margin-bottom: 0.2rem;
+    font-size: 1.02rem;
+  }
+
+  /* Closing CTA */
+  .cta {
+    margin: 3rem 0 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .cta h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin: 0 0 0.5rem; }
+  .cta p { color: var(--muted); margin: 0 auto 1.25rem; max-width: 60ch; }
+  .cta-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+  .cta-phone { margin: 1rem auto 0 !important; font-size: 0.95rem; }
+  .cta-phone a { color: var(--green-dark); font-weight: 700; text-decoration: none; }
+  .cta-phone a:hover { text-decoration: underline; }
+</style>

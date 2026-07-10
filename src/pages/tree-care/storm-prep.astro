@@ -1,0 +1,499 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import { faqSchema, articleSchema } from '../../lib/schema';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Tree Care', url: '/tree-care/' },
+  { name: 'Storm Prep', url: '/tree-care/storm-prep/' },
+];
+
+// The failure modes we actually see after Central Florida storms.
+const failureModes = [
+  {
+    title: 'Weak unions with included bark',
+    body: 'Two co-dominant trunks with bark pinched inside the union instead of solid wood. It looks like a strong V — it is actually a seam waiting for wind load to pull it apart.',
+  },
+  {
+    title: 'Hidden internal decay',
+    body: 'Rot columns from old topping wounds, or root and butt decay like Ganoderma. The outside can look fine while the wood doing the holding is gone. This is what risk assessments exist to find.',
+  },
+  {
+    title: 'Lion-tailed & over-lifted canopies',
+    body: 'When the interior branches are stripped out, all the weight and sail area concentrates at the branch tips. The limbs whip harder in wind instead of dampening it — the pruning made the tree worse.',
+  },
+  {
+    title: 'Saturated soil + sustained wind',
+    body: 'Central Florida hurricanes arrive on top of the summer wet season. Days of rain loosen sandy soil around the root plate, and then hours of sustained wind lever against it. Whole healthy-looking trees tip at the roots.',
+  },
+  {
+    title: 'Hurricane-cut palms',
+    body: 'Palms stripped to a tuft are starved, not protected. The canopy a palm keeps is what feeds it, and the new spear growth on an over-cut palm is weaker in exactly the winds it was supposedly prepared for.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'When should I prune trees before hurricane season in Florida?',
+    a: 'The structural pruning window in Central Florida is roughly January through March, while trees are dormant and defects are easy to see — with April and May as the last practical window for an arborist inspection and any remaining corrective work. Once hurricane season opens June 1, major pruning does more harm than good: fresh large cuts and a stressed canopy are the opposite of storm-ready. Dead or broken wood is the exception — remove it whenever you find it.',
+  },
+  {
+    q: 'Do hurricane cuts protect palm trees?',
+    a: 'No. A "hurricane cut" — stripping a palm down to a small tuft of upright fronds — makes a palm more likely to fail in a storm, not less. Palms cannot heal cuts or rebuild reserves the way hardwoods can, so an over-stripped canopy starves the palm and weakens the new growth that has to survive the wind. UF/IFAS guidance is to remove only dead or dying fronds. Sacred Tree Service does not perform hurricane cuts, in any season.',
+  },
+  {
+    q: 'Which trees are most likely to fall in a hurricane?',
+    a: 'In Central Florida, the trees most likely to fail in hurricane winds are the ones with pre-existing structural problems: co-dominant trunks with included bark, internal decay (often from old topping cuts or root rot like Ganoderma), lion-tailed or over-lifted canopies, and recently hurricane-cut palms. Fast-growing, weak-wooded species — laurel oak, water oak, camphor — fail more often than live oaks, and any tree standing in saturated soil can go over at the roots. Most of these problems are visible to an arborist months before the season starts.',
+  },
+  {
+    q: 'Will insurance cover my tree if it falls in a hurricane?',
+    a: 'Under most Florida homeowners policies: if the tree hits an insured structure (house, garage, fence), removal from the structure and repair of the structure are usually covered. A tree that falls in the yard without hitting anything is usually not covered. And if a neighbor’s tree lands on your property, it is your policy that pays — not theirs — in almost every Florida policy. Photograph everything before cleanup begins; Sacred Tree Service provides claim-formatted documentation (photos, scope, invoice) at no extra charge.',
+  },
+  {
+    q: 'What should I do with my trees the week before a hurricane?',
+    a: 'The week before a storm is for small, safe tasks — not pruning. Secure or store loose outdoor furniture and yard items, clear dead branches and debris you can reach from the ground, and photograph your trees and structures for insurance. Do not hire anyone offering a same-week "quick trim," especially with climbing spikes — rushed cuts wound trees and remove nothing that matters in hurricane winds. If a specific tree genuinely worries you, call (321) 204-8459 and we will triage it honestly.',
+  },
+];
+
+const title = 'Preparing Trees for Hurricane Season in Central Florida';
+const description =
+  'Prepare trees for hurricane season the Central Florida way: structural pruning January–May, an arborist walk before June 1 — never topping or hurricane cuts.';
+
+const jsonLd = [
+  faqSchema(faqs),
+  articleSchema({
+    title,
+    description,
+    url: '/tree-care/storm-prep/',
+    published: '2026-07-08',
+  }),
+];
+---
+
+<Base title={title} description={description} breadcrumbs={trail} jsonLd={jsonLd}>
+  <div class="container narrow">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head" data-reveal>
+      <span class="kicker">Tree care guide</span>
+      <h1>Preparing Your Trees for Hurricane Season</h1>
+      <p class="lede">
+        The evergreen guide for Central Florida homeowners: what actually makes
+        a tree storm-ready, when the work has to happen, and the popular
+        "preparations" that make trees more likely to fail — not less.
+      </p>
+    </header>
+
+    <div class="prose">
+      <aside class="answer" data-reveal>
+        <h2>The short answer</h2>
+        <p>
+          Hurricane prep for Central Florida trees happens in <strong>winter
+          and spring — not the week a storm forms</strong>. Structural pruning
+          belongs in the January–May window, and an arborist walk before
+          June&nbsp;1 catches the weak unions and decay that actually bring
+          trees down. And never let anyone "top" a tree or "hurricane cut" a
+          palm: both make failure <em>more</em> likely, not less.
+        </p>
+      </aside>
+
+      <p>
+        Hurricane season runs June 1 through November 30, and every year it
+        arrives with a wave of door-knockers offering last-minute trims. Here
+        is the honest version instead: by the time a storm has a name, the
+        useful window closed months ago. What protects a tree in hurricane
+        winds is good structure — and structure is built in the dormant
+        season, not the forecast cone.
+      </p>
+      <p>
+        This page is the evergreen how-to. For the field version — the
+        checklist we wrote from the truck mid-season — read our blog post,
+        <a href="/blog/florida-hurricane-tree-prep/">Florida hurricane prep
+        for your trees</a>.
+      </p>
+
+      <h2>Why do trees fail in hurricanes?</h2>
+      <p>
+        Healthy, well-structured trees survive hurricanes remarkably well —
+        Central Florida's live oaks have been doing it for centuries. The
+        trees that come down usually had a problem long before the storm did.
+        These are the failure modes we see over and over after a storm passes
+        through the greater Orlando area:
+      </p>
+      <div class="grid" data-reveal data-reveal-stagger>
+        {failureModes.map((f) => (
+          <article class="card">
+            <h3>{f.title}</h3>
+            <p>{f.body}</p>
+          </article>
+        ))}
+      </div>
+      <p>
+        Notice the pattern: two of the five are caused by bad pruning. UF/IFAS
+        studies of tree damage after Florida's hurricanes consistently found
+        that well-structured, properly pruned trees held up better than
+        topped, over-thinned, or neglected ones. Preparation is real — it just
+        looks nothing like the panic trims sold in June.
+      </p>
+
+      <h2>The prep calendar</h2>
+      <p>
+        Storm readiness in Central Florida follows the same calendar every
+        year. Here is the whole cycle:
+      </p>
+      <ol class="phases" data-reveal data-reveal-stagger>
+        <li class="phase">
+          <span class="phase-n">01</span>
+          <div class="phase-body">
+            <header>
+              <h3>Structural pruning window</h3>
+              <span class="phase-time">Jan–Mar</span>
+            </header>
+            <p>
+              This is when hurricane prep actually happens. Trees are dormant,
+              defects are easy to see, and there is time for new growth to
+              harden off before summer. ANSI A300 structural pruning — crown
+              cleaning, reduction of over-extended limbs, correcting weak
+              architecture in young trees — is the single most effective thing
+              you can do. See our
+              <a href="/services/tree-pruning/">tree pruning service</a> for
+              how we approach it.
+            </p>
+          </div>
+        </li>
+        <li class="phase">
+          <span class="phase-n">02</span>
+          <div class="phase-body">
+            <header>
+              <h3>Arborist walk &amp; corrections</h3>
+              <span class="phase-time">Apr–May</span>
+            </header>
+            <p>
+              Before the season opens, have a certified arborist walk the
+              property looking for the failure modes above: co-dominant unions
+              with included bark, decay indicators, over-extended limbs over
+              targets. Trees worth keeping but structurally weak are often
+              candidates for <a href="/services/cabling-bracing/">cabling and
+              bracing</a> — and where risk needs to be documented, we conduct
+              TRAQ-framework assessments through our
+              <a href="/services/arborist-consulting/">arborist consulting
+              service</a>.
+            </p>
+          </div>
+        </li>
+        <li class="phase">
+          <span class="phase-n">03</span>
+          <div class="phase-body">
+            <header>
+              <h3>Season opens</h3>
+              <span class="phase-time">Jun 1</span>
+            </header>
+            <p>
+              From here on, major pruning does more harm than good — large
+              fresh cuts and a stressed canopy are the opposite of
+              storm-ready. What still makes sense: removing deadwood whenever
+              you spot it, clearing loose debris and hangers, and keeping an
+              eye on anything the spring walk flagged. If you missed the
+              window, don't panic-prune — a targeted deadwood pass beats a
+              rushed canopy job every time.
+            </p>
+          </div>
+        </li>
+        <li class="phase">
+          <span class="phase-n">04</span>
+          <div class="phase-body">
+            <header>
+              <h3>The week before a storm</h3>
+              <span class="phase-time">watch &amp; warnings</span>
+            </header>
+            <p>Small, safe tasks only:</p>
+            <ul>
+              <li>Secure or store patio furniture, potted plants, and anything loose that becomes a projectile.</li>
+              <li>Photograph your trees, house, fence, and other structures — insurance claims go far smoother with "before" photos.</li>
+              <li>Clear dead branches and ground debris you can reach without a ladder.</li>
+              <li>Do <strong>not</strong> let anyone "quick-trim" your trees — especially anyone climbing on spikes. Rushed cuts wound the tree and remove nothing that matters in hurricane winds.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="phase">
+          <span class="phase-n">05</span>
+          <div class="phase-body">
+            <header>
+              <h3>After the storm</h3>
+              <span class="phase-time">safety first</span>
+            </header>
+            <p>
+              Assume every downed line is live and stay away from anything
+              touching one — call 911 for sparking or burning lines. Keep
+              people out of rooms under a tree on the roof. Photograph the
+              damage before anything is moved. Then triage: trees on
+              structures first, blocked access second, leaners third. Our
+              <a href="/emergency/">emergency page</a> covers what to do in
+              the moment, and our
+              <a href="/services/emergency-storm-damage/">storm response
+              service</a> covers how we prioritize the work.
+            </p>
+          </div>
+        </li>
+      </ol>
+
+      <h2>What NOT to do</h2>
+      <p>
+        Most storm-prep damage is self-inflicted — sold to homeowners as
+        protection. Four things to refuse, no matter who offers them:
+      </p>
+      <ul class="dont" data-reveal data-reveal-stagger>
+        <li>
+          <span class="dont-ico" aria-hidden="true"><Icon name="lucide:x" /></span>
+          <div>
+            <h3>Topping</h3>
+            <p>
+              Cutting major limbs back to stubs. ANSI A300 prohibits it. The
+              regrowth is fast, weakly attached, and prone to snapping — a
+              topped tree is <em>more</em> dangerous in the next storm, and
+              often dying on top of it.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="dont-ico" aria-hidden="true"><Icon name="lucide:x" /></span>
+          <div>
+            <h3>Hurricane cuts on palms</h3>
+            <p>
+              Stripping a palm to a bare tuft starves it and weakens the new
+              growth. UF/IFAS guidance is clear: remove only dead or dying
+              fronds. A full, green canopy is a healthy palm's storm
+              protection, not its liability.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="dont-ico" aria-hidden="true"><Icon name="lucide:x" /></span>
+          <div>
+            <h3>Lion-tailing</h3>
+            <p>
+              Gutting the interior of the canopy so limbs look "cleaned out."
+              It shifts all the weight and wind load to the branch tips, where
+              limbs whip and break instead of dampening the wind.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="dont-ico" aria-hidden="true"><Icon name="lucide:x" /></span>
+          <div>
+            <h3>DIY chainsaw work under tension</h3>
+            <p>
+              A bent, hung, or pinned limb stores energy like a loaded spring,
+              and it releases without warning. Anything under tension — or
+              anywhere near a line — belongs to trained crews working to the
+              ANSI Z133 safety standard, not a weekend and a rented saw.
+            </p>
+          </div>
+        </li>
+      </ul>
+
+      <h2>Insurance notes, in plain English</h2>
+      <p>
+        Every policy differs, but Florida homeowners policies follow a
+        consistent pattern with storm-felled trees:
+      </p>
+      <ul>
+        <li><strong>Tree hits an insured structure</strong> (house, garage, fence): removal from the structure and repair of the structure are usually covered.</li>
+        <li><strong>Tree falls in the yard, hits nothing:</strong> usually not covered — cleanup is typically on you.</li>
+        <li><strong>Neighbor's tree lands on your property:</strong> your policy pays, not theirs, in almost every Florida policy. It surprises people every single season.</li>
+      </ul>
+      <p class="note">
+        Photograph everything <strong>before</strong> cleanup starts — wide
+        shots, close-ups, and the point of impact. We provide claim-formatted
+        documentation (photos, scope of work, invoice) at no extra charge on
+        every storm job.
+      </p>
+    </div>
+
+    <FaqBlock faqs={faqs} />
+
+    <aside class="cta" data-reveal>
+      <h2>Want your trees checked before the season?</h2>
+      <p>
+        We'd rather save your tree than sell you a removal. A pre-season walk
+        with a certified arborist on our staff finds the weak unions and decay
+        that actually bring trees down — while there's still time to fix them.
+      </p>
+      <div class="cta-actions">
+        <a class="btn primary" href="/services/arborist-consulting/">Book an arborist walk</a>
+        <a class="btn ghost" href="/contact/">Request a free estimate</a>
+      </div>
+    </aside>
+  </div>
+</Base>
+
+<style>
+  .head { text-align: center; margin: 1rem 0 2rem; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h1 { font-size: clamp(2rem, 5vw, 2.8rem); margin: 0.3rem 0 0.75rem; }
+  .lede { color: var(--muted); font-size: 1.15rem; margin: 0 auto; max-width: 60ch; }
+
+  .prose h2 {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    margin: 2.25rem 0 0.6rem;
+  }
+  .prose h3 { font-size: 1.1rem; margin: 0 0 0.4rem; }
+  .prose p { margin: 0 0 1rem; color: var(--ink-soft); line-height: 1.7; }
+  .prose ul { margin: 0 0 1rem 1.2rem; color: var(--ink-soft); line-height: 1.7; }
+  .prose li { margin-bottom: 0.4rem; }
+  .prose strong { color: var(--ink); }
+  .prose a {
+    color: var(--green-dark);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  /* Answer-first summary box */
+  .answer {
+    background: var(--green-tint);
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    padding: 1.5rem 1.75rem;
+    margin: 0 0 1.75rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .answer h2 {
+    font-size: 1.2rem;
+    margin: 0 0 0.5rem;
+    color: var(--green-dark);
+  }
+  .answer p { margin: 0; }
+
+  /* Failure-mode cards */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin: 1.25rem 0 1rem;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+  }
+  .card h3 { font-size: 1.05rem; margin: 0 0 0.35rem; }
+  .card p { color: var(--muted); margin: 0; font-size: 0.93rem; line-height: 1.55; }
+
+  /* Prep-calendar phases */
+  .phases {
+    list-style: none;
+    padding: 0;
+    margin: 1.25rem 0 1rem;
+    display: grid;
+    gap: 1.25rem;
+  }
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem 1.75rem;
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  .phase-n {
+    font-family: 'Marcellus', Georgia, serif;
+    font-size: 2rem;
+    color: var(--green);
+    line-height: 1;
+  }
+  .phase-body header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: baseline;
+    margin-bottom: 0.4rem;
+  }
+  .phase-body h3 { font-size: 1.2rem; margin: 0; }
+  .phase-time {
+    font-size: 0.85rem;
+    color: var(--green-dark);
+    background: var(--green-tint);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+  .phase-body p { margin: 0 0 0.5rem; color: var(--ink-soft); line-height: 1.6; }
+  .phase-body p:last-child { margin-bottom: 0; }
+  .phase-body ul { margin: 0 0 0 1.2rem; }
+  .phase-body li { font-size: 0.95rem; }
+  @media (max-width: 600px) {
+    .phase { grid-template-columns: 1fr; padding: 1.25rem; }
+    .phase-n { font-size: 1.5rem; }
+  }
+
+  /* What-not-to-do list */
+  .dont {
+    list-style: none;
+    padding: 0;
+    margin: 1.25rem 0 1rem !important;
+    display: grid;
+    gap: 1rem;
+  }
+  .dont li {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 1rem;
+    align-items: start;
+    margin: 0;
+  }
+  .dont-ico {
+    display: inline-grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--green-tint);
+    color: var(--green-dark);
+  }
+  .dont-ico [data-icon] { width: 20px; height: 20px; }
+  .dont h3 { font-size: 1.05rem; margin: 0 0 0.3rem; }
+  .dont p { color: var(--muted); margin: 0; font-size: 0.93rem; line-height: 1.55; }
+  @media (max-width: 480px) {
+    .dont li { grid-template-columns: 1fr; }
+  }
+
+  .note {
+    background: var(--highlight-bg);
+    border: 1px solid var(--highlight-border);
+    color: var(--highlight-ink);
+    border-radius: 12px;
+    padding: 0.9rem 1.2rem;
+    font-size: 0.95rem;
+  }
+
+  .cta {
+    margin: 3rem 0 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .cta h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin: 0 0 0.5rem; }
+  .cta p { color: var(--muted); margin: 0 auto 1.25rem; max-width: 52ch; }
+  .cta-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+</style>

@@ -1,0 +1,449 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import { faqSchema, articleSchema } from '../../lib/schema';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Tree Care', url: '/tree-care/' },
+  { name: 'Should I Remove This Tree?', url: '/tree-care/should-i-remove-this-tree/' },
+];
+
+// The signs that genuinely point toward removal. Honest, specific, no
+// fear-mongering — each one names the mechanism, not just the scare.
+const removalSigns = [
+  {
+    title: 'Dead — or most of the canopy gone',
+    body: 'A tree with no live growth, or one that has lost roughly half its canopy or more, is past the point where treatment makes sense. Dead wood only gets weaker with time — in hurricane country, that is a countdown, not a wait-and-see.',
+  },
+  {
+    title: 'Fungal conks on the trunk or root flare',
+    body: 'Shelf- or mushroom-like growths at the base or on the trunk are the fruiting bodies of decay fungi already working inside the wood. By the time you can see the conk, the internal decay is well established.',
+  },
+  {
+    title: 'Root-plate lift or a brand-new lean',
+    body: 'Raised or cracked soil on one side of the base, or a lean that was not there before, means the roots themselves may be failing. This is the most urgent sign on this list — keep people clear and get it assessed the same day.',
+  },
+  {
+    title: 'A major crack through a trunk or union',
+    body: 'A split running through a branch union or down the trunk is a structural failure in progress. A clean, recent crack in an otherwise healthy tree can sometimes be braced; a deep crack with decay in it usually cannot.',
+  },
+  {
+    title: 'Lethal bronzing or Ganoderma',
+    body: 'Two Central Florida diseases with no cure. A palm showing lethal bronzing symptoms, or a tree with Ganoderma butt rot, cannot be saved — here, removal is how you protect the healthy trees and palms around it.',
+  },
+  {
+    title: 'Repeated large-limb failures',
+    body: 'One storm-broken limb is weather. A tree that keeps dropping large limbs in ordinary conditions is telling you its wood or its structure is failing — and each failure confirms the pattern.',
+  },
+];
+
+// The complaints that bring us the most "take it down" calls — and almost
+// never actually mean removal.
+const keepSigns = [
+  {
+    title: 'A lean the tree grew with',
+    body: 'Trees lean toward light and build compensating wood for decades. A long-standing lean with a curved trunk and no soil movement at the base is usually stable. It is the NEW lean that matters.',
+  },
+  {
+    title: 'Spanish moss',
+    body: 'An epiphyte, not a parasite — it takes nothing from the tree. Heavy moss on a declining tree is a symptom of a thinning canopy letting light in, not the cause of the decline.',
+  },
+  {
+    title: 'One dead limb',
+    body: 'That is a pruning job, not a removal. Crown cleaning takes the deadwood out — and the risk goes with it. Removing a whole tree over one limb is like totaling a car over a flat tire.',
+  },
+  {
+    title: 'Surface roots',
+    body: 'Normal for many species in Florida’s shallow, sandy soils. Annoying under a mower, but not a verdict on the tree — and cutting or shaving them creates the instability people were worried about.',
+  },
+  {
+    title: '“It’s messy”',
+    body: 'Leaves, acorns, and fruit are a maintenance question, not a safety one. There are cheaper answers than removing a healthy mature tree — and you cannot buy back thirty years of shade.',
+  },
+  {
+    title: 'It’s just big',
+    body: 'Size alone is not risk. A large, healthy, well-structured live oak is often safer than a small tree with a bad union — and the big ones are exactly the trees local ordinances protect.',
+  },
+];
+
+const toolkit = [
+  {
+    icon: 'lucide:scissors',
+    title: 'Reduction pruning',
+    body: '“Outgrown its space” is usually a pruning problem, not a removal problem. Reduction shortens limbs back to healthy laterals, easing weight and wind load without topping — which ANSI A300 prohibits.',
+    href: '/services/tree-pruning/',
+    linkText: 'Tree pruning',
+  },
+  {
+    icon: 'lucide:link-2',
+    title: 'Cabling & bracing',
+    body: 'A good tree with one weak point — co-dominant stems, a heavy lateral limb, a poor union — can often be reinforced with steel hardware and gain many more safe, healthy years.',
+    href: '/services/cabling-bracing/',
+    linkText: 'Cabling & bracing',
+  },
+  {
+    icon: 'lucide:leaf',
+    title: 'Plant health care',
+    body: 'Declines caught early — soil compaction, nutrient deficiencies in sandy Florida soils, treatable pests — are often reversible. The trick is diagnosis before the decline passes the point of return.',
+    href: '/services/plant-health-care/',
+    linkText: 'Plant health care',
+  },
+];
+
+const faqs = [
+  {
+    q: 'How do I know if my tree is dying?',
+    a: 'Look for canopy thinning that worsens season over season, dieback starting at the branch tips, mushroom-like conks on the trunk or root flare, and bark falling away with no new growth beneath. In Central Florida, add the local threats: bronzing fronds moving up a palm (lethal bronzing), sudden wilt in bay trees (laurel wilt), and slow decline in mature oaks. One dead limb usually means pruning, not a dying tree. If the whole canopy is declining, have it assessed by a certified arborist — declines caught early are often reversible.',
+  },
+  {
+    q: 'Should I remove a tree that leans toward my house?',
+    a: 'Not necessarily — the cause of the lean matters more than the direction. A tree that grew leaning toward the light, with a curved trunk and decades of compensating wood, is usually stable even pointed at the house. A new or worsening lean is different: if the lean has visibly changed, or the soil is lifting or cracking on the far side of the trunk, the root plate may be failing and the tree needs a same-day professional assessment. A TRAQ risk assessment can tell you which kind of lean you have.',
+  },
+  {
+    q: 'Do I need a permit to remove a tree in Orlando?',
+    a: 'Usually yes for mature trees. The City of Orlando, Winter Park, Maitland, and unincorporated Orange and Seminole counties all protect trees above certain trunk sizes — live oaks especially — under local tree ordinances. Removal typically requires a permit, often a written arborist justification, and sometimes a mitigation planting plan. Sacred Tree Service handles the permit paperwork and documentation as part of the removal.',
+  },
+  {
+    q: 'How much does tree removal cost?',
+    a: 'Residential tree removal in the Orlando area typically runs $800–$4,500 depending on the tree’s size, condition, access, and how close it stands to structures — a small open-yard tree sits at the low end, and large oaks over structures can run well beyond the range, especially with crane work. Every job is quoted in person, in writing, free; a real number requires seeing the tree. Our tree service cost guide at sacredtreeservice.com breaks down the ranges for removal, pruning, and stump grinding.',
+  },
+  {
+    q: 'Can a half-dead tree be saved?',
+    a: 'Sometimes — it depends entirely on why it is half dead. Decline driven by a fixable stress — soil compaction, a nutrient deficiency in sandy Central Florida soil, a treatable pest or scale infestation — can often be reversed with plant health care if it is caught early. But a tree that has lost roughly half its canopy or more, or that has significant decay in the trunk, has usually passed the point where treatment makes sense, and the honest answer is removal. An arborist assessment tells you which side of that line your tree is on.',
+  },
+];
+
+const jsonLd = [
+  faqSchema(faqs),
+  articleSchema({
+    title: 'Should I Remove This Tree? How Arborists Actually Decide',
+    description:
+      'Most trees homeowners want removed can be saved. The honest test Central Florida arborists use — signs that mean removal, signs that don’t, and save-first fixes.',
+    url: '/tree-care/should-i-remove-this-tree/',
+    published: '2026-07-08',
+  }),
+];
+---
+
+<Base
+  title="Should I Remove This Tree? How Orlando Arborists Decide"
+  description="Most trees homeowners want removed can be saved. The honest test Central Florida arborists use — signs that mean removal, signs that don’t, and save-first fixes."
+  breadcrumbs={trail}
+  jsonLd={jsonLd}
+>
+  <div class="container narrow">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head" data-reveal>
+      <span class="kicker">Tree care guide</span>
+      <h1>Should I Remove This Tree?</h1>
+      <p class="lede">
+        Most trees we're asked to remove in Central Florida don't need to come
+        down. Here is the honest framework arborists actually use — the signs
+        that really do mean removal, the ones that don't, and the fixes worth
+        trying first.
+      </p>
+    </header>
+
+    <div class="prose">
+      <h2>The short answer: probably not</h2>
+      <p>
+        Most "should I remove this tree?" trees in the greater Orlando area
+        don't need removal — they need pruning, cabling, or plant health care.
+        In our experience at Sacred Tree Service, the majority of removal
+        requests we look at turn out to be solvable problems: a limb that needs
+        to come off, a weak union that can be supported, a decline that can be
+        treated. We'd rather save your tree than sell you a removal, and the
+        framework below is how we tell the difference.
+      </p>
+      <p>The honest test comes down to three questions:</p>
+      <ol class="test">
+        <li>
+          <strong>Is the tree a hazard that can't be mitigated?</strong> Most
+          hazards <em>can</em> be — by removing deadwood, reducing weight over
+          the target, cabling a weak union, or simply moving what's underneath.
+          Removal is for the hazards that no amount of that fixes.
+        </li>
+        <li>
+          <strong>Is it dead, or dying beyond recovery?</strong> A dead tree
+          only gets more dangerous. A declining tree may or may not be
+          recoverable — that depends on the cause and how early it's caught.
+        </li>
+        <li>
+          <strong>Has it outgrown its site beyond what reduction pruning can
+          fix?</strong> Wrong tree, wrong place happens. But "too big" is a
+          pruning conversation first, and a removal conversation only when the
+          site genuinely can't hold the mature tree.
+        </li>
+      </ol>
+      <p>
+        If the answer to any of the three is a clear yes, removal is the
+        responsible call. If it's no across the board, the tree stays — and
+        there's usually a cheaper, better fix.
+      </p>
+
+      <h2>Which signs actually point to removal?</h2>
+      <p>
+        These are the findings that shift our recommendation from "let's save
+        it" to "it needs to come down." Each one is about failed structure or
+        unrecoverable decline — not about how the tree looks.
+      </p>
+      <div class="grid">
+        {removalSigns.map((s) => (
+          <article class="card bad">
+            <h3>{s.title}</h3>
+            <p>{s.body}</p>
+          </article>
+        ))}
+      </div>
+      <p>
+        Want a deeper walkthrough of what these look like on a real tree? We
+        wrote a field guide:
+        <a href="/blog/how-to-tell-if-a-tree-needs-removal/">how to tell if a tree needs removal</a>.
+      </p>
+
+      <h2>Which signs usually don't mean removal?</h2>
+      <p>
+        These are the complaints behind most of the removal calls we get — and
+        almost none of them are a reason to take a tree down.
+      </p>
+      <div class="grid">
+        {keepSigns.map((s) => (
+          <article class="card good">
+            <h3>{s.title}</h3>
+            <p>{s.body}</p>
+          </article>
+        ))}
+      </div>
+
+      <h2>The save-first toolkit</h2>
+      <p>
+        Before a healthy-but-imperfect tree comes down, there are three tools
+        that solve the vast majority of the problems people call about:
+      </p>
+      <div class="toolkit">
+        {toolkit.map((t) => (
+          <article class="tool">
+            <span class="ico" aria-hidden="true"><Icon name={t.icon} /></span>
+            <div>
+              <h3>{t.title}</h3>
+              <p>{t.body}</p>
+              <a href={t.href}>{t.linkText} &rarr;</a>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <h2>How does a professional assessment work?</h2>
+      <p>
+        When the call is genuinely unclear, guessing is the wrong tool. The
+        industry framework is <strong>TRAQ</strong> — the ISA's Tree Risk
+        Assessment Qualification — and it weighs four things:
+      </p>
+      <ul>
+        <li><strong>The target:</strong> what the tree (or the part in question) could actually hit — a house, a driveway, a play area, or just open lawn.</li>
+        <li><strong>Likelihood of failure:</strong> how probable it is that the tree or limb fails, based on its structure, decay, and condition.</li>
+        <li><strong>Likelihood of impact:</strong> whether a failure would actually reach the target — a limb over an empty side yard is a different problem than the same limb over a bedroom.</li>
+        <li><strong>Consequences:</strong> how bad it would be if it did.</li>
+      </ul>
+      <p>
+        A standard <strong>Level 2 visual assessment</strong> walks the whole
+        tree — root flare to crown, all sides, sounding for cavities — and
+        produces a risk rating rather than a gut feeling. The point of the
+        framework is that risk can often be <em>lowered</em> without removal:
+        reduce the load, support the union, or move the target. When paperwork
+        needs it — an HOA, an insurance carrier, a city permit — we put the
+        findings in a written report through our
+        <a href="/services/arborist-consulting/">arborist consulting</a> service.
+      </p>
+
+      <h2>Do you need a permit to remove it?</h2>
+      <p>
+        In much of Central Florida, yes — many municipalities protect mature
+        trees, live oaks especially, under local tree ordinances. The City of
+        Orlando, Winter Park, Maitland, and unincorporated Orange and Seminole
+        counties all require a permit to remove protected trees above certain
+        sizes, and the application often needs a written arborist justification
+        — sometimes a replanting (mitigation) plan too. Taking a protected oak
+        down without one can cost far more in fines than the removal itself.
+      </p>
+      <p class="note">
+        We handle the permit paperwork, documentation, and arborist
+        justification as part of every
+        <a href="/services/tree-removal/">tree removal</a> that needs it — you
+        don't have to navigate the ordinance yourself.
+      </p>
+
+      <h2>If it does come down, close the loop</h2>
+      <p>
+        A removal shouldn't be the end of the story. Two things finish the job
+        properly: <a href="/services/stump-grinding/">grind the stump</a> below
+        grade so the space is actually usable again, and
+        <a href="/services/tree-planting/">replant the right tree in the right
+        place</a> — often on the same visit, while the crew and equipment are
+        already there. Central Florida's near year-round growing season makes
+        replanting easy to fold in, and choosing a species matched to the site
+        means you won't be having this conversation again in twenty years.
+        Removals should be part of the cycle of a healthy landscape, not the
+        end of it. For what all of this typically costs, see our
+        <a href="/tree-care/tree-service-costs/">tree service cost guide</a>.
+      </p>
+    </div>
+
+    <FaqBlock faqs={faqs} />
+
+    <aside class="cta" data-reveal>
+      <h2>Not sure which side of the line your tree is on?</h2>
+      <p>
+        Ask us. We'd rather save your tree than sell you a removal — and if it
+        does need to come down, we'll tell you that honestly too. Free
+        in-person estimates, in writing, across the greater Orlando area.
+      </p>
+      <div class="cta-actions">
+        <a class="btn primary" href="/contact/">Request a free estimate</a>
+        <a class="btn ghost" href="/services/arborist-consulting/">Book a risk assessment</a>
+      </div>
+    </aside>
+  </div>
+</Base>
+
+<style>
+  .head { text-align: center; margin: 1rem 0 2rem; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h1 { font-size: clamp(2rem, 5vw, 2.8rem); margin: 0.3rem 0 0.75rem; }
+  .lede { color: var(--muted); font-size: 1.15rem; margin: 0 auto; max-width: 60ch; }
+
+  .prose h2 {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    margin: 2.25rem 0 0.6rem;
+  }
+  .prose h3 { font-size: 1.1rem; margin: 0 0 0.4rem; }
+  .prose p { margin: 0 0 1rem; color: var(--ink-soft); line-height: 1.7; }
+  .prose ul { margin: 0 0 1rem 1.2rem; color: var(--ink-soft); line-height: 1.7; }
+  .prose li { margin-bottom: 0.4rem; }
+  .prose strong { color: var(--ink); }
+  .prose a {
+    color: var(--green-dark);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  /* The three-question test */
+  .test {
+    list-style: none;
+    counter-reset: test;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .test li {
+    counter-increment: test;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.1rem 1.25rem 1.1rem 3.4rem;
+    position: relative;
+    color: var(--ink-soft);
+    line-height: 1.65;
+  }
+  .test li::before {
+    content: counter(test, lower-alpha);
+    position: absolute;
+    left: 1.1rem;
+    top: 1.1rem;
+    display: grid;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: var(--green-tint);
+    color: var(--green-dark);
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  /* Sign card grids */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin: 1.25rem 0 1.25rem;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+  }
+  .card.good { background: var(--green-tint); }
+  .card h3 { font-size: 1.02rem; margin: 0 0 0.35rem; }
+  .card p { color: var(--muted); margin: 0; font-size: 0.93rem; line-height: 1.55; }
+  .card.good p { color: var(--ink-soft); }
+
+  /* Save-first toolkit */
+  .toolkit {
+    display: grid;
+    gap: 0.9rem;
+    margin: 1.25rem 0 1.25rem;
+  }
+  .tool {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 1rem;
+    align-items: start;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+  }
+  .tool .ico {
+    display: inline-grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--green-tint);
+    color: var(--green-dark);
+  }
+  .tool .ico [data-icon] { width: 24px; height: 24px; }
+  .tool h3 { font-size: 1.05rem; margin: 0 0 0.3rem; }
+  .tool p { color: var(--muted); margin: 0 0 0.4rem; font-size: 0.94rem; line-height: 1.6; }
+  .tool a { font-size: 0.92rem; }
+  @media (max-width: 480px) {
+    .tool { grid-template-columns: 1fr; }
+  }
+
+  .note {
+    background: var(--highlight-bg);
+    border: 1px solid var(--highlight-border);
+    color: var(--highlight-ink);
+    border-radius: 12px;
+    padding: 0.9rem 1.2rem;
+    font-size: 0.95rem;
+  }
+
+  .cta {
+    margin: 3rem 0 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .cta h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin: 0 0 0.5rem; }
+  .cta p { color: var(--muted); margin: 0 auto 1.25rem; max-width: 52ch; }
+  .cta-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+</style>

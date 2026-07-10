@@ -23,7 +23,7 @@ We're going to write the stuff we actually tell people on estimates:
 
 ## Who's writing
 
-This blog is written by our team, including our **ISA Certified Arborists**. When a post is written by a credentialed arborist, you'll see the badge on the byline.
+This blog is written by our team, including the **ISA Certified Arborists** on our staff. When a post is written or reviewed by a credentialed arborist, you'll see the Arborist-reviewed badge on the byline.
 
 That's the deal. No fluff, no clickbait, just the kind of notes we wish more tree services published.
 

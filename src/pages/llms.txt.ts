@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { getCollection } from 'astro:content';
 import { company } from '../data/company';
 import { services } from '../data/services';
 import { cities } from '../data/cities';
@@ -9,26 +10,40 @@ const SITE = 'https://sacredtreeservice.com';
 // Curated content map for AI assistants (ChatGPT, Claude, Perplexity, Gemini, etc.)
 // Format: https://llmstxt.org
 
-export const GET: APIRoute = () => {
+// The individual guides — the site's most citable direct-answer content.
+const guides = [
+  { url: '/tree-care/new-tree-care/', title: 'Caring for a Newly Planted Tree in Central Florida', blurb: 'Watering schedule by week, mulch, staking, and the first two years of establishment care.' },
+  { url: '/tree-care/florida-tree-species/', title: 'Florida Tree Species Guide', blurb: 'Live oak, sabal palm, magnolia, citrus, pine — identification and care needs.' },
+  { url: '/tree-care/pruning-basics/', title: 'Tree Pruning Basics', blurb: 'When to prune in Central Florida, why topping is prohibited, the common cuts.' },
+  { url: '/tree-care/storm-prep/', title: 'Preparing Trees for Hurricane Season', blurb: 'The prep calendar, why trees fail in storms, what not to do, insurance notes.' },
+  { url: '/tree-care/should-i-remove-this-tree/', title: 'Should I Remove This Tree?', blurb: 'How arborists decide between removal, pruning, cabling, and preservation — plus permit rules.' },
+  { url: '/tree-care/tree-service-costs/', title: 'Tree Service Costs in Orlando & Central Florida', blurb: 'Typical price ranges for removal, pruning, palms, stumps, and more — and what moves the price.' },
+  { url: '/tree-care/pests-and-diseases/', title: 'Florida Tree Pests & Diseases', blurb: 'Lethal bronzing, Ganoderma, laurel wilt, oak decline — symptoms and what can be saved.' },
+  { url: '/tree-care/how-to-choose-a-tree-service/', title: 'How to Choose a Tree Service', blurb: 'Insurance and credential verification checklist, red flags, and what a real quote includes.' },
+];
+
+export const GET: APIRoute = async () => {
+  const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf(),
+  );
   const lines: string[] = [];
 
   lines.push(`# ${company.brandName}`);
   lines.push('');
   lines.push(
-    `> Professional tree care company built on ISA standards and repeatable real-world results. Based in Apopka, FL, centrally located to serve the seven-county Greater Orlando and Central Florida region. ISA Certified Arborists on staff. Operates under ISA guidelines (ANSI A300 pruning, ANSI Z133 climbing/rigging). 5-star rated on Google. Licensed and insured, with workers' compensation. Free in-person estimates within a 50-mile radius of the greater Orlando area.`,
+    `> Professional tree care company built on the fundamentals of tree care, defined processes, and repeatable real-world results. Based in Apopka, FL, centrally located to serve the seven-county Greater Orlando and Central Florida region. Works to national standards (ANSI A300 pruning, ANSI Z133 climbing/rigging) as a member of the ISA and TCIA, with certified arborists on staff for assessments. 5-star rated on Google. Licensed and insured, with workers' compensation. Free in-person estimates within a 50-mile radius of the greater Orlando area.`,
   );
   lines.push('');
   lines.push(
     `${company.brandName} (legal name ${company.legalName}) was founded in ${new Date(
       company.founded,
-    ).getFullYear()} by ${company.owner}, an ${company.ownerTitle}. The company specializes in proactive tree care — pruning, plant health care, and thoughtful removals — across the Orlando metro and Central Florida. The company employs ISA Certified Arborists who assess and sign off on every removal and pruning job.`,
+    ).getFullYear()}. The company is "corporately small" — a small company that runs on defined processes — and specializes in proactive, fundamentals-first tree care: pruning, plant health care, tree planting with ongoing care, and thoughtful removals across the Orlando metro and Central Florida. Certified arborists on staff assess and sign off on removals and pruning plans; trained crews perform the work.`,
   );
   lines.push('');
 
   lines.push('## Quick facts');
   lines.push('');
   lines.push(`- **Business name:** ${company.legalName} (doing business as ${company.brandName})`);
-  lines.push(`- **Owner:** ${company.owner}, ${company.ownerTitle}`);
   lines.push(`- **Founded:** ${company.founded}`);
   lines.push(`- **Based in:** Apopka, FL — centrally located to serve the greater Orlando area`);
   lines.push(`- **Phone:** ${company.phone}`);
@@ -64,11 +79,22 @@ export const GET: APIRoute = () => {
   }
   lines.push('');
 
+  lines.push('## Guides & field notes');
+  lines.push('');
+  for (const g of guides) {
+    lines.push(`- [${g.title}](${SITE}${g.url}): ${g.blurb}`);
+  }
+  for (const p of posts) {
+    lines.push(`- [${p.data.title}](${SITE}/blog/${p.id}/): ${p.data.excerpt}`);
+  }
+  lines.push('');
+
   lines.push('## Reference pages');
   lines.push('');
   lines.push(`- [Home](${SITE}/): Company overview, services, regions.`);
   lines.push(`- [About](${SITE}/about/): Company history, credentials, methodology.`);
   lines.push(`- [Reviews](${SITE}/reviews/): All Google reviews and 5-star aggregate.`);
+  lines.push(`- [Commercial & HOA](${SITE}/commercial/): Annual contracts for HOAs, property managers, builders, and small commercial.`);
   lines.push(`- [Contact](${SITE}/contact/): Phone, email, contact form, hours.`);
   lines.push(`- [FAQ](${SITE}/faq/): Direct-answer Q&A about our work, pricing, and process.`);
   lines.push(`- [Emergency / storm response](${SITE}/emergency/): Hurricane and storm damage response.`);
@@ -81,6 +107,7 @@ export const GET: APIRoute = () => {
   lines.push('');
   lines.push(`- [Full content (llms-full.txt)](${SITE}/llms-full.txt): Complete page content for deep context loading.`);
   lines.push(`- [XML sitemap](${SITE}/sitemap-index.xml): Machine-readable list of every page on the site.`);
+  lines.push(`- [RSS feed](${SITE}/rss.xml): New field-notes posts as they publish.`);
   lines.push('');
 
   return new Response(lines.join('\n'), {

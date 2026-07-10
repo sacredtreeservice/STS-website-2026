@@ -41,7 +41,7 @@ const faqs = [
   },
   {
     q: `Are your arborists certified?`,
-    a: `Yes — every job in ${county.county} County is assessed by an ISA Certified Arborist. We are members of the International Society of Arboriculture (ISA) and the Tree Care Industry Association (TCIA), and our crews are licensed, insured, and carry workers' compensation coverage.`,
+    a: `Yes — estimates in ${county.county} County are assessed by a certified arborist on staff. Sacred Tree Service is a member of the ISA and TCIA, and our crews are licensed, insured, and carry workers' compensation coverage.`,
   },
   {
     q: `How fast can you get to ${county.county} County?`,
@@ -79,8 +79,8 @@ const itemList = {
 ---
 
 <Base
-  title={`Tree Service in ${county.name} — ISA Certified Arborists`}
-  description={`ISA Certified Arborists serving ${county.name}. ${county.region}. Tree removal, pruning, palm care, and emergency response across ${countyCities.length} cities. Licensed & insured. Free estimates.`}
+  title={`Tree Service in ${county.name} — Sacred Tree Service`}
+  description={`Professional tree care across ${county.name}. ${county.region}. Tree removal, pruning, palm care, and emergency response across ${countyCities.length} cities. Licensed & insured. Free estimates.`}
   breadcrumbs={trail}
   jsonLd={[faqSchema(faqs), countyServiceSchema, itemList]}
 >
@@ -127,8 +127,9 @@ const itemList = {
         <h2>Tree care services in {county.county} County</h2>
         <p>
           The full Sacred Tree Service catalog is available across {county.name} —
-          same crew, same ISA-credentialed standards, same equipment. Pick the
-          service you need to see scope, examples, and pricing context.
+          same crew, same equipment, and one process on every job: assessment,
+          written scope, execution, cleanup. Pick the service you need to see
+          scope, examples, and pricing context.
         </p>
         <ul class="services">
           {services.map((s) => (
@@ -146,9 +147,9 @@ const itemList = {
 
         <h2>Why {county.county} County property owners choose us</h2>
         <ul class="checks">
-          <li><strong>ISA Certified Arborists on every job</strong> — assessed and signed off by a credentialed pro before the chainsaw starts.</li>
+          <li><strong>Assessed before the chainsaw starts</strong> — every job is scoped and signed off by a certified arborist on staff.</li>
           <li><strong>ISA &amp; TCIA member</strong> — bound by the national best-practice standards (ANSI A300, ANSI Z133).</li>
-          <li><strong>Local, ISA-credentialed, based in Apopka</strong> — no out-of-area surcharges anywhere in {county.county} County.</li>
+          <li><strong>Local, based in Apopka</strong> — one crew and one process everywhere in {county.county} County.</li>
           <li><strong>Licensed, insured, workers' comp</strong> — full coverage so the homeowner is never on the hook.</li>
           <li><strong>50-mile radius covers the whole county</strong> — including the more remote corners other crews skip.</li>
         </ul>

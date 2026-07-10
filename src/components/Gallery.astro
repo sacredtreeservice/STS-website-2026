@@ -1,9 +1,18 @@
 ---
+import { Image } from 'astro:assets';
+import work1 from '../assets/work/work-1.jpg';
+import work2 from '../assets/work/work-2.jpg';
+import work4 from '../assets/work/work-4.jpg';
+import work6 from '../assets/work/work-6.jpg';
+
+// Optimized via astro:assets — the originals were shipped raw (up to 1.1MB
+// each) into 180px grid cells, dragging down mobile Core Web Vitals on the
+// highest-traffic page.
 const photos = [
-  { src: '/assets/work-1.jpg', alt: 'Removal of a large hardwood' },
-  { src: '/assets/work-2.jpg', alt: 'Crew working safely up in a tree' },
-  { src: '/assets/work-4.jpg', alt: 'Climber pruning a mature canopy' },
-  { src: '/assets/work-6.jpg', alt: 'Crane-loading a large log' },
+  { src: work1, alt: 'Removal of a large hardwood' },
+  { src: work2, alt: 'Crew working safely up in a tree' },
+  { src: work4, alt: 'Climber pruning a mature canopy' },
+  { src: work6, alt: 'Crane-loading a large log' },
 ];
 ---
 
@@ -17,7 +26,14 @@ const photos = [
     <div class="grid" data-reveal data-reveal-stagger>
       {photos.map((p, i) => (
         <figure class={`g g-${i}`}>
-          <img src={p.src} alt={p.alt} loading="lazy" />
+          <Image
+            src={p.src}
+            alt={p.alt}
+            width={800}
+            widths={[400, 800]}
+            sizes="(max-width: 800px) 50vw, 600px"
+            loading="lazy"
+          />
         </figure>
       ))}
     </div>

@@ -12,7 +12,10 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.2",
+    "@fontsource/lato": "^5.2.7",
+    "@fontsource/marcellus": "^5.2.8",
     "@iconify-json/lucide": "^1.2.105",
     "astro": "^6.2.1",
     "astro-icon": "^1.1.5"

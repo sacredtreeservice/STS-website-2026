@@ -51,7 +51,7 @@ export const faqs: Faq[] = [
   {
     q: 'Can you remove trees in tight or difficult spots without damaging my property?',
     answer:
-      'Yes — this is where ISA Certified Arborists, climbing skill, and crane access matter most. We rig everything down piece-by-piece when needed, and protect surrounding plants, structures, and surfaces.',
+      'Yes — this is where planning, climbing skill, and crane access matter most. We rig everything down piece-by-piece when needed, and protect surrounding plants, structures, and surfaces.',
     quotes: [
       { quote: 'Sacred Tree Service removed a large bird of paradise in my pool area that was in a small area difficult to work in.', name: 'Phil Biddlecome' },
       { quote: 'Alex and his team safely removed a large tree in a spot I thought was impossible.', name: 'Tim M' },
@@ -116,7 +116,7 @@ export const faqs: Faq[] = [
   {
     q: 'Are your arborists real arborists who actually care about the trees?',
     answer:
-      'Yes. Sacred Tree Service has ISA Certified Arborists on staff who genuinely care about plant health and long-term care. We’re also members of ISA and TCIA, and operate under ANSI A300 pruning standards on every job.',
+      'Yes. Sacred Tree Service is built around plant health and long-term care — certified arborists on staff handle assessments, and we operate to ANSI A300 pruning standards on every job as members of the ISA and TCIA.',
     quotes: [
       { quote: 'Sacred Tree Service goes above and beyond! They really care about the trees, your property and others property!', name: 'Erica Hall' },
       { quote: 'They actually care for their work and the organisms they are working on.', name: 'Jaylon Hamer' },

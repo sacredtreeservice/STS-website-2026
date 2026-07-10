@@ -7,21 +7,22 @@ const trail = [
   { name: 'Tree Care', url: '/tree-care/' },
 ];
 
-// Educational topic clusters. Pages with an `href` are live guides; the rest
-// are placeholders that render as plain "coming soon" cards.
+// Educational topic clusters — all live guides.
 const pillars = [
+  { slug: 'new-tree-care', title: 'Caring for a New Tree', blurb: 'Watering schedules, mulch, staking, and the first two years that decide whether a young tree makes it.', href: '/tree-care/new-tree-care/' },
   { slug: 'florida-tree-species', title: 'Florida Tree Species', blurb: 'Live oak, sabal palm, magnolia, citrus, pine — care needs and ID.', href: '/tree-care/florida-tree-species/' },
-  { slug: 'storm-prep', title: 'Storm & Hurricane Prep', blurb: 'How to prepare trees for hurricane season — and what to do after.' },
+  { slug: 'storm-prep', title: 'Storm & Hurricane Prep', blurb: 'How to prepare trees for hurricane season — and what to do after.', href: '/tree-care/storm-prep/' },
   { slug: 'pruning-basics', title: 'Pruning Basics', blurb: 'When to prune, what topping does, and the ANSI A300 standard.', href: '/tree-care/pruning-basics/' },
-  { slug: 'tree-removal-decisions', title: 'Should I Remove This Tree?', blurb: 'How arborists decide between removal, pruning, and preservation.' },
-  { slug: 'cost-guides', title: 'Cost Guides', blurb: 'What tree work actually costs in Central Florida, and why prices vary.' },
-  { slug: 'pests-and-diseases', title: 'Pests &amp; Diseases', blurb: 'Lethal bronzing, oak wilt, beetles — what to watch for in Florida.' },
+  { slug: 'should-i-remove-this-tree', title: 'Should I Remove This Tree?', blurb: 'How arborists decide between removal, pruning, and preservation.', href: '/tree-care/should-i-remove-this-tree/' },
+  { slug: 'tree-service-costs', title: 'Tree Service Costs', blurb: 'What tree work actually costs in Central Florida, and why prices vary.', href: '/tree-care/tree-service-costs/' },
+  { slug: 'pests-and-diseases', title: 'Pests &amp; Diseases', blurb: 'Lethal bronzing, oak wilt, beetles — what to watch for in Florida.', href: '/tree-care/pests-and-diseases/' },
+  { slug: 'how-to-choose-a-tree-service', title: 'How to Choose a Tree Service', blurb: 'The insurance, credentials, and red-flag checklist — before you sign anything.', href: '/tree-care/how-to-choose-a-tree-service/' },
 ];
 ---
 
 <Base
   title="Tree Care Education — Florida Tree Owner's Guide"
-  description="Educational guides on Florida tree species, pruning, storm prep, costs, and pest/disease identification — written by ISA Certified Arborists."
+  description="Educational guides on Florida tree species, pruning, storm prep, costs, and pest/disease identification — from the team at Sacred Tree Service."
   breadcrumbs={trail}
 >
   <div class="container">
@@ -30,8 +31,8 @@ const pillars = [
       <h1>Tree Care Education</h1>
       <p class="lede">
         Practical, no-fluff guides for Central Florida tree owners — from
-        species ID to storm prep to cost expectations. Written by ISA Certified
-        Arborists.
+        species ID to storm prep to cost expectations. Written by the team at
+        Sacred Tree Service.
       </p>
     </header>
 
@@ -54,7 +55,7 @@ const pillars = [
     </div>
 
     <p class="todo">
-      <em>Pillar pages are being written. In the meantime, head to <a href="/blog/">the blog</a> for field notes — or <a href="/contact/">ask us a question</a> and we’ll cover it.</em>
+      <em>Want the field version? Head to <a href="/blog/">the blog</a> for notes from real jobs — or <a href="/contact/">ask us a question</a> and we’ll cover it in a future guide.</em>
     </p>
   </div>
 </Base>

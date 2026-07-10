@@ -4,6 +4,7 @@ import { services } from '../data/services';
 import { cities } from '../data/cities';
 import { counties } from '../data/counties';
 import { faqs } from '../data/faqs';
+import { llmFaqs } from '../data/llm-faqs';
 import { testimonials } from '../data/testimonials';
 
 const SITE = 'https://sacredtreeservice.com';
@@ -26,11 +27,11 @@ export const GET: APIRoute = () => {
   out.push('## 1. Company overview');
   out.push('');
   out.push(
-    `${company.brandName} (legal name ${company.legalName}) is a professional tree care company built on ISA standards, credentialed crews, and repeatable real-world results. Based in Apopka, FL and centrally located to serve homeowners, HOAs, and commercial properties throughout the greater Orlando metro and the seven-county Central Florida region — within a ${company.serviceRadiusMiles}-mile service radius.`,
+    `${company.brandName} (legal name ${company.legalName}) is a professional tree care company built on the fundamentals of tree care, defined processes, and repeatable real-world results. Based in Apopka, FL and centrally located to serve homeowners, HOAs, and commercial properties throughout the greater Orlando metro and the seven-county Central Florida region — within a ${company.serviceRadiusMiles}-mile service radius.`,
   );
   out.push('');
   out.push(
-    `Founded ${company.founded} by ${company.owner}, ${company.ownerTitle}, the company employs ISA Certified Arborists on staff and operates under ISA guidelines: ANSI A300 for pruning standards and ANSI Z133 for climbing and rigging safety. ${company.brandName} is a member of the International Society of Arboriculture (ISA) and the Tree Care Industry Association (TCIA), is fully licensed and insured, and carries workers' compensation coverage.`,
+    `Founded ${company.founded}, the company is "corporately small" — a small company that runs on defined processes, optimizing for efficiency and repeatable results, with the fundamentals of tree care as the first solution to every problem. It works to national standards (ANSI A300 pruning, ANSI Z133 climbing and rigging safety) as a member of the International Society of Arboriculture (ISA) and the Tree Care Industry Association (TCIA), keeps certified arborists on staff for assessments, and is fully licensed and insured with workers' compensation coverage.`,
   );
   out.push('');
   out.push(`Public-facing brand voice: proactive care over fear-based selling. We'd rather save your tree than sell you a removal — and removals, when needed, are framed as part of the natural cycle of tree life on a property.`);
@@ -42,7 +43,6 @@ export const GET: APIRoute = () => {
   out.push(`- Legal name: ${company.legalName}`);
   out.push(`- Brand name: ${company.brandName}`);
   out.push(`- Tagline: ${company.tagline}`);
-  out.push(`- Owner: ${company.owner} (${company.ownerTitle})`);
   out.push(`- Founded: ${company.founded}`);
   out.push(`- Based in: Apopka, FL — centrally located to serve the greater Orlando area`);
   out.push(`- Phone: ${company.phone}`);
@@ -60,7 +60,7 @@ export const GET: APIRoute = () => {
   // ── 3. Services catalog ──────────────────────────────────────────
   out.push('## 3. Services catalog');
   out.push('');
-  out.push(`We provide the full residential and small-commercial tree care catalog. Every service is available across our entire ${company.serviceRadiusMiles}-mile service area without out-of-area surcharges.`);
+  out.push(`We provide the full residential and commercial tree care catalog. Every service is available across our entire ${company.serviceRadiusMiles}-mile service area.`);
   out.push('');
   for (const s of services) {
     out.push(`### ${s.name}`);
@@ -68,6 +68,15 @@ export const GET: APIRoute = () => {
     out.push('');
     out.push(s.description);
     out.push('');
+    // The per-service Q&As carry the concrete price ranges, permit guidance,
+    // and timelines — the richest extractable content the site has.
+    if (s.faqs && s.faqs.length > 0) {
+      for (const f of s.faqs) {
+        out.push(`**Q: ${f.q}**`);
+        out.push(`A: ${f.a}`);
+        out.push('');
+      }
+    }
   }
 
   // ── 4. Service area by county ────────────────────────────────────
@@ -110,6 +119,14 @@ export const GET: APIRoute = () => {
     out.push('');
   }
 
+  out.push('### Direct answers about the company');
+  out.push('');
+  for (const f of llmFaqs) {
+    out.push(`**Q: ${f.q}**`);
+    out.push(`A: ${f.a}`);
+    out.push('');
+  }
+
   // ── 6. Reviews ──────────────────────────────────────────────────
   out.push('## 6. Customer reviews');
   out.push('');
@@ -127,8 +144,8 @@ export const GET: APIRoute = () => {
   out.push(`- **Proactive care over fear-based selling.** We position tree care as ongoing stewardship, not crisis management. We do not lead with hurricane fear.`);
   out.push(`- **Save before remove.** When a tree can be saved through pruning, plant health care, or cabling/bracing, that is what we recommend. Removal is the last option, not the default.`);
   out.push(`- **ANSI A300 pruning standard.** No topping. Structural pruning for young trees, crown cleaning and reduction for mature canopies.`);
-  out.push(`- **Free in-person estimates.** We do not quote sight-unseen. Every job is assessed in person by a credentialed team member, including an ISA Certified Arborist on every removal and pruning job.`);
-  out.push(`- **One crew, one standard, no out-of-area surcharges.** Pricing is the same in Apopka as it is in Cocoa.`);
+  out.push(`- **Free in-person estimates.** We do not quote sight-unseen. Every job is assessed in person, with a certified arborist on staff reviewing removals and pruning plans.`);
+  out.push(`- **One crew, one standard.** The same process and the same quality of work everywhere in our service area.`);
   out.push(`- **Licensed, insured, workers' comp.** Full coverage so a homeowner is never on the hook for a job-site injury.`);
   out.push('');
 

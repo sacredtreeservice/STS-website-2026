@@ -26,18 +26,29 @@ const defaultFaqs = [
   { q: `Do you offer free estimates for ${service.name.toLowerCase()}?`,
     a: 'Yes. We come to the property, walk the job with you, and provide a written estimate at no cost.' },
   { q: 'Are you licensed and insured?',
-    a: 'Yes — Sacred Tree Service LLC is licensed, insured, and carries workers’ compensation. We are members of ISA and TCIA, with ISA Certified Arborists on staff.' },
+    a: 'Yes — Sacred Tree Service LLC is licensed, insured, and carries workers’ compensation, and we’re members of the ISA and TCIA. Ask for our certificate of insurance any time.' },
 ];
 const faqs = service.faqs ?? defaultFaqs;
 
-const cityList = cities.slice(0, 18);
+// Every city, grouped by county — service hubs are the natural place to give
+// all 44 combo pages a crawl path (previously only the first 18 got links).
+const countyNames = [...new Set(cities.map((c) => c.county))];
+const citiesByCounty = countyNames.map((county) => ({
+  county,
+  cities: cities.filter((c) => c.county === county),
+}));
+
+// Curated "pairs with" cross-links (falls back to adjacent services).
+const related = (service.relatedSlugs ?? [])
+  .map((slug) => services.find((s) => s.slug === slug))
+  .filter((s): s is (typeof services)[number] => Boolean(s));
 
 const jsonLd = [serviceSchema({ name: service.name, description: service.description, slug: service.slug }), faqSchema(faqs)];
 ---
 
 <Base
   title={`${service.name} in Orlando & Central Florida`}
-  description={`${service.blurb} ISA Certified Arborists. Free estimates. Licensed & insured.`}
+  description={`${service.blurb} Professional crew, free estimates, licensed & insured.`}
   breadcrumbs={trail}
   jsonLd={jsonLd}
 >
@@ -56,19 +67,40 @@ const jsonLd = [serviceSchema({ name: service.name, description: service.descrip
 
         <h2>Why Sacred Tree Service?</h2>
         <ul class="checks">
-          <li>ISA Certified Arborists assess every job before we touch a saw.</li>
-          <li>Member of ISA and TCIA — bound by national best-practice standards.</li>
+          <li>Fundamentals first — we diagnose the actual problem before anyone touches a saw.</li>
+          <li>One process on every job: assessment, written scope, execution, cleanup.</li>
           <li>Fully licensed and insured, with workers’ comp coverage.</li>
-          <li>ISA-credentialed crew based in Apopka, FL — your call goes to a real person.</li>
+          <li>Work to national standards (ANSI A300) as an ISA &amp; TCIA member — certified arborists on staff for assessments.</li>
         </ul>
+
+        {related.length > 0 && (
+          <>
+            <h2>Pairs with</h2>
+            <ul class="related">
+              {related.map((r) => (
+                <li>
+                  <a href={`/services/${r.slug}/`}>
+                    <strong>{r.name}</strong>
+                    <span>{r.blurb}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
 
         <h2>Cities we serve</h2>
         <p>We provide {service.shortName.toLowerCase()} services across Central Florida, including:</p>
-        <ul class="cities">
-          {cityList.map((c) => (
-            <li><a href={`/services/${service.slug}/${c.slug}/`}>{service.shortName} in {c.name}</a></li>
-          ))}
-        </ul>
+        {citiesByCounty.map((group) => (
+          <div class="county-group">
+            <h3>{group.county} County</h3>
+            <ul class="cities">
+              {group.cities.map((c) => (
+                <li><a href={`/services/${service.slug}/${c.slug}/`}>{service.shortName} in {c.name}</a></li>
+              ))}
+            </ul>
+          </div>
+        ))}
 
         <FaqBlock faqs={faqs} />
       </article>
@@ -124,6 +156,35 @@ const jsonLd = [serviceSchema({ name: service.name, description: service.descrip
     left: 0;
     color: var(--green);
     font-weight: 700;
+  }
+  .related {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .related a {
+    display: block;
+    padding: 0.85rem 1.1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--ink);
+    transition: border-color 0.2s ease, transform 0.2s var(--easing), box-shadow 0.2s ease;
+  }
+  .related a:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+  .related strong { display: block; color: var(--green-dark); margin-bottom: 0.15rem; }
+  .related span { color: var(--muted); font-size: 0.9rem; }
+  .county-group h3 {
+    font-size: 1.05rem;
+    margin: 1.25rem 0 0.5rem;
+    color: var(--green-dark);
   }
   .cities {
     list-style: none;

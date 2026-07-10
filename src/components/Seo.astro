@@ -6,14 +6,31 @@ export interface Props {
   description: string;
   canonical?: string;
   ogImage?: string;
+  ogImageAlt?: string;
   noindex?: boolean;
+  // 'article' for dated editorial content (blog posts, guides). Adds
+  // article:published_time / article:modified_time when dates are given.
+  ogType?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
 }
 
-const { title, description, canonical, ogImage = '/assets/og-image.jpg', noindex = false } = Astro.props;
+const {
+  title,
+  description,
+  canonical,
+  ogImage = '/assets/og-image.jpg',
+  ogImageAlt,
+  noindex = false,
+  ogType = 'website',
+  publishedTime,
+  modifiedTime,
+} = Astro.props;
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site ?? 'https://sacredtreeservice.com').toString();
 const fullTitle = title.includes(company.brandName) ? title : `${title} | ${company.brandName}`;
 const ogImageUrl = new URL(ogImage, Astro.site ?? 'https://sacredtreeservice.com').toString();
 const ogImageType = ogImageUrl.endsWith('.png') ? 'image/png' : 'image/jpeg';
+const imageAlt = ogImageAlt ?? fullTitle;
 ---
 
 <title>{fullTitle}</title>
@@ -21,7 +38,8 @@ const ogImageType = ogImageUrl.endsWith('.png') ? 'image/png' : 'image/jpeg';
 <link rel="canonical" href={canonicalUrl} />
 {noindex && <meta name="robots" content="noindex, nofollow" />}
 
-<meta property="og:type" content="website" />
+<meta property="og:type" content={ogType} />
+<meta property="og:locale" content="en_US" />
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonicalUrl} />
@@ -30,11 +48,14 @@ const ogImageType = ogImageUrl.endsWith('.png') ? 'image/png' : 'image/jpeg';
 <meta property="og:image:type" content={ogImageType} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content={description} />
+<meta property="og:image:alt" content={imageAlt} />
 <meta property="og:site_name" content={company.brandName} />
+{ogType === 'article' && publishedTime && <meta property="article:published_time" content={publishedTime} />}
+{ogType === 'article' && modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+{ogType === 'article' && <meta property="article:author" content={company.brandName} />}
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={fullTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImageUrl} />
-<meta name="twitter:image:alt" content={description} />
+<meta name="twitter:image:alt" content={imageAlt} />

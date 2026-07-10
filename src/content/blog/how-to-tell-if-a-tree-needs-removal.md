@@ -30,7 +30,7 @@ Look at the soil on the uphill side of the tree — if it's heaved up or cracked
 
 Co-dominant stems (two leaders splitting from a low fork) are a known failure mode. If you see a vertical crack running down from where the leaders meet, the tree is telling you it's about to split.
 
-**Verdict:** Crack at a major union = remove or aggressively reduce. Sometimes cabling can buy time on a high-value tree.
+**Verdict:** Crack at a major union = remove or aggressively reduce. Sometimes [cabling and bracing](/services/cabling-bracing/) can buy time on a high-value tree.
 
 ## 4. Is it threatening a structure?
 
@@ -55,6 +55,8 @@ A healthy live oak or sabal palm? Different conversation entirely.
 
 ## When in doubt — get an arborist out
 
-This list is a starting point, not a substitute for someone who climbs trees for a living looking at *your specific* tree. We do free estimates across Central Florida and will tell you straight: remove, prune, or leave it alone.
+This list is a starting point, not a substitute for someone who climbs trees for a living looking at *your specific* tree. We do free [tree removal estimates](/services/tree-removal/) across Central Florida and will tell you straight: remove, prune, or leave it alone. If the call is genuinely close — or you need it documented for an HOA or insurer — a formal [arborist risk assessment](/services/arborist-consulting/) settles it.
 
-Most of the time, the answer is "leave it alone."
+Most of the time, the answer is "leave it alone." And when a tree does come down, ask about [replanting](/services/tree-planting/) — the best time to put the next tree in the ground is the day the old one comes out.
+
+*Want the full decision framework? Read our guide: [Should I remove this tree?](/tree-care/should-i-remove-this-tree/)*

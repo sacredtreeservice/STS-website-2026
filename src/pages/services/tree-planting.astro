@@ -146,11 +146,12 @@ const jsonLd = [
         <p>
           And we don’t plant and leave. The first year or two is when a young
           tree lives or dies, so every planting folds into our
-          <a href="/services/plant-health-care/">Plant Health Care</a> program —
+          <a href="/services/tree-care-plans/">New-Tree Establishment Program</a> —
           establishment watering, monitoring for transplant stress, and
-          deep-root feeding tuned to Florida’s sandy soils. Planting the tree
-          is the easy part. Keeping it alive and thriving is the part we’re
-          built around.
+          deep-root feeding tuned to Florida’s sandy soils, backed by our
+          <a href="/services/plant-health-care/">Plant Health Care</a> team.
+          Planting the tree is the easy part. Keeping it alive and thriving is
+          the part we’re built around.
         </p>
       </div>
     </section>
@@ -199,6 +200,11 @@ const jsonLd = [
           </li>
         ))}
       </ol>
+      <p class="phase-foot" data-reveal>
+        Want the homeowner's version of step 04? Read our guide to
+        <a href="/tree-care/new-tree-care/">caring for a newly planted tree in Central Florida</a> —
+        or let our <a href="/services/tree-care-plans/">Tree Care Plans</a> handle it for you.
+      </p>
     </section>
 
     <section class="species" aria-labelledby="species-heading">
@@ -404,6 +410,14 @@ const jsonLd = [
 
   /* Process phases */
   .process { padding: 3rem 0; }
+  .phase-foot {
+    max-width: 880px;
+    margin: 1.5rem auto 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.98rem;
+  }
+  .phase-foot a { color: var(--green-dark); font-weight: 600; }
   .phases {
     list-style: none;
     padding: 0;

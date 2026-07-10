@@ -6,6 +6,10 @@ export type Service = {
   description: string;
   icon: string;
   faqs?: { q: string; a: string }[];
+  // Curated "pairs with" services rendered as cross-links on service pages.
+  // Keeps the removal → planting → plant-health → care-plans loop connected
+  // instead of letting array order decide which services get internal links.
+  relatedSlugs?: string[];
 };
 
 // Order matters — we lead with proactive care, frame removals as part of the
@@ -23,7 +27,7 @@ export const services: Service[] = [
     faqs: [
       {
         q: 'How much does tree pruning cost in Central Florida?',
-        a: 'Single-tree pruning typically runs $250–$1,200 in the Orlando area depending on size and access. A mature live oak with deadwood and structural work usually lands $800–$2,000. Multi-tree property visits are priced as one job — less per tree than individual visits. We quote every job in person, in writing, with no high-pressure upsells.',
+        a: 'Single-tree pruning typically runs $400–$1,800 in the Orlando area depending on size and access. A mature live oak with deadwood and structural work usually lands $900–$2,400. Multi-tree property visits are priced as one job — less per tree than individual visits. We quote every job in person, in writing, with no high-pressure upsells.',
       },
       {
         q: 'When is the best time to prune trees in Florida?',
@@ -42,6 +46,7 @@ export const services: Service[] = [
         a: 'Yes — and this is where most palm work goes wrong. Palms don’t produce wound wood the way hardwoods do; every cut is permanent. Over-pruning (the "hurricane cut" removing every frond above horizontal) starves the palm and shortens its life. We follow UF/IFAS guidelines: take only dead or dying fronds at or below horizontal — typically a fraction of what most landscapers cut.',
       },
     ],
+    relatedSlugs: ['plant-health-care', 'tree-care-plans', 'arborist-consulting'],
   },
   {
     slug: 'plant-health-care',
@@ -49,7 +54,7 @@ export const services: Service[] = [
     shortName: 'Plant Health',
     blurb: 'Diagnose before you treat. Year-round monitoring, targeted pest and disease care, and fertilization built for Florida soils.',
     description:
-      'Most plant health care is sold as a calendar of pre-paid sprays. Ours starts with an ISA Certified Arborist watching the tree. We scout, sample soil, identify the actual problem, and treat surgically — with priority on the threats that matter most in Central Florida: lethal bronzing in palms, oak decline, laurel wilt, scale and borers, and the chronic nutrient deficiencies sandy FL soils cause.',
+      'Most plant health care is sold as a calendar of pre-paid sprays. Ours starts with a certified arborist watching the tree. We scout, sample soil, identify the actual problem, and treat surgically — with priority on the threats that matter most in Central Florida: lethal bronzing in palms, oak decline, laurel wilt, scale and borers, and the chronic nutrient deficiencies sandy FL soils cause.',
     icon: 'lucide:leaf',
     faqs: [
       {
@@ -62,7 +67,7 @@ export const services: Service[] = [
       },
       {
         q: 'Can you save a tree that is already showing decline?',
-        a: 'Sometimes — and sometimes the honest answer is no. Many declines are reversible with the right intervention started early: oak decline driven by soil compaction, scale infestations, drought stress, manganese or iron deficiency. Others are not: advanced lethal bronzing in palms, Ganoderma butt rot, severe internal decay. An ISA Certified Arborist assessment will tell you which side of that line your tree is on, and we will not sell you treatment for a tree that cannot be saved.',
+        a: 'Sometimes — and sometimes the honest answer is no. Many declines are reversible with the right intervention started early: oak decline driven by soil compaction, scale infestations, drought stress, manganese or iron deficiency. Others are not: advanced lethal bronzing in palms, Ganoderma butt rot, severe internal decay. A certified arborist’s assessment will tell you which side of that line your tree is on, and we will not sell you treatment for a tree that cannot be saved.',
       },
       {
         q: 'Do you offer organic or lower-chemical options?',
@@ -73,12 +78,45 @@ export const services: Service[] = [
         a: 'If a palm is symptomatic — bronzing fronds advancing up the crown, spear leaf collapse — it cannot be saved. UF/IFAS is unambiguous about this, and removal is the only way to stop the disease from spreading to nearby healthy palms. Those nearby palms, however, can be protected with oxytetracycline (OTC) trunk injections every 3–4 months for at least 2 years. That preventive protocol is one of the most common reasons Central Florida palm owners hire us.',
       },
     ],
+    relatedSlugs: ['tree-care-plans', 'tree-planting', 'palm-tree-services'],
+  },
+  {
+    slug: 'tree-care-plans',
+    name: 'Tree Care Plans & Ongoing Maintenance',
+    shortName: 'Care Plans',
+    blurb: 'Year-round care on a plan: establishment care for new plantings, an annual arborist walk, and seasonal plant health monitoring.',
+    description:
+      'One arborist team that knows your property, year after year. Our care plans put tree care on a calendar instead of a crisis footing: an annual arborist walk, seasonal plant health monitoring on the Florida calendar, storm-season prep checks, and — for newly planted trees — a dedicated establishment program through the first years that decide whether a young tree makes it. Every plan starts with a free property walk and a written plan; nothing is pre-sold on a spray calendar.',
+    icon: 'lucide:calendar-check',
+    faqs: [
+      {
+        q: 'What is included in a Sacred Tree Service care plan?',
+        a: 'The core of every plan is an annual arborist property walk plus seasonal plant health care on the Florida calendar: spring scouting and soil sampling, summer monitoring (during the county fertilizer blackout, June–September), and fall deep-root fertilization once restrictions lift. Around that core we add what your property actually needs — storm-season prep checks before hurricane season, establishment care for newly planted trees, and palm protection (OTC trunk injections every 3–4 months where lethal bronzing is a threat). You get a written plan up front, and we only treat what scouting confirms.',
+      },
+      {
+        q: 'How much does an annual tree care plan cost in Central Florida?',
+        a: 'Plans are priced per property, based on tree count, species mix, and what the initial walk finds — a small yard with a few oaks is very different from an acre with mature canopy and a dozen palms. The initial property walk is free, and you get the plan and the price in writing before anything starts. Per-tree services inside the plan (deep-root fertilization, trunk injections) are itemized so you can see exactly what you are paying for. We do not sell pre-paid spray calendars.',
+      },
+      {
+        q: 'What is new-tree establishment care?',
+        a: 'The first one to three years after planting are when a young tree lives or dies, and Florida’s sandy soils and split wet/dry seasons make establishment care different here. Our establishment program covers watering guidance tuned to Central Florida (frequency matters more than volume in sand), monitoring for transplant stress, mulch-ring maintenance, staking removal at the right time (usually within the first year), formative structural pruning in years 1–3, and deep-root feeding once the tree is ready. It folds into any tree planting job we do — and we offer it for trees someone else planted, too.',
+      },
+      {
+        q: 'Do I have to sign a long-term contract?',
+        a: 'Not a multi-year one. Plans run in simple annual terms, sized from a free property walk, with the full terms in a plain-English agreement you approve before anything starts — and we earn each renewal with results. Most customers stay because the same team walking the same property every season catches problems while they are still cheap to fix: a scale infestation before it spreads, a girdling root before it strangles, a weak branch union before hurricane season finds it.',
+      },
+      {
+        q: 'What is the difference between a care plan and one-time plant health care?',
+        a: 'A one-time plant health care visit solves a problem that is already visible — a declining oak, a pest outbreak, a nutrient deficiency. A care plan is continuity: the same team tracking your trees season over season, so most problems get caught at the scouting stage before they cost real money. Both are available; we will honestly tell you which one your property needs. A single healthy oak may need nothing more than a pruning cycle — a property with new plantings, mature canopy, and palms almost always benefits from the plan.',
+      },
+    ],
+    relatedSlugs: ['plant-health-care', 'tree-planting', 'tree-pruning'],
   },
   {
     slug: 'arborist-consulting',
     name: 'Arborist Consulting & Risk Assessment',
     shortName: 'Consulting',
-    blurb: 'ISA Certified Arborist evaluations, reports, and tree risk assessments.',
+    blurb: 'Certified arborist evaluations, reports, and tree risk assessments.',
     description:
       'Pre-purchase tree inspections, insurance and HOA reports, and tree risk evaluations conducted by ISA Certified Arborists — with documented findings you can share with stakeholders.',
     icon: 'lucide:clipboard-check',
@@ -89,7 +127,7 @@ export const services: Service[] = [
       },
       {
         q: 'How much does an arborist consultation or tree risk assessment cost?',
-        a: 'Basic on-site consultations and informal risk assessments typically run $250–$500. Formal written reports — the kind insurance carriers, HOAs, and municipalities accept — run $400–$1,200 depending on tree count, complexity, and required documentation. Pre-purchase inspections of properties with significant canopy typically fall $350–$800. We quote each consultation in advance based on the actual scope.',
+        a: 'Basic on-site consultations and informal risk assessments typically run $300–$600. Formal written reports — the kind insurance carriers, HOAs, and municipalities accept — run $500–$1,500 depending on tree count, complexity, and required documentation. Pre-purchase inspections of properties with significant canopy typically fall $400–$900. We quote each consultation in advance based on the actual scope.',
       },
       {
         q: 'Can you write a report for my insurance company, HOA, or city permit?',
@@ -100,6 +138,7 @@ export const services: Service[] = [
         a: 'Yes. TRAQ (Tree Risk Assessment Qualification) is the ISA’s structured framework for evaluating tree failure risk. We conduct full Level 2 visual assessments and, when warranted, advanced (Level 3) assessments involving climbing inspection. The report includes target identification, likelihood-of-failure, likelihood-of-impact, consequence analysis, and a final risk rating — the framework municipalities and insurance carriers recognize.',
       },
     ],
+    relatedSlugs: ['tree-pruning', 'cabling-bracing', 'tree-removal'],
   },
   {
     slug: 'cabling-bracing',
@@ -112,11 +151,11 @@ export const services: Service[] = [
     faqs: [
       {
         q: 'When is cabling or bracing the right call?',
-        a: 'When a tree has a structural weakness — typically a co-dominant stem with included bark, a heavy lateral limb with a poor branch attachment, or a partially failed branch union — but the tree is otherwise healthy and worth keeping. It is not a fix for decayed wood, dying trees, or trees that should be removed. We evaluate every candidate against ISA standards. If hardware won’t meaningfully extend safe, healthy life, we’ll say so.',
+        a: 'When a tree has a structural weakness — typically a co-dominant stem with included bark, a heavy lateral limb with a poor branch attachment, or a partially failed branch union — but the tree is otherwise healthy and worth keeping. It is not a fix for decayed wood, dying trees, or trees that should be removed. We evaluate every candidate against ANSI standards. If hardware won’t meaningfully extend safe, healthy life, we’ll say so.',
       },
       {
         q: 'How much does cabling a tree cost?',
-        a: 'A single cable installation in a residential setting typically runs $300–$1,000 per cable depending on tree size, height, and access. Bracing rods (used to hold split unions together) add roughly $200–$500 per rod. Most jobs involve 1–3 attachment points. Heritage trees with multiple failure points can run $1,500–$3,500 for a full system. We quote the full system in writing before any hardware goes in.',
+        a: 'A single cable installation in a residential setting typically runs $400–$1,200 per cable depending on tree size, height, and access. Bracing rods (used to hold split unions together) add roughly $250–$600 per rod. Most jobs involve 1–3 attachment points. Heritage trees with multiple failure points can run $2,000–$4,500 for a full system. We quote the full system in writing before any hardware goes in.',
       },
       {
         q: 'How long do cables and braces last?',
@@ -127,6 +166,7 @@ export const services: Service[] = [
         a: 'Sometimes — and sometimes not. A clean recent crack with no decay can often be braced and recovered. An older crack, a split with internal rot, or a failure that has separated tissue beyond a certain limit usually means the tree can’t be saved structurally. We have to see it to know. What we won’t do is install hardware on a tree that’s likely to fail anyway — that creates a false sense of safety.',
       },
     ],
+    relatedSlugs: ['arborist-consulting', 'tree-pruning', 'plant-health-care'],
   },
   {
     slug: 'large-tree-transplanting',
@@ -139,7 +179,7 @@ export const services: Service[] = [
     faqs: [
       {
         q: 'What does it cost to transplant a large tree?',
-        a: 'Wide range. Typical residential moves run $1,000–$5,000. Trees over 24 inches in trunk caliper or with hard access can run $3,500–$10,000 or more. Distance, crane needs, species, and soil disposal all swing the price significantly, so we quote every job in person rather than guess.',
+        a: 'Wide range. Typical residential moves run $1,500–$7,500. Trees over 24 inches in trunk caliper or with hard access can run $5,000–$25,000 or more. Distance, crane needs, species, and soil disposal all swing the price significantly, so we quote every job in person rather than guess.',
       },
       {
         q: 'What is the survival rate for a transplanted tree?',
@@ -158,6 +198,7 @@ export const services: Service[] = [
         a: 'We do not put a hollow warranty on a living thing whose success depends on factors a homeowner controls — irrigation, ground conditions, weather, and time. What we do: assess honestly before quoting, prep the tree the right way, execute the move under our mentor’s eye, and stay involved through the full aftercare year so problems get caught early.',
       },
     ],
+    relatedSlugs: ['tree-planting', 'plant-health-care', 'arborist-consulting'],
   },
   {
     slug: 'palm-tree-services',
@@ -170,7 +211,7 @@ export const services: Service[] = [
     faqs: [
       {
         q: 'How much does palm trimming cost in Central Florida?',
-        a: 'Standard palm trimming typically runs $75–$250 per palm depending on height, species, and how overdue the trim is. Tall royal palms (over 40 feet) can run $250–$450 each because they require climbing or a bucket. Sabal palmettos, washingtonias, and queens are routine — we price each in person. Removal of a dead palm (lethal bronzing, late-stage Ganoderma) typically runs $400–$1,500 depending on size and access.',
+        a: 'Standard palm trimming typically runs $150–$300 per palm depending on height, species, and how overdue the trim is — multi-palm visits bring the per-palm price down. Tall royal palms (over 40 feet) can run $300–$500 each because they require climbing or a bucket. Sabal palmettos, washingtonias, and queens are routine — we price each in person. Removal of a dead palm (lethal bronzing, late-stage Ganoderma) typically runs $600–$1,800 depending on size and access.',
       },
       {
         q: 'How often should I have my palms trimmed?',
@@ -189,6 +230,7 @@ export const services: Service[] = [
         a: 'Sabal palmetto (our state tree) is the most reliable native — drought-tolerant, cold-hardy, well-suited to local soils. Other strong performers: pindo (Butia capitata), Mediterranean fan (Chamaerops humilis), windmill (Trachycarpus fortunei), and cabbage palm. Queen palms grow well but need more nutrition. Royals need cold-snap protection. Washingtonia robusta is fast but messy and prone to lightning strikes. We can advise on the right palm for your site.',
       },
     ],
+    relatedSlugs: ['plant-health-care', 'tree-care-plans', 'tree-removal'],
   },
   {
     slug: 'tree-removal',
@@ -196,12 +238,12 @@ export const services: Service[] = [
     shortName: 'Removal',
     blurb: 'Thoughtful removals as part of a healthy landscape — and we replant where you want.',
     description:
-      'Removals happen for good reasons: a tree has reached the end of its safe life, a property is being reshaped, or a tree has outgrown its space. Our ISA Certified Arborists assess every removal carefully, and we’ll always tell you when a tree is worth saving. Where you’d like, we replant — keeping the cycle going.',
+      'Removals happen for good reasons: a tree has reached the end of its safe life, a property is being reshaped, or a tree has outgrown its space. A certified arborist on staff assesses every removal carefully, and we’ll always tell you when a tree is worth saving. Where you’d like, we replant — keeping the cycle going.',
     icon: 'lucide:tree-deciduous',
     faqs: [
       {
         q: 'How much does tree removal cost in Central Florida?',
-        a: 'Residential tree removal in the Orlando metro typically runs $400–$3,500 depending on size, access, proximity to structures, and disposal. A 30-foot pine in an open yard sits at the low end ($400–$800). A 70-foot live oak overhanging a house and pool with crane access runs $3,000–$8,000+. Stump grinding is usually quoted separately ($100–$400 per stump). We quote in person, in writing, and stand behind the number.',
+        a: 'Residential tree removal in the Orlando metro typically runs $800–$4,500 depending on size, access, proximity to structures, and disposal. A 30-foot pine in an open yard sits at the low end ($800–$1,200). A 70-foot live oak overhanging a house and pool with crane access runs $4,500–$12,000+. Stump grinding is usually quoted with the removal ($200–$650 per stump) so you see one all-in number. We quote in person, in writing, and stand behind the number.',
       },
       {
         q: 'Do I need a permit to remove a tree in Central Florida?',
@@ -213,13 +255,14 @@ export const services: Service[] = [
       },
       {
         q: 'Will you grind the stump too?',
-        a: 'Yes — and we’ll quote it with the removal so you see one all-in number. Standard stump grinding is $100–$400 per stump depending on diameter. We grind 6–12 inches below grade, sweep up the chips, and leave the site ready for sod, mulch, or new plantings. If you want the stump left (some homeowners do for natural seating, mushroom cultivation, or carving), we leave it whatever height you want.',
+        a: 'Yes — and we’ll quote it with the removal so you see one all-in number. Standard stump grinding typically runs $200–$650 per stump depending on diameter. We grind 6–12 inches below grade, sweep up the chips, and leave the site ready for sod, mulch, or new plantings. If you want the stump left (some homeowners do for natural seating, mushroom cultivation, or carving), we leave it whatever height you want.',
       },
       {
         q: 'Will you replant after a removal?',
         a: 'Yes. Removals should be part of a healthy landscape cycle, not the end of it. If you’d like to replant, we can recommend appropriate species (right-tree-right-place principles), source the new tree, and plant it as part of the same visit or a follow-up — this is our dedicated Tree Planting & Installation service. Replanting after a removal is one of the most overlooked parts of good tree care.',
       },
     ],
+    relatedSlugs: ['tree-planting', 'stump-grinding', 'crane-assisted-removal'],
   },
   {
     slug: 'tree-planting',
@@ -232,7 +275,7 @@ export const services: Service[] = [
     faqs: [
       {
         q: 'Can you plant a tree the same day you remove one — or do I have to book planting separately?',
-        a: 'Either works. Most of our planting happens the same day as a removal — the crew, equipment, and access are already on site, so a fresh tree goes in where the old one came out and you only pay for one visit. But planting is also a standalone service: plenty of customers call us simply because they want trees added to their landscape, with no removal involved at all. Same-visit planting after a removal typically runs $250–$1,200 per tree installed (size and species dependent); a standalone planting day is quoted on its own based on tree count, sizes, and access.',
+        a: 'Either works. Most of our planting happens the same day as a removal — the crew, equipment, and access are already on site, so a fresh tree goes in where the old one came out and you only pay for one visit. But planting is also a standalone service: plenty of customers call us simply because they want trees added to their landscape, with no removal involved at all. Same-visit planting after a removal typically runs $350–$1,500 per tree installed (size and species dependent); a standalone planting day is quoted on its own based on tree count, sizes, and access.',
       },
       {
         q: 'Where do the trees come from — do you grow them or buy them from a big-box store?',
@@ -251,6 +294,7 @@ export const services: Service[] = [
         a: 'Central Florida’s growing season runs nearly year-round, so the planting window is far wider here than up north — one of the real advantages of this climate. That said, the sweet spot for most trees is the cooler, drier months from roughly October through March: the tree can settle its roots without the heat and water stress of peak summer, and the natural rains of the following wet season help it establish. We do plant in summer when it makes sense (especially same-day with a removal), with closer attention to irrigation while the tree takes hold. We’ll tell you the ideal window for your specific species rather than rush a planting that would do better a few weeks later.',
       },
     ],
+    relatedSlugs: ['tree-care-plans', 'plant-health-care', 'tree-removal'],
   },
   {
     slug: 'stump-grinding',
@@ -263,7 +307,7 @@ export const services: Service[] = [
     faqs: [
       {
         q: 'How much does stump grinding cost in Central Florida?',
-        a: 'Single stump grinding typically runs $100–$400 depending on diameter, root flare, and access. Large stumps (24-inch+ diameter, big root systems, old hardwood) can run $400–$700. A common rule of thumb is $4–$8 per inch of stump diameter, with a minimum charge. Multi-stump jobs on the same property are priced together — less per stump than individual visits.',
+        a: 'Single stump grinding typically runs $200–$650 depending on diameter, root flare, and access. Large stumps (24-inch+ diameter, big root systems, old hardwood) can run $650–$900. Pricing is by diameter and access, and small standalone stump visits carry a service minimum — which is why bundling the grind with a removal is almost always the better deal. Multi-stump jobs on the same property are priced together — less per stump than individual visits.',
       },
       {
         q: 'How deep do you grind a stump?',
@@ -271,13 +315,14 @@ export const services: Service[] = [
       },
       {
         q: 'What happens to the wood chips after grinding?',
-        a: 'The grinding produces a pile of mixed wood chips and soil right where the stump was. Three options: leave them as fill (they settle in a few months, decompose over a year or two); we haul them away ($50–$150 added); or we spread them as mulch around the rest of the landscape. Most homeowners pick option 1 or 3.',
+        a: 'The grinding produces a pile of mixed wood chips and soil right where the stump was. Three options: leave them as fill (they settle in a few months, decompose over a year or two); we haul them away ($150–$500 added, depending on volume); or we spread them as mulch around the rest of the landscape. Most homeowners pick option 1 or 3.',
       },
       {
         q: 'Can I plant grass over a ground stump?',
         a: 'Yes, with a caveat. Wood chips and old roots tie up nitrogen as they decompose, which can yellow new grass for the first season. Best practice: scrape off loose chips, add 4–6 inches of fresh topsoil, mix in a starter fertilizer, and seed or sod. By the second season the area is indistinguishable from surrounding lawn. If you want to plant a new tree right on top, give it a year — or grind deeper at the time of the original job.',
       },
     ],
+    relatedSlugs: ['tree-removal', 'tree-planting', 'land-clearing'],
   },
   {
     slug: 'land-clearing',
@@ -290,7 +335,7 @@ export const services: Service[] = [
     faqs: [
       {
         q: 'How much does land clearing cost per acre in Central Florida?',
-        a: 'Selective clearing of a lightly wooded acre typically runs $1,500–$3,500. Heavily wooded acreage with mature hardwoods, palms, and undergrowth runs $3,500–$7,500 per acre. Multi-acre commercial clearing is quoted per project — economies of scale apply. The variables: tree density, stump removal vs. grinding, debris disposal, and how much specimen-tree preservation is required. We give a written estimate after walking the site.',
+        a: 'Selective clearing of a lightly wooded acre typically runs $2,500–$5,000. Heavily wooded acreage with mature hardwoods, palms, and undergrowth runs $5,000–$9,000 per acre. Multi-acre commercial clearing is quoted per project — economies of scale apply. The variables: tree density, stump removal vs. grinding, debris disposal, and how much specimen-tree preservation is required. We give a written estimate after walking the site.',
       },
       {
         q: 'Do I need a permit for land clearing in Central Florida?',
@@ -305,6 +350,7 @@ export const services: Service[] = [
         a: 'Land clearing produces three streams of debris: brush (chipped on-site or hauled to a mulch facility), logs (sold as firewood, milled, or hauled away depending on species and quality), and stumps (ground in place or trucked out for landfill). We handle all three. Disposal costs are a meaningful line item — we tell you the breakdown so you can decide if any debris stays on-site.',
       },
     ],
+    relatedSlugs: ['tree-removal', 'stump-grinding', 'crane-assisted-removal'],
   },
   {
     slug: 'crane-assisted-removal',
@@ -321,7 +367,7 @@ export const services: Service[] = [
       },
       {
         q: 'How much does crane-assisted tree removal cost?',
-        a: 'Crane work adds $1,500–$3,500 minimum to a conventional removal — sometimes more for larger cranes, longer setup, or extended boom reach. A full crane-assisted removal of a large hardwood over a structure typically lands $3,500–$10,000, including the crane, climbing crew, rigging, and cleanup. We coordinate certified operators with our crew so it’s one quote, one invoice, one job.',
+        a: 'Crane work adds $2,000–$4,500 minimum to a conventional removal — sometimes more for larger cranes, longer setup, or extended boom reach. A full crane-assisted removal of a large hardwood over a structure typically lands $4,500–$12,000, including the crane, climbing crew, rigging, and cleanup. We coordinate certified operators with our crew so it’s one quote, one invoice, one job.',
       },
       {
         q: 'Can you use a crane in tight residential lots?',
@@ -332,6 +378,7 @@ export const services: Service[] = [
         a: 'Generally yes — for large trees over structures. A crane lets us pick a heavy section, lift it cleanly clear of the house or pool, and lower it to a safe area for processing. Conventional rigging requires lowering pieces by rope through the canopy, which is safe when done by trained crews but offers less margin. For ground-level brush and clear-zone trees, conventional rigging is faster and cheaper.',
       },
     ],
+    relatedSlugs: ['tree-removal', 'emergency-storm-damage', 'stump-grinding'],
   },
   {
     slug: 'emergency-storm-damage',
@@ -352,13 +399,14 @@ export const services: Service[] = [
       },
       {
         q: 'Is emergency tree work more expensive than scheduled work?',
-        a: 'Yes, modestly. Emergency response involves after-hours crews, expedited scheduling, and often more complex rigging because the tree is already in a failure state. Expect 20–50% above the equivalent scheduled job rate. For active storm events, demand exceeds supply across the entire Central Florida market and prices reflect that. We post our rates honestly and don’t price-gouge — but we also don’t undercharge our crew for working at 2 AM in a hurricane.',
+        a: 'Yes, modestly. Emergency response involves after-hours crews, expedited scheduling, and often more complex rigging because the tree is already in a failure state. Expect 25–50% above the equivalent scheduled job rate. For active storm events, demand exceeds supply across the entire Central Florida market and prices reflect that. We post our rates honestly and don’t price-gouge — but we also don’t undercharge our crew for working at 2 AM in a hurricane.',
       },
       {
         q: 'What should I do before the crew arrives?',
         a: 'First, prioritize safety: stay clear of fallen trees and broken limbs, never approach a tree resting on power lines, call 911 if there’s active sparking. Document the damage with photos for insurance — wide shots, close-ups, structure damage. Move vehicles and outdoor furniture out of the work zone if it’s safe. If a tree is on your house, restrict access to that room. Then call us — we’ll triage by phone and dispatch.',
       },
     ],
+    relatedSlugs: ['tree-removal', 'crane-assisted-removal', 'tree-pruning'],
   },
 ];
 

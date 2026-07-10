@@ -2,13 +2,16 @@
 import { Icon } from 'astro-icon/components';
 import { company } from '../data/company';
 
+// Reviews replaces Careers up here — social proof is a top-3 conversion
+// asset and was previously reachable only from the footer. Careers still
+// lives in the footer's Company column.
 const navLinks = [
   { href: '/services/', label: 'Services' },
   { href: '/service-area/', label: 'Service Area' },
   { href: '/tree-care/', label: 'Tree Care' },
+  { href: '/reviews/', label: 'Reviews' },
   { href: '/blog/', label: 'Blog' },
   { href: '/about/', label: 'About' },
-  { href: '/careers/', label: 'Careers' },
   { href: '/contact/', label: 'Contact' },
 ];
 ---

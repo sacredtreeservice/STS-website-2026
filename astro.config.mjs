@@ -4,7 +4,6 @@ import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
 
 const SITE = 'https://sacredtreeservice.com';
-const BUILD_DATE = new Date().toISOString();
 
 // Crawl-priority tiers. The site builds ~580 pages; ~430 of them are the
 // long-tail service×city combos. A flat sitemap tells crawlers everything
@@ -50,11 +49,14 @@ export default defineConfig({
       // /book-a-call/ is a hidden ad landing page (noindex). Keep it out of the
       // sitemap entirely so crawlers are never even pointed at it.
       filter: (page) => !page.replace(SITE, '').replace(/\/+$/, '').endsWith('/book-a-call'),
+      // No lastmod, deliberately: stamping the build time on all ~580 URLs
+      // every deploy is a provably false freshness signal, and Google
+      // ignores lastmod site-wide once it detects that. Honest silence
+      // beats lying — add real per-page dates only if we ever wire them.
       serialize(item) {
         const t = tier(item.url);
         item.priority = t.priority;
         item.changefreq = t.changefreq;
-        item.lastmod = BUILD_DATE;
         return item;
       },
     }),
@@ -64,4 +66,8 @@ export default defineConfig({
   // link in viewport (incl. dead ones), hammering the dev server and adding
   // perceived nav lag on real navigation.
   prefetch: { defaultStrategy: 'hover' },
+  // Responsive content images: markdown/collection images emit srcset+sizes
+  // automatically instead of shipping the full-resolution original into a
+  // 760px column (blog photos are 2200px/1MB+ without this).
+  image: { layout: 'constrained' },
 });

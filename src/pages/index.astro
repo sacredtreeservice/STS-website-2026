@@ -101,7 +101,7 @@ const regions = [
 
 <Base
   title="Tree Care, Pruning & Plant Health in Orlando"
-  description="ISA Certified Arborists in Orlando. Proactive tree care, pruning, plant health, and thoughtful removals across Central Florida. Professional crew, licensed &amp; insured."
+  description="Sacred Tree Service — professional tree care in Orlando. Proactive pruning, plant health, planting, and thoughtful removals across Central Florida. Licensed &amp; insured, free estimates."
 >
   <section class="hero">
     <Picture
@@ -121,7 +121,7 @@ const regions = [
     <div class="hero-inner">
       <span class="eyebrow" data-reveal>
         <span class="dot"></span>
-        ISA-Credentialed · Greater Orlando · Since 2023
+        Professional Tree Care · Greater Orlando · Since 2023
       </span>
 
       <h1 data-reveal>
@@ -131,8 +131,8 @@ const regions = [
 
       <p class="lede" data-reveal>
         Proactive pruning, plant health, and thoughtful work when it’s
-        time — by ISA Certified Arborists who’d rather save your tree
-        than sell you a removal.
+        time — by a crew that would rather save your tree than sell
+        you a removal.
       </p>
 
       <div class="cta" data-reveal>
@@ -145,11 +145,11 @@ const regions = [
       </div>
 
       <div class="hero-meta" data-reveal>
-        <span><Icon name="lucide:badge-check" /> ISA Certified Arborists</span>
+        <span><Icon name="lucide:shield" /> Licensed &amp; Insured</span>
         <span class="dot-sep" aria-hidden="true">·</span>
-        <span><Icon name="lucide:shield" /> Fully Insured</span>
+        <span><Icon name="lucide:star" /> 5.0★ on Google</span>
         <span class="dot-sep" aria-hidden="true">·</span>
-        <span><Icon name="lucide:landmark" /> ISA & TCIA Member</span>
+        <span><Icon name="lucide:landmark" /> ISA &amp; TCIA Member</span>
       </div>
     </div>
 
@@ -159,6 +159,21 @@ const regions = [
   </section>
 
   <TrustStrip />
+
+  <!-- Answer-first definitional block: the first entity-rich, extractable
+       description of the business in DOM order. AI engines weight opening
+       content heavily when summarizing "what is / who is the best" queries. -->
+  <section class="container intro-block" aria-label="About Sacred Tree Service">
+    <p data-reveal>
+      <strong>Sacred Tree Service</strong> is a professional tree care company
+      based in Apopka, FL, serving the greater Orlando area within a 50-mile
+      radius — pruning, plant health, tree planting with years of ongoing
+      care, thoughtful removals, and storm response. Corporately small: a
+      small company built on the fundamentals of tree care, defined processes,
+      and repeatable results. Licensed and insured, rated 5.0 stars on Google.
+      Free in-person estimates: <a href={company.phoneHref}>{company.phone}</a>.
+    </p>
+  </section>
 
   <section id="what-we-do" class="container svc-section">
     <header class="section-head" data-reveal>
@@ -185,6 +200,54 @@ const regions = [
 
   <Process />
 
+  <section class="lifecycle-band">
+    <div class="container">
+      <header class="section-head" data-reveal>
+        <span class="kicker">Plant with us, grow with us</span>
+        <h2>We plant trees — then keep them thriving for years.</h2>
+        <p>
+          Most companies plant and leave. We source locally grown trees, plant
+          them right, walk them through the establishment years, and stay on as
+          your arborist team — the full life of the tree, one crew.
+        </p>
+      </header>
+      <ol class="lifecycle" data-reveal data-reveal-stagger>
+        <li>
+          <span class="step-n">1</span>
+          <h3><a href="/services/tree-planting/">Plant it right</a></h3>
+          <p>
+            Locally grown, locally sourced trees — delivered and installed by
+            our own crew, same-day with a removal or on their own. Right tree,
+            right place, every time.
+          </p>
+        </li>
+        <li>
+          <span class="step-n">2</span>
+          <h3><a href="/tree-care/new-tree-care/">Establish it, years 1–2</a></h3>
+          <p>
+            The years that decide whether a young tree makes it. Watering tuned
+            to sandy Florida soil, transplant-stress monitoring, mulch, staking
+            removal, and formative pruning.
+          </p>
+        </li>
+        <li>
+          <span class="step-n">3</span>
+          <h3><a href="/services/tree-care-plans/">Care for it, every year</a></h3>
+          <p>
+            An annual arborist walk, seasonal plant health monitoring, and
+            storm-season prep on a simple year-to-year plan — problems caught
+            while they're still cheap to fix.
+          </p>
+        </li>
+      </ol>
+      <div class="lifecycle-cta" data-reveal>
+        <a class="btn primary" href="/services/tree-care-plans/">
+          Explore Tree Care Plans <Icon name="lucide:arrow-right" />
+        </a>
+      </div>
+    </div>
+  </section>
+
   <Testimonials />
 
   <Gallery />
@@ -197,13 +260,13 @@ const regions = [
     <div class="area-grid">
       <header class="area-text" data-reveal>
         <span class="kicker">Service area</span>
-        <h2>ISA Certified Arborists across Greater Orlando &amp; Central Florida</h2>
+        <h2>Professional tree care across Greater Orlando &amp; Central Florida</h2>
         <p>
           Centrally located in Apopka, FL, we serve homeowners, HOAs, and
           commercial properties across the seven-county Central Florida
           region — Orange, Seminole, Osceola, Lake, Volusia, Brevard, and
-          northern Polk. Same crew, same ISA-credentialed standards, no
-          out-of-area surcharges anywhere inside our 50-mile radius.
+          northern Polk. Same crew, same process, same standards — everywhere
+          inside our 50-mile radius.
         </p>
       </header>
 
@@ -229,8 +292,23 @@ const regions = [
 
   <CtaBand />
 
+  <section class="container emergency-strip" aria-label="Emergency tree service">
+    <p data-reveal>
+      <Icon name="lucide:cloud-lightning" />
+      <span>
+        <strong>Tree down? Storm damage?</strong> We answer 24/7 for true
+        emergencies — <a href="/emergency/">see our emergency response</a> or
+        call <a href={company.phoneHref}>{company.phone}</a>.
+      </span>
+    </p>
+  </section>
+
   <section class="container narrow form-block">
     <BookingForm context="General estimate" />
+    <p class="financing-note">
+      Larger project? <a href="/financing/">Financing is available</a> on major
+      tree work.
+    </p>
   </section>
 </Base>
 
@@ -388,6 +466,96 @@ const regions = [
     0%, 100% { transform: translate(-50%, 0); }
     50% { transform: translate(-50%, 6px); }
   }
+
+  /* Answer-first intro block — visually quiet, early in the DOM. */
+  .intro-block {
+    padding: 2.25rem 1.25rem 0;
+    max-width: 880px;
+  }
+  .intro-block p {
+    margin: 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.98rem;
+    line-height: 1.7;
+  }
+  .intro-block strong { color: var(--green-dark); }
+  .intro-block a { color: var(--green-dark); font-weight: 700; text-decoration: none; }
+  .intro-block a:hover { text-decoration: underline; }
+
+  /* Plant → Establish → Care lifecycle band */
+  .lifecycle-band {
+    padding: 5rem 0;
+    background: var(--paper-2);
+  }
+  .lifecycle {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2.25rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  .lifecycle li {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 1.85rem;
+    position: relative;
+  }
+  .step-n {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--green-tint), color-mix(in srgb, var(--teal) 18%, transparent));
+    color: var(--green-dark);
+    font-family: 'Marcellus', Georgia, serif;
+    font-size: 1.3rem;
+    margin-bottom: 0.9rem;
+  }
+  .lifecycle h3 { font-size: 1.2rem; margin: 0 0 0.4rem; }
+  .lifecycle h3 a {
+    color: var(--green-dark);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+  .lifecycle h3 a:hover { border-bottom-color: var(--green); }
+  .lifecycle p { color: var(--muted); margin: 0; font-size: 0.95rem; line-height: 1.6; }
+  .lifecycle-cta { text-align: center; }
+  .lifecycle-cta .btn { display: inline-flex; gap: 0.4rem; }
+  .lifecycle-cta .btn [data-icon] { width: 16px; height: 16px; }
+  @media (max-width: 900px) {
+    .lifecycle { grid-template-columns: 1fr; }
+  }
+
+  /* Slim emergency strip */
+  .emergency-strip { padding: 0 1.25rem; margin: 2.5rem auto 0; max-width: 880px; }
+  .emergency-strip p {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin: 0;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-left: 4px solid var(--warning);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+  }
+  .emergency-strip [data-icon] { width: 22px; height: 22px; color: var(--warning); flex-shrink: 0; }
+  .emergency-strip a { color: var(--green-dark); font-weight: 700; }
+
+  .financing-note {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin: 1rem 0 0;
+  }
+  .financing-note a { color: var(--green-dark); font-weight: 700; }
 
   .svc-section { padding: 5rem 1.25rem; }
   .section-head { text-align: center; margin: 0 auto 2.5rem; max-width: 60ch; }

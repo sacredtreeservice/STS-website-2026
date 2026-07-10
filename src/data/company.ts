@@ -29,7 +29,10 @@ export const company = {
   googleReviewCount: 63 as number | undefined,
   googleAverageRating: 5.0,
   memberships: ['ISA — International Society of Arboriculture', 'TCIA — Tree Care Industry Association'],
-  credentials: ['ISA Certified Arborists on Staff', 'Licensed', 'Insured', 'Workers’ Comp'],
+  // Order matters — licensed/insured lead; the credential story supports the
+  // brand, it isn't the brand. Certified arborists are staff (assessment
+  // role), the company itself is an ISA/TCIA *member*.
+  credentials: ['Licensed', 'Insured', 'Workers’ Comp', 'ISA Certified Arborists on Staff'],
   // Each URL here is published in LocalBusiness.sameAs — they're the
   // entity-consistency signals AI engines and Google cross-reference. Order
   // is for our own readability; search engines don't care about order.

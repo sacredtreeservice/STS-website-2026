@@ -1,0 +1,682 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import BookingForm from '../components/BookingForm.astro';
+import FaqBlock from '../components/FaqBlock.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { company } from '../data/company';
+import { counties } from '../data/counties';
+import { faqSchema } from '../lib/schema';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Commercial & HOA', url: '/commercial/' },
+];
+
+const creds = [
+  {
+    icon: 'lucide:shield-check',
+    title: 'Workers’ comp & general liability',
+    body: 'If an uninsured crew member gets hurt on association property, the claim can land on the association or the owner. We carry general liability and workers’ compensation, documented and current — and the certificates come straight from our insurer, not a photocopy from us.',
+  },
+  {
+    icon: 'lucide:award',
+    title: 'Certified arborists on staff',
+    body: 'Assessments, specs, and risk calls are made by certified arborists on staff — a dedicated assessment specialty on our team, not a foreman guessing at what looks overgrown. That judgment is what your board is actually buying.',
+  },
+  {
+    icon: 'lucide:file-text',
+    title: 'ANSI A300 written into the scope',
+    body: 'We write the pruning standard into the scope — cut types, clearances, and limits per ANSI A300, topping prohibited. When every bidder is quoting the same written spec, your board can finally compare bids apples to apples.',
+  },
+  {
+    icon: 'lucide:clipboard-check',
+    title: 'Specs you can hold us to',
+    body: 'A written spec is a promise you can verify. Boards and managers can walk the finished work against the document — and if something isn’t to spec, we come back and make it right.',
+  },
+];
+
+const phases = [
+  {
+    n: '01',
+    title: 'Property walk',
+    time: '1 visit',
+    body: 'We walk the property with your board rep or manager — common areas, streetscapes, palms, preserve edges. We inventory what you have, flag hazards and priorities, and listen to what the community actually wants. The walk is free, like every estimate we do.',
+  },
+  {
+    n: '02',
+    title: 'Written scope & per-zone pricing',
+    time: 'days',
+    body: 'You get a written scope with ANSI A300 specs and pricing broken out per zone — so the board can approve the whole plan or phase it across budget years. Everything is quoted in person, in writing, free. No pressure, no padding.',
+  },
+  {
+    n: '03',
+    title: 'Scheduled work',
+    time: 'on the calendar',
+    body: 'Pruning cycles, palm visits, and plant health work go on a calendar instead of a crisis footing. We schedule around your community’s rhythms, give notice before crews arrive, and leave zones clean — the standard your residents and tenants will judge you by.',
+  },
+  {
+    n: '04',
+    title: 'Season-over-season continuity',
+    time: 'ongoing',
+    body: 'The same team returns year after year, so problems get caught while they’re still cheap: a weak branch union before hurricane season, a scale infestation before it spreads, a declining palm before it becomes a removal. A storm-prep walk before June is part of the rhythm.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'Do you provide COIs and workers’ comp documentation?',
+    a: 'Yes. Sacred Tree Service is licensed and insured with general liability and workers’ compensation coverage, and we provide certificates of insurance (COIs) to HOAs, property management companies, and commercial owners across Central Florida as a standard part of onboarding. Certificates are sent directly from our insurer to your office — not forwarded copies — so you know the coverage is real and current, and renewals land in your files without you chasing them.',
+  },
+  {
+    q: 'Do you do annual HOA tree maintenance contracts?',
+    a: 'Yes — annual contracts are our Tree Care Plans model applied at community scale. A contract starts with a community-wide tree inventory and assessment, then puts the work on a calendar: ANSI A300 pruning cycles by zone, a palm program on the UF/IFAS cadence, seasonal plant health monitoring, and a storm-prep walk before hurricane season. Contracts run in annual terms, the initial property walk is free, and the board gets the full plan and pricing in writing before anything starts.',
+  },
+  {
+    q: 'Can you produce reports our board or insurer will accept?',
+    a: 'Yes. Our certified arborists on staff produce written, photo-documented TRAQ Level 2 tree risk assessments — the ISA’s structured risk framework that municipalities, insurance carriers, and HOA boards across Central Florida recognize. Each report covers target identification, likelihood of failure, likelihood of impact, and a final risk rating, formatted so a board can vote on it and an insurer can file it.',
+  },
+  {
+    q: 'How do you handle storm response for communities?',
+    a: 'Contract clients get priority triage. When a hurricane or severe summer storm moves through Central Florida, we work hazards in order: trees on structures first, then blocked roads and gates, then hanging limbs and next-day preventive work. Because we already know a contract community — where the big oaks are, which zones have targets underneath — triage starts before the truck arrives, and your community isn’t calling down a list of strangers at 7 AM after landfall.',
+  },
+  {
+    q: 'Do you work with property management companies?',
+    a: 'Yes. Sacred Tree Service works with property managers and vacation-rental managers across the greater Orlando area, including multi-property portfolios. We coordinate scheduling across your properties, keep one point of contact on our side, and consolidate the paperwork — one invoice, one COI on file, and one call to make when something comes down. Palm-heavy portfolios in particular benefit from a set trimming cadence instead of ad-hoc visits per property.',
+  },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Commercial & HOA Tree Services',
+    description:
+      'Annual tree care contracts and commercial tree services for HOAs, property managers, builders, and small commercial properties across the greater Orlando area — tree inventories, ANSI A300 pruning cycles by zone, palm programs on the UF/IFAS cadence, TRAQ risk reports, and priority storm response from a professional crew based in Apopka, FL.',
+    provider: { '@id': 'https://sacredtreeservice.com#business' },
+    serviceType: 'Commercial & HOA Tree Services',
+    areaServed: { '@type': 'State', name: 'Florida' },
+    url: 'https://sacredtreeservice.com/commercial/',
+  },
+  faqSchema(faqs),
+];
+---
+
+<Base
+  title="Commercial & HOA Tree Services — Orlando & Central Florida"
+  description="Annual tree care contracts for HOAs, property managers & small commercial in greater Orlando — professional crew, licensed & insured, written specs, priority storm response."
+  breadcrumbs={trail}
+  jsonLd={jsonLd}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head" data-reveal>
+      <span class="icon-hero" aria-hidden="true"><Icon name="lucide:building-2" /></span>
+      <span class="kicker">Commercial &amp; HOA</span>
+      <h1>Tree care for communities and commercial properties.</h1>
+      <p class="lede">
+        One professional team for HOAs, property managers, builders, and small
+        commercial across the greater Orlando area — annual contracts, written
+        specs, and honest recommendations. We’d rather save your trees than
+        sell you removals.
+      </p>
+    </header>
+
+    <section class="framing" data-reveal aria-labelledby="framing-heading">
+      <div class="framing-inner">
+        <span class="kicker">How we work</span>
+        <h2 id="framing-heading">Community tree care on a plan, not a crisis footing.</h2>
+        <p>
+          Sacred Tree Service provides commercial and HOA tree care across the
+          greater Orlando area from our base in Apopka, FL — annual maintenance
+          contracts built around a tree inventory, ANSI A300 pruning cycles by
+          zone, palm programs on the UF/IFAS cadence, TRAQ risk reports for the
+          board, and priority storm response. It’s our
+          <a href="/services/tree-care-plans/">Tree Care Plans</a> model,
+          scaled up from a single yard to a whole community.
+        </p>
+        <p>
+          The same philosophy applies at commercial scale as on a homeowner’s
+          lot: we put every scope in writing, we don’t pad a contract with work
+          your property doesn’t need, and when a tree can be saved instead of
+          removed, we say so. Boards get numbers they can budget against.
+          Managers get a crew that shows up when it says it will.
+        </p>
+      </div>
+    </section>
+
+    <section class="who" aria-labelledby="who-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">Who we serve</span>
+        <h2 id="who-heading">One team for boards, managers, builders, and owners.</h2>
+        <p>
+          Different properties, same fundamentals: written scopes, one defined
+          process on every job, and work that stays on a calendar.
+        </p>
+      </header>
+      <div class="tiles" data-reveal data-reveal-stagger>
+        <article class="tile">
+          <span class="ico"><Icon name="lucide:users" /></span>
+          <h3>HOAs &amp; communities</h3>
+          <p>
+            Annual contracts for common areas, streetscapes, and amenity spaces
+            — with board-ready reports, per-zone pricing your association can
+            budget against, and one written scope to hold us to.
+          </p>
+        </article>
+        <article class="tile">
+          <span class="ico"><Icon name="lucide:building-2" /></span>
+          <h3>Property &amp; vacation-rental managers</h3>
+          <p>
+            Multi-property scheduling with one point of contact and one
+            invoice. Palm trimming on the UF/IFAS cadence — healthier palms on
+            fewer trims — through our
+            <a href="/services/palm-tree-services/">palm tree services</a>.
+          </p>
+        </article>
+        <article class="tile">
+          <span class="ico"><Icon name="lucide:hammer" /></span>
+          <h3>Builders &amp; developers</h3>
+          <p>
+            Lot prep with specimen-tree preservation: we tag what stays,
+            protect root zones during construction, and document the canopy for
+            permitting. See our
+            <a href="/services/land-clearing/">land &amp; lot clearing</a> service.
+          </p>
+        </article>
+        <article class="tile">
+          <span class="ico"><Icon name="lucide:store" /></span>
+          <h3>Small commercial</h3>
+          <p>
+            Offices, retail plazas, churches, and schools. Scheduled pruning
+            that keeps canopy clear of roofs, signage, lighting, and walkways —
+            worked around your hours, cleaned up before you open.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="includes" aria-labelledby="includes-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">Annual contracts</span>
+        <h2 id="includes-heading">What does an annual tree care contract include?</h2>
+        <p>
+          An annual contract with Sacred Tree Service covers the full cycle of
+          care for a Central Florida community — inventory, scheduled pruning,
+          palms, storm prep, and the documentation your board and insurer
+          actually need.
+        </p>
+      </header>
+      <ul class="inc-grid" data-reveal data-reveal-stagger>
+        <li class="inc">
+          <span class="inc-ico"><Icon name="lucide:check" /></span>
+          <div>
+            <h3>Community-wide tree inventory &amp; assessment</h3>
+            <p>
+              Every tree in the common areas walked and assessed up front, so
+              decisions come from a real baseline instead of guesswork — and
+              year-two budgets get easier, not harder.
+            </p>
+          </div>
+        </li>
+        <li class="inc">
+          <span class="inc-ico"><Icon name="lucide:check" /></span>
+          <div>
+            <h3>Scheduled pruning cycles by zone</h3>
+            <p>
+              ANSI A300 pruning on a rotation, zone by zone, so the work is
+              predictable, budgetable, and never a surprise assessment to the
+              membership.
+            </p>
+          </div>
+        </li>
+        <li class="inc">
+          <span class="inc-ico"><Icon name="lucide:check" /></span>
+          <div>
+            <h3>A palm program on the right cadence</h3>
+            <p>
+              Dead and dying fronds only, per UF/IFAS — typically every 12–18
+              months. Healthier, fuller palms on fewer trims than the quarterly
+              schedule many landscapers sell.
+            </p>
+          </div>
+        </li>
+        <li class="inc">
+          <span class="inc-ico"><Icon name="lucide:check" /></span>
+          <div>
+            <h3>Storm-season prep + priority response</h3>
+            <p>
+              A pre-June walk to flag weak unions and hazards before hurricane
+              season — and priority post-storm triage for contract communities,
+              structure hits first.
+            </p>
+          </div>
+        </li>
+        <li class="inc">
+          <span class="inc-ico"><Icon name="lucide:check" /></span>
+          <div>
+            <h3>TRAQ risk reports for the board</h3>
+            <p>
+              Written, photo-documented Level 2 risk assessments from our
+              <a href="/services/arborist-consulting/">arborist consulting</a>
+              team — the format boards vote on and insurers file.
+            </p>
+          </div>
+        </li>
+        <li class="inc">
+          <span class="inc-ico"><Icon name="lucide:check" /></span>
+          <div>
+            <h3>One point of contact</h3>
+            <p>
+              One person who knows your property, your zones, and your history
+              — no re-explaining the community to a new estimator every visit.
+            </p>
+          </div>
+        </li>
+        <li class="inc">
+          <span class="inc-ico"><Icon name="lucide:check" /></span>
+          <div>
+            <h3>Documented COI &amp; workers’ comp</h3>
+            <p>
+              Certificates of insurance sent directly from our insurer for your
+              files, renewed annually — the paperwork side handled before the
+              first crew arrives.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="sitework" data-reveal aria-labelledby="sitework-heading">
+      <div class="framing-inner">
+        <span class="kicker">Beyond the canopy</span>
+        <h2 id="sitework-heading">Vegetation management &amp; stormwater sitework.</h2>
+        <p>
+          For site-services firms, HOAs, and property managers, we also handle
+          the vegetation work that isn’t “tree service” on paper but lands on
+          the same properties: retention pond and easement clearing, recurring
+          vegetation maintenance after the initial clear, shoreline and
+          property-line clearing, erosion repair, and post-storm site cleanup.
+          Larger projects are phased with written scopes per phase, so budgets
+          stay predictable from mobilization to closeout.
+        </p>
+        <p>
+          It pairs naturally with our
+          <a href="/services/land-clearing/">land &amp; lot clearing</a> service —
+          one contractor, one point of contact, one standard of documentation
+          across the whole property.
+        </p>
+      </div>
+    </section>
+
+    <section class="creds" aria-labelledby="creds-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">Standards &amp; liability</span>
+        <h2 id="creds-heading">Why do credentials matter at commercial scale?</h2>
+        <p>
+          On a commercial property, tree work is a liability question before
+          it’s a landscaping question — and an unwritten scope is a bid you
+          can’t compare and a result you can’t verify.
+        </p>
+      </header>
+      <div class="creds-grid" data-reveal data-reveal-stagger>
+        {creds.map((c) => (
+          <article class="cred-card">
+            <span class="ico"><Icon name={c.icon} /></span>
+            <h3>{c.title}</h3>
+            <p>{c.body}</p>
+          </article>
+        ))}
+      </div>
+      <p class="creds-note" data-reveal>
+        Sacred Tree Service is a member of the ISA and TCIA — and you don’t
+        have to take our word for the rest. See what Central Florida property
+        owners say about working with us on our <a href="/reviews/">reviews page</a>.
+      </p>
+    </section>
+
+    <section class="process" aria-labelledby="process-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">How it starts</span>
+        <h2 id="process-heading">From first walk to a standing calendar.</h2>
+        <p>
+          No pressure and no pre-sold spray calendars — a free property walk, a
+          written scope, and work that earns its renewal every year.
+        </p>
+      </header>
+      <ol class="phases" data-reveal data-reveal-stagger>
+        {phases.map((p) => (
+          <li class="phase">
+            <span class="phase-n">{p.n}</span>
+            <div class="phase-body">
+              <header>
+                <h3>{p.title}</h3>
+                <span class="phase-time">{p.time}</span>
+              </header>
+              <p>{p.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <div class="layout">
+      <article class="area-faq">
+        <h2>Where we work</h2>
+        <p>
+          We’re based in Apopka, FL and serve commercial and HOA properties
+          within a 50-mile radius — seven Central Florida counties covering the
+          greater Orlando area:
+        </p>
+        <ul class="county-list">
+          {counties.map((c) => (
+            <li><a href={`/service-area/${c.slug}/`}>{c.name}</a></li>
+          ))}
+        </ul>
+        <FaqBlock faqs={faqs} />
+      </article>
+      <aside>
+        <BookingForm
+          heading="Request a property walk"
+          subheading="Free walk-through of your community or property. We’ll follow up with a written scope and per-zone pricing — no obligation, no pressure."
+          context="Commercial / HOA"
+        />
+      </aside>
+    </div>
+  </div>
+
+  <CtaBand
+    heading="Ready to put your community’s trees on a plan?"
+    subheading={`Free property walks across the greater Orlando area. Call ${company.phone} or request a walk online.`}
+  />
+</Base>
+
+<style>
+  .head {
+    text-align: center;
+    margin: 1rem 0 2.5rem;
+  }
+  .icon-hero {
+    display: inline-grid;
+    place-items: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(75, 112, 33, 0.15), rgba(104, 204, 209, 0.12));
+    color: var(--green-dark);
+    margin-bottom: 1rem;
+  }
+  .icon-hero [data-icon] { width: 40px; height: 40px; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h1 {
+    font-size: clamp(2rem, 4.6vw, 2.8rem);
+    margin: 0.4rem 0 0.75rem;
+  }
+  .lede {
+    color: var(--muted);
+    max-width: 62ch;
+    margin: 0 auto;
+    font-size: 1.15rem;
+  }
+
+  .section-head {
+    text-align: center;
+    max-width: 62ch;
+    margin: 0 auto 2.25rem;
+  }
+  .section-head h2 {
+    font-size: clamp(1.6rem, 3.2vw, 2.1rem);
+    margin: 0.4rem 0 0.6rem;
+  }
+  .section-head p {
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* Framing band */
+  .framing {
+    margin: 3rem auto 4rem;
+    max-width: 760px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 2.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .framing h2 {
+    font-size: clamp(1.5rem, 3vw, 1.9rem);
+    margin: 0.4rem 0 1rem;
+  }
+  .framing p {
+    margin: 0 0 0.85rem;
+    font-size: 1.02rem;
+    color: var(--ink-soft);
+    line-height: 1.65;
+  }
+  .framing p:last-child { margin-bottom: 0; }
+  .framing a {
+    color: var(--green-dark);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  /* Sitework band — same visual language as the framing band */
+  .sitework {
+    margin: 3rem auto 4rem;
+    max-width: 760px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 2.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .sitework h2 {
+    font-size: clamp(1.5rem, 3vw, 1.9rem);
+    margin: 0.4rem 0 1rem;
+  }
+  .sitework p {
+    margin: 0 0 0.85rem;
+    font-size: 1.02rem;
+    color: var(--ink-soft);
+    line-height: 1.65;
+  }
+  .sitework p:last-child { margin-bottom: 0; }
+  .sitework a {
+    color: var(--green-dark);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  /* Who-we-serve tiles */
+  .who { padding: 3rem 0; }
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+  .tile {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: transform 0.25s var(--easing), border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .tile:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+  }
+  .ico {
+    display: inline-grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--green-tint), color-mix(in srgb, var(--teal) 18%, transparent));
+    color: var(--green-dark);
+    margin-bottom: 0.85rem;
+  }
+  .ico [data-icon] { width: 24px; height: 24px; }
+  .tile h3 { font-size: 1.05rem; margin: 0 0 0.3rem; }
+  .tile p { color: var(--muted); margin: 0; font-size: 0.93rem; line-height: 1.55; }
+  .tile a { color: var(--green-dark); font-weight: 600; text-decoration: underline; }
+  @media (max-width: 980px) { .tiles { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .tiles { grid-template-columns: 1fr; } }
+
+  /* Contract-includes checklist */
+  .includes { padding: 3rem 0; }
+  .inc-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 980px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  .inc {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 0.85rem;
+    align-items: start;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+  }
+  .inc-ico {
+    display: inline-grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--green-tint);
+    color: var(--green-dark);
+    margin-top: 0.1rem;
+  }
+  .inc-ico [data-icon] { width: 18px; height: 18px; }
+  .inc h3 { font-size: 1.02rem; margin: 0 0 0.3rem; }
+  .inc p { color: var(--muted); margin: 0; font-size: 0.92rem; line-height: 1.55; }
+  .inc a { color: var(--green-dark); font-weight: 600; text-decoration: underline; }
+  @media (max-width: 720px) { .inc-grid { grid-template-columns: 1fr; } }
+
+  /* Credentials grid */
+  .creds { padding: 3rem 0; }
+  .creds-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+  .cred-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.6rem;
+  }
+  .cred-card h3 { font-size: 1.05rem; margin: 0 0 0.4rem; }
+  .cred-card p { color: var(--muted); margin: 0; font-size: 0.92rem; line-height: 1.55; }
+  .creds-note {
+    text-align: center;
+    color: var(--muted);
+    max-width: 62ch;
+    margin: 1.75rem auto 0;
+  }
+  .creds-note a {
+    color: var(--green-dark);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+  @media (max-width: 980px) { .creds-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .creds-grid { grid-template-columns: 1fr; } }
+
+  /* Process phases */
+  .process { padding: 3rem 0 4rem; }
+  .phases {
+    list-style: none;
+    padding: 0;
+    max-width: 880px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1.25rem;
+  }
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem 1.75rem;
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  .phase-n {
+    font-family: 'Marcellus', Georgia, serif;
+    font-size: 2rem;
+    color: var(--green);
+    line-height: 1;
+  }
+  .phase-body header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: baseline;
+    margin-bottom: 0.4rem;
+  }
+  .phase-body h3 {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  .phase-time {
+    font-size: 0.85rem;
+    color: var(--green-dark);
+    background: var(--green-tint);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+  .phase-body p { margin: 0; color: var(--ink-soft); line-height: 1.6; }
+  @media (max-width: 600px) {
+    .phase { grid-template-columns: 1fr; padding: 1.25rem; }
+    .phase-n { font-size: 1.5rem; }
+  }
+
+  /* Bottom layout: counties + FAQ + form */
+  .layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 3rem;
+    align-items: start;
+    margin-top: 2rem;
+  }
+  .area-faq h2 {
+    font-size: 1.5rem;
+    margin: 2rem 0 0.85rem;
+  }
+  .area-faq > p { color: var(--ink-soft); line-height: 1.65; }
+  .county-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    columns: 2;
+    gap: 1rem;
+  }
+  .county-list li { margin-bottom: 0.4rem; }
+  .county-list a { color: var(--green-dark); text-decoration: none; }
+  .county-list a:hover { text-decoration: underline; }
+  aside { position: sticky; top: 100px; }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { position: static; }
+    .county-list { columns: 1; }
+  }
+</style>

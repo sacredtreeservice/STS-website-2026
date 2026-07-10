@@ -1,0 +1,334 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import { faqSchema, articleSchema } from '../../lib/schema';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Tree Care', url: '/tree-care/' },
+  { name: 'Pests & Diseases', url: '/tree-care/pests-and-diseases/' },
+];
+
+// The threats that actually kill and disfigure Central Florida trees.
+// Each card names the four things a worried homeowner wants: what it is,
+// what it looks like, whether the tree can be saved, and what we do about it.
+const threats = [
+  {
+    icon: 'lucide:palmtree',
+    title: 'Lethal bronzing (Texas Phoenix palm decline)',
+    what: 'A phytoplasma — a bacteria-like organism — spread tree to tree by planthopper insects. It hits sabal (cabbage), queen, and Phoenix (date) palms hardest.',
+    symptoms: 'The oldest, lowest fronds bronze and die first, and the browning climbs up the canopy. Fruit and flowers drop early, and the spear leaf (the newest, upright leaf) collapses.',
+    saved: 'No. Once a palm is showing symptoms there is no cure — removing it is how you stop the disease from moving to the palms around it.',
+    weDo: 'We confirm the ID, remove the infected palm, and protect nearby healthy palms with over-the-counter trunk injections every 3–4 months for two or more years, following the UF/IFAS protocol.',
+  },
+  {
+    icon: 'lucide:shield-alert',
+    title: 'Ganoderma butt rot',
+    what: 'A fungus that attacks the base of a palm’s trunk and kills it from the ground up. It is common across Central Florida and there is no treatment.',
+    symptoms: 'Hard, shelf-like fungal brackets — called conks — forming low on the trunk are the tell. By the time a conk appears, the internal rot is already well advanced.',
+    saved: 'No. There is no cure for Ganoderma butt rot.',
+    weDo: 'We remove the palm before the conks release their spores, and we never move the infected debris or grind-chips near other palms — that is exactly how it spreads.',
+  },
+  {
+    icon: 'lucide:droplet-off',
+    title: 'Laurel wilt',
+    what: 'A fungus carried by the tiny redbay ambrosia beetle. It kills redbays, swampbays, and avocados — sometimes in a single season.',
+    symptoms: 'Whole sections of canopy wilt to a purple-brown and hang on the tree rather than dropping. It moves fast, often top-down through the crown.',
+    saved: 'Once a tree is infected, usually not — but a high-value, still-healthy tree in an active area can be protected before it is hit.',
+    weDo: 'For a tree worth saving, we apply a preventive systemic injection of propiconazole ahead of infection. On trees already lost, removal limits the beetle’s next host nearby.',
+  },
+  {
+    icon: 'lucide:trees',
+    title: 'Oak decline (and an oak-wilt caution)',
+    what: 'Not a single disease — a stress-driven decline of mature oaks. The usual causes are soil compaction, fill dirt piled over the root zone, and drought.',
+    symptoms: 'A thinning upper canopy and branch dieback that worsens over several seasons, rather than the sudden collapse you see in a disease.',
+    saved: 'Often, yes — decline caught early is frequently reversible once the underlying stress is relieved.',
+    weDo: 'We diagnose the actual stressor and address it — decompaction, root-zone care, deep-root feeding — and we prune oaks only in the cooler months to reduce the risk of oak wilt.',
+  },
+  {
+    icon: 'lucide:bug',
+    title: 'The workaday pests: scale, borers, mites & aphids',
+    what: 'The everyday insects that feed on trees. Left unchecked they weaken a tree until a disease finds the opening, but most are very manageable.',
+    symptoms: 'Sticky honeydew and black sooty mold, stippled or yellowing leaves, small round bore holes in the bark, and thinning or dieback on affected limbs.',
+    saved: 'Yes. Caught in time, these are treatable without harming the tree.',
+    weDo: 'We use Integrated Pest Management (IPM): scout the tree, identify the pest by species, treat only when the population crosses a threshold worth treating, and reach for the lowest-impact option first.',
+  },
+  {
+    icon: 'lucide:flask-conical',
+    title: 'Nutrient deficiencies that mimic disease',
+    what: 'Not a pathogen at all. Florida’s sandy soils have almost no capacity to hold nutrients, so fertilizer leaches away in days and trees go hungry.',
+    symptoms: 'Frizzletop on palms — new fronds emerging stunted and frizzled, a manganese deficiency — and interveinal chlorosis on oaks, where the leaf yellows but the veins stay green (an iron shortage).',
+    saved: 'Yes, readily — these are correctable, not fatal, when addressed.',
+    weDo: 'We correct the specific deficiency with deep-root feeding on the cadence Florida soil actually responds to, rather than one big seasonal blast that flushes straight through the sand.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'What is killing my palm tree in Florida?',
+    a: 'In Central Florida, the two diseases that most often kill palms are lethal bronzing (Texas Phoenix palm decline), a phytoplasma spread by planthopper insects, and Ganoderma butt rot, a trunk-base fungus. Both are incurable once a palm is symptomatic. Nutrient deficiencies in our sandy soils and pests like palm weevils can also decline a palm but are often treatable. Because the fatal diseases and the fixable problems can look similar early on, have a certified arborist confirm which one you are dealing with before you act.',
+  },
+  {
+    q: 'Can lethal bronzing be cured?',
+    a: 'No. Once a palm in Central Florida is showing lethal bronzing symptoms — older fronds bronzing and dying upward, early fruit drop, a collapsed spear leaf — it cannot be cured, and removing it is how you stop the phytoplasma from spreading to nearby palms. Healthy palms close to a confirmed case can be protected preventively with over-the-counter trunk injections every 3–4 months for two or more years, following the UF/IFAS protocol.',
+  },
+  {
+    q: 'What are the shelf mushrooms at the base of my palm?',
+    a: 'Hard, shelf-like brackets at the base of a palm trunk are conks — the fruiting bodies of Ganoderma butt rot, a fungal disease that kills palms from the ground up. There is no cure, and by the time a conk is visible the internal decay is already advanced. The palm should be removed before the conks release spores, and the infected debris must not be moved or chipped near other palms. Have it confirmed by an arborist, since the palm may fail without much warning.',
+  },
+  {
+    q: 'Is Spanish moss killing my oak tree?',
+    a: 'No. Spanish moss and ball moss are epiphytes — they perch on the branches for support but take no nutrients from the tree, so they are not parasites and do not kill oaks. Heavy moss on a declining oak is usually a symptom of a thinning canopy letting more light in, not the cause of the decline. Mistletoe is the one exception in Central Florida: it is genuinely parasitic and is worth addressing.',
+  },
+  {
+    q: 'How do I know if my oak is declining?',
+    a: 'Watch the upper canopy: an oak in decline thins from the top down and dies back at the branch tips over several seasons, rather than collapsing suddenly. The usual Central Florida causes are stress — soil compaction, fill dirt piled over the roots, or drought — and decline caught early is often reversible once that stress is relieved. If the thinning is worsening season over season, have a certified arborist diagnose the cause before it passes the point of return.',
+  },
+];
+
+const jsonLd = [
+  faqSchema(faqs),
+  articleSchema({
+    title: 'Florida Tree Pests & Diseases: What to Watch For',
+    description:
+      'The Central Florida tree pests and diseases that actually matter — lethal bronzing, Ganoderma, laurel wilt, oak decline — how to spot them, and what can still be saved.',
+    url: '/tree-care/pests-and-diseases/',
+    published: '2026-07-08',
+  }),
+];
+---
+
+<Base
+  title="Florida Tree Pests & Diseases: What Orlando Owners Watch"
+  description="The Central Florida tree pests and diseases that actually matter — lethal bronzing, Ganoderma, laurel wilt, oak decline — how to spot them, and what can be saved."
+  breadcrumbs={trail}
+  jsonLd={jsonLd}
+>
+  <div class="container narrow">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head" data-reveal>
+      <span class="kicker">Tree care guide</span>
+      <h1>Florida Tree Pests &amp; Diseases</h1>
+      <p class="lede">
+        A short, honest field guide to the pests and diseases that actually
+        threaten trees in Central Florida — what each one looks like, whether
+        the tree can be saved, and what we do about it.
+      </p>
+    </header>
+
+    <div class="prose">
+      <h2>What is actually killing Central Florida trees?</h2>
+      <p>
+        In the greater Orlando area, a handful of specific threats do most of
+        the real damage — and it helps to know which are fatal and which are
+        fixable. On palms, the two killers are <strong>lethal bronzing</strong>
+        and <strong>Ganoderma butt rot</strong>; both are incurable once
+        symptoms show. On hardwoods, <strong>laurel wilt</strong> is a fast
+        killer of bay trees, while <strong>oak decline</strong> is usually a
+        slow, stress-driven problem that is often reversible if it is caught
+        early. And a good share of what looks like disease is really a hungry
+        tree — Florida’s sandy soils leach nutrients in days, and the fix is
+        feeding, not a fungicide. We would rather correct a treatable problem
+        than sell you a removal, so the honest first step is figuring out which
+        of these you actually have.
+      </p>
+      <p>
+        The single most useful thing you can do is watch the <em>direction and
+        speed</em> of change. A problem that is advancing week over week, conks
+        appearing at the base of a palm, or bronzing climbing up a palm’s
+        canopy all mean it is time to have it looked at — not next season, now.
+      </p>
+
+      <h2>The threats that matter in Central Florida</h2>
+      <p>
+        These are the pests and diseases our crews are trained to catch — named,
+        with the early symptoms that separate a fatal case from a fixable one.
+      </p>
+      <div class="grid" data-reveal data-reveal-stagger>
+        {threats.map((t) => (
+          <article class="threat">
+            <span class="ico" aria-hidden="true"><Icon name={t.icon} /></span>
+            <h3>{t.title}</h3>
+            <p class="what">{t.what}</p>
+            <p><span class="label">Symptoms:</span> {t.symptoms}</p>
+            <p><span class="label">Can it be saved?</span> {t.saved}</p>
+            <p><span class="label">What we do:</span> {t.weDo}</p>
+          </article>
+        ))}
+      </div>
+
+      <aside class="myth">
+        <h3><Icon name="lucide:leaf" aria-hidden="true" /> What does <em>not</em> hurt your tree</h3>
+        <p>
+          <strong>Spanish moss and ball moss are not killing your tree.</strong>
+          They are epiphytes — they perch on the branches for support but take
+          no nutrients from the tree, so they are not parasites. Heavy moss on a
+          struggling tree is a symptom of a thinning canopy letting light in,
+          not the cause. We will not sell you a treatment to remove it.
+          <strong>Mistletoe is the one exception</strong> — it is genuinely
+          parasitic, and that one we will address.
+        </p>
+      </aside>
+
+      <h2>When should you call an arborist?</h2>
+      <p>
+        You do not need to diagnose the tree yourself — you just need to know
+        the moments that are worth a professional set of eyes. In Central
+        Florida, call when you see:
+      </p>
+      <ul>
+        <li><strong>Anything advancing week over week</strong> — decline that is visibly worse than it was a few weeks ago is moving, and moving problems don’t wait for a convenient season.</li>
+        <li><strong>Conks at the base of a palm</strong> — the shelf-like brackets of Ganoderma butt rot mean the palm needs to come out before it fails or spreads spores.</li>
+        <li><strong>Bronzing climbing up a palm’s canopy</strong> — the signature of lethal bronzing, and the window to protect the palms around it closes quickly.</li>
+      </ul>
+      <p>
+        The threats above are exactly what our
+        <a href="/services/plant-health-care/">plant health care</a> program is
+        built to catch and treat, and palms get their own attention through our
+        <a href="/services/palm-tree-services/">palm tree services</a>. Because
+        so many of these problems turn on catching them early, ongoing
+        monitoring is worth more than a one-time visit — that is the whole idea
+        behind our <a href="/services/tree-care-plans/">tree care plans</a>.
+        And when a palm or tree truly cannot be saved, prompt
+        <a href="/services/tree-removal/">tree removal</a> is how you protect
+        the healthy trees standing next to it.
+      </p>
+      <p class="note">
+        Every estimate is done in person, in writing, and free. A real answer
+        requires seeing the tree — and telling a fatal disease from a treatable
+        one is exactly the call worth getting right the first time.
+      </p>
+    </div>
+
+    <FaqBlock faqs={faqs} />
+
+    <aside class="cta" data-reveal>
+      <h2>Worried about a tree or palm?</h2>
+      <p>
+        Have it assessed by a certified arborist on staff before you act. We
+        would rather save your tree than sell you a
+        removal — and if it does need to come down, we will tell you honestly.
+        Free in-person estimates across the greater Orlando area.
+      </p>
+      <div class="cta-actions">
+        <a class="btn primary" href="/contact/">Request a free estimate</a>
+        <a class="btn ghost" href="/services/plant-health-care/">See plant health care</a>
+      </div>
+    </aside>
+  </div>
+</Base>
+
+<style>
+  .head { text-align: center; margin: 1rem 0 2rem; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h1 { font-size: clamp(2rem, 5vw, 2.8rem); margin: 0.3rem 0 0.75rem; }
+  .lede { color: var(--muted); font-size: 1.15rem; margin: 0 auto; max-width: 60ch; }
+
+  .prose h2 {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    margin: 2.25rem 0 0.6rem;
+  }
+  .prose h3 { font-size: 1.1rem; margin: 0 0 0.4rem; }
+  .prose p { margin: 0 0 1rem; color: var(--ink-soft); line-height: 1.7; }
+  .prose ul { margin: 0 0 1rem 1.2rem; color: var(--ink-soft); line-height: 1.7; }
+  .prose li { margin-bottom: 0.5rem; }
+  .prose strong { color: var(--ink); }
+  .prose a {
+    color: var(--green-dark);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  /* Threat card grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin: 1.25rem 0;
+  }
+  .threat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem 1.5rem;
+    transition: transform 0.25s var(--easing), border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .threat:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+  }
+  .threat .ico {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--green-tint), color-mix(in srgb, var(--teal) 18%, transparent));
+    color: var(--green-dark);
+    margin-bottom: 0.75rem;
+  }
+  .threat .ico [data-icon] { width: 22px; height: 22px; }
+  .threat h3 { font-size: 1.08rem; margin: 0 0 0.5rem; line-height: 1.3; }
+  .threat p { color: var(--muted); margin: 0 0 0.55rem; font-size: 0.92rem; line-height: 1.55; }
+  .threat p:last-child { margin-bottom: 0; }
+  .threat .what { color: var(--ink-soft); }
+  .threat .label {
+    font-weight: 700;
+    color: var(--green-dark);
+  }
+
+  /* Epiphyte myth-buster callout */
+  .myth {
+    margin: 1.5rem 0;
+    background: var(--highlight-bg);
+    border: 1px solid var(--highlight-border);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+    color: var(--highlight-ink);
+  }
+  .myth h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 1.05rem;
+    margin: 0 0 0.5rem;
+    color: var(--highlight-ink);
+  }
+  .myth h3 [data-icon] { width: 20px; height: 20px; color: var(--green-dark); }
+  .myth p { margin: 0; font-size: 0.95rem; line-height: 1.6; }
+  .myth strong { color: var(--highlight-ink); }
+
+  .note {
+    background: var(--highlight-bg);
+    border: 1px solid var(--highlight-border);
+    color: var(--highlight-ink);
+    border-radius: 12px;
+    padding: 0.9rem 1.2rem;
+    font-size: 0.95rem;
+  }
+
+  .cta {
+    margin: 3rem 0 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .cta h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin: 0 0 0.5rem; }
+  .cta p { color: var(--muted); margin: 0 auto 1.25rem; max-width: 54ch; }
+  .cta-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+</style>

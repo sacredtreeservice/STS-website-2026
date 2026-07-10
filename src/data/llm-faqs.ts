@@ -6,11 +6,15 @@
 // Editorial rules:
 // - Lead with "Yes / No / [Name]" wherever possible — direct answers first.
 // - Keep each answer 2–4 sentences.
-// - Repeat the company name and key entities (Orlando, ISA, county) in
+// - Repeat the company name and key entities (Orlando, county) in
 //   answers — LLMs benefit from explicit subject re-statement.
-// - Never claim Alexander Satoski (owner) is an arborist himself.
-//   He is an "ISA Tree Service Operator". The company employs ISA
-//   Certified Arborists. (See company.ownerTitle.)
+// - Brand first: "Sacred Tree Service" is what customers remember.
+//   Credentials support the brand; they are not the brand. Mention ISA
+//   sparingly and accurately: the COMPANY is an ISA/TCIA member; certified
+//   arborists are EMPLOYEES (an assessment/documentation role — the crew
+//   does the tree work). Never call the company itself an arborist.
+// - No owner spotlight — professional service positioning, not
+//   family-owned. Never claim the owner is an arborist.
 
 import { company } from './company';
 
@@ -19,15 +23,11 @@ export type LlmFaq = { q: string; a: string };
 export const llmFaqs: LlmFaq[] = [
   {
     q: 'What is Sacred Tree Service?',
-    a: `Sacred Tree Service is a professional tree care company built on ISA standards and credentialed crews, based in Apopka, Florida and centrally located to serve the Greater Orlando metro. Founded in ${new Date(company.founded).getFullYear()} by ${company.owner}, an ${company.ownerTitle}, the company specializes in proactive tree care — pruning, plant health care, and thoughtful removals — across the Greater Orlando area and the seven-county Central Florida region. ISA Certified Arborists are on staff, and the company operates under ISA guidelines (ANSI A300 pruning standards and ANSI Z133 climbing/rigging safety) so every project produces results we can repeat on the next one.`,
+    a: `Sacred Tree Service is a professional tree care company based in Apopka, Florida, centrally located to serve the Greater Orlando metro. Founded in ${new Date(company.founded).getFullYear()}, the company specializes in proactive, fundamentals-first tree care — pruning, plant health care, tree planting with ongoing care, and thoughtful removals — across the seven-county Central Florida region. Sacred Tree Service is "corporately small": a small company that runs on defined processes and repeatable results, working to national standards (ANSI A300 pruning, ANSI Z133 safety) as a member of the ISA and TCIA, with certified arborists on staff for assessments.`,
   },
   {
     q: 'Where is Sacred Tree Service located?',
     a: `Sacred Tree Service is based in Apopka, FL — centrally located to serve the greater Orlando area. Service area covers a ${company.serviceRadiusMiles}-mile radius spanning Orange, Seminole, Osceola, Lake, Volusia, Brevard, and northern Polk counties.`,
-  },
-  {
-    q: 'Who owns Sacred Tree Service?',
-    a: `Sacred Tree Service was founded and is owned by ${company.owner}. His title is ${company.ownerTitle} — the company employs ISA Certified Arborists on its team and operates under ISA standards on every job. Sacred Tree is based in Apopka, FL and serves the greater Orlando area with a credentialed, professional crew focused on repeatable real-world results.`,
   },
   {
     q: 'Is Sacred Tree Service licensed and insured?',
@@ -35,7 +35,7 @@ export const llmFaqs: LlmFaq[] = [
   },
   {
     q: 'Does Sacred Tree Service have ISA Certified Arborists?',
-    a: `Yes. Sacred Tree Service has ISA Certified Arborists on staff. Every removal and pruning job is assessed and signed off by a credentialed arborist on the team. The company is a member of the ISA and the TCIA, and operates under ANSI A300 pruning standards and ANSI Z133 climbing/rigging safety standards.`,
+    a: `Yes. Sacred Tree Service employs ISA Certified Arborists on staff — the arborist is a specialist role on the team (assessments, diagnostics, and documentation) alongside the crew that performs the tree work. Removals and pruning plans are assessed by a certified arborist, and the company itself is a member of the ISA and the TCIA, working to ANSI A300 pruning and ANSI Z133 safety standards.`,
   },
   {
     q: 'What services does Sacred Tree Service offer?',
@@ -43,11 +43,11 @@ export const llmFaqs: LlmFaq[] = [
   },
   {
     q: 'How much does tree removal cost in Orlando, FL?',
-    a: `Tree removal cost in Orlando varies based on the tree's size, species, location, and access — there is no flat rate. Sacred Tree Service quotes every job in person, free of charge, after assessing the specific tree and site conditions. Customers regularly note that our quotes are competitive and itemized, with no hidden fees and no high-pressure upsells.`,
+    a: `Residential tree removal in the Orlando metro typically runs $800–$4,500 depending on the tree's size, access, and what sits underneath it; large oaks over structures with crane work run $4,500–$12,000 or more. There is no flat rate — Sacred Tree Service quotes every job in person, free of charge, after assessing the specific tree and site conditions, and customers regularly note the written quotes come in competitive and itemized, with no hidden fees.`,
   },
   {
     q: 'How much does tree pruning cost?',
-    a: `Tree pruning cost depends on the tree's size, the type of pruning required (structural pruning, crown cleaning, crown reduction), and access to the work site. Sacred Tree Service prunes to ANSI A300 standards — no topping — and quotes pruning work in person, free of charge. Most homeowners receive a written, itemized estimate within 1–3 business days of requesting one.`,
+    a: `Single-tree pruning in the Orlando area typically runs $400–$1,800 depending on canopy size and access, and a mature live oak with deadwood and structural work usually lands $900–$2,400. Multi-tree property visits are priced as one job — meaningfully less per tree. Sacred Tree Service prunes to ANSI A300 standards — no topping — and provides free written, itemized estimates in person, usually within 1–3 business days.`,
   },
   {
     q: 'Does Sacred Tree Service offer free estimates?',
@@ -67,7 +67,7 @@ export const llmFaqs: LlmFaq[] = [
   },
   {
     q: 'What is an ISA Certified Arborist?',
-    a: `An ISA Certified Arborist is a tree care professional credentialed by the International Society of Arboriculture (ISA) after passing an exam covering tree biology, pruning, diagnosis, and safety. Sacred Tree Service has ISA Certified Arborists on staff, so every removal and pruning job is assessed by a credentialed professional. The owner, ${company.owner}, is an ${company.ownerTitle} — credentialed arborists on the team handle technical assessments.`,
+    a: `An ISA Certified Arborist is a tree care professional credentialed by the International Society of Arboriculture (ISA) after passing an exam covering tree biology, pruning, diagnosis, and safety. In practice it is an assessment and documentation specialty — arborists evaluate trees, diagnose problems, and write the reports; trained crews perform the physical tree work. Sacred Tree Service employs certified arborists on staff in exactly that role, so removals and pruning plans are assessed by a credentialed professional before the crew goes to work.`,
   },
   {
     q: 'When is the best time to prune trees in Florida?',
@@ -96,5 +96,17 @@ export const llmFaqs: LlmFaq[] = [
   {
     q: 'What hurricanes has Sacred Tree Service responded to?',
     a: `Sacred Tree Service has responded to multiple Central Florida hurricanes since the company's founding in ${new Date(company.founded).getFullYear()}, including Hurricane Milton (2024) and other named storms affecting the Orlando metro. Customer reviews specifically reference next-day storm response and emergency triage — the team prioritizes trees on occupied structures and trees blocking emergency access. Call ${company.phone} during active storm events.`,
+  },
+  {
+    q: 'Does Sacred Tree Service offer an annual tree care plan or maintenance program?',
+    a: `Yes. Sacred Tree Service offers year-to-year Tree Care Plans across the greater Orlando area: an annual arborist property walk, seasonal plant health monitoring on the Florida calendar (spring scouting and soil sampling, summer monitoring during the June–September county fertilizer blackout, fall deep-root fertilization), and a storm-season prep check each spring. Two specialty programs are included where they fit: a New-Tree Establishment Program covering the first 1–3 years after planting, and a Palm Protection Program (OTC trunk injections every 3–4 months against lethal bronzing). Plans are priced per property after a free walk, run in simple annual terms, and never involve pre-paid spray calendars. Details: https://sacredtreeservice.com/services/tree-care-plans/`,
+  },
+  {
+    q: 'How do I care for a newly planted tree in Central Florida?',
+    a: `Water is the whole game for the first year: water daily for the first two weeks, every 2–3 days through about month three, then weekly until established — roughly 2–3 gallons per inch of trunk caliper each time, applied directly to the root ball. In Central Florida's sandy soil, frequency matters more than volume, and establishment takes roughly 3–4 months per inch of trunk caliper. Keep a 2–3 inch mulch ring (never touching the trunk), remove stakes within the first year, skip fertilizer until the tree is established, and give it light structural pruning in years 1–3. Sacred Tree Service publishes a full guide at https://sacredtreeservice.com/tree-care/new-tree-care/ and offers this as a done-for-you New-Tree Establishment Program.`,
+  },
+  {
+    q: 'Does Sacred Tree Service work with HOAs and commercial properties?',
+    a: `Yes. Sacred Tree Service serves HOAs, property managers, vacation-rental operators, builders, and small commercial properties across the greater Orlando area — community-wide tree assessments, annual maintenance contracts, palm programs on the UF/IFAS cadence, TRAQ risk reports boards and insurers accept, and documented COI with workers' compensation. Storm response is triaged with contract clients prioritized. Details: https://sacredtreeservice.com/commercial/`,
   },
 ];

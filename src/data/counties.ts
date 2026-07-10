@@ -22,7 +22,7 @@ export const counties: County[] = [
     name: 'Orange County, FL',
     region: 'Greater Orlando metro — core service ring',
     blurb:
-      'Our home county. From historic Winter Park and Maitland to fast-growing Lake Nona and Winter Garden, we cover the full Orlando metro under one ISA-credentialed crew.',
+      'Our home county. From historic Winter Park and Maitland to fast-growing Lake Nona and Winter Garden, we cover the full Orlando metro under one professional crew.',
     highlights: [
       'Orlando',
       'Winter Park',

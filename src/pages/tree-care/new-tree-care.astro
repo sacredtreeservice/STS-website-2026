@@ -1,0 +1,419 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import { faqSchema, articleSchema } from '../../lib/schema';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Tree Care', url: '/tree-care/' },
+  { name: 'New Tree Care', url: '/tree-care/new-tree-care/' },
+];
+
+const title = 'Caring for a Newly Planted Tree in Central Florida: The First Two Years';
+const description =
+  'How often to water a newly planted tree in Central Florida, plus mulch, staking, pruning, and fertilizing — a plain-English guide to the first two years.';
+
+const faqs = [
+  {
+    q: 'How often should I water a newly planted tree in Florida?',
+    a: 'Water a newly planted tree in Florida every day for the first two weeks, every 2–3 days through about month three, then weekly until it is established — using 2–3 gallons per inch of trunk caliper each time, applied directly to the root ball. This follows UF/IFAS guidance for Florida. Central Florida’s sandy soil drains within hours, so watering often matters more than watering a lot.',
+  },
+  {
+    q: 'How long does it take a tree to establish in Central Florida?',
+    a: 'In Central Florida, a newly planted tree needs roughly 3–4 months per inch of trunk caliper to establish — so a 2-inch-caliper tree takes about 6–8 months, and a 4-inch tree can take well over a year. The near year-round growing season helps, but the tree still depends on its original root ball for water until new roots grow out into the surrounding soil, so establishment watering has to continue that whole time.',
+  },
+  {
+    q: 'Should I fertilize a newly planted tree?',
+    a: 'No — do not fertilize a tree at planting. A new tree can’t use the nutrients until it grows roots to take them up, and fertilizer salts can burn a stressed root ball. Wait until the tree is established (roughly 3–4 months per inch of trunk caliper in Florida), then feed lightly, tuned to sandy soil. In Orange, Seminole, and several other Central Florida counties, fertilizing is prohibited June 1 – September 30, so feeding lands in fall or spring.',
+  },
+  {
+    q: 'When should I remove the stakes from a new tree?',
+    a: 'Remove stakes from a newly planted tree within about one year of planting — sooner if the root ball is firm and the tree stands on its own. Straps should be loose from day one so the trunk can flex in the wind, because flexing is what builds trunk taper and strength. Forgotten straps are one of the most common ways young trees in Central Florida are damaged: they girdle the trunk as it grows and can snap the top off in a storm.',
+  },
+  {
+    q: 'Why is my newly planted tree dropping leaves?',
+    a: 'Some leaf drop and leaf scorch in the first season after planting is normal transplant stress — in Central Florida it usually means the root ball is drying out between waterings in our fast-draining sandy soil. Check the root ball itself (not just the mulch) and tighten up the watering schedule. Call an arborist if branch tips keep dying back, whole limbs go bare, or the tree shows no new growth by its second spring.',
+  },
+];
+
+const jsonLd = [
+  faqSchema(faqs),
+  articleSchema({
+    title,
+    description,
+    url: '/tree-care/new-tree-care/',
+    published: '2026-07-08',
+    author: 'Sacred Tree Service',
+  }),
+];
+---
+
+<Base
+  title="How to Care for a Newly Planted Tree in Central Florida"
+  description={description}
+  breadcrumbs={trail}
+  jsonLd={jsonLd}
+>
+  <div class="container narrow">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head" data-reveal>
+      <span class="kicker">Tree care guide</span>
+      <h1>Caring for a Newly Planted Tree</h1>
+      <p class="lede">
+        The first two years decide whether a new tree in Central Florida makes
+        it. Here is the plain-English version — how often to water, how to
+        mulch and stake, and when the yellow leaves are normal.
+      </p>
+    </header>
+
+    <aside class="answer-box" data-reveal aria-label="Quick answer">
+      <span class="answer-kicker"><Icon name="lucide:droplets" aria-hidden="true" /> The short answer</span>
+      <ul>
+        <li><strong>Water</strong> daily for the first 2 weeks, every 2–3 days through month 3, then weekly until established.</li>
+        <li><strong>How much:</strong> 2–3 gallons per inch of trunk caliper at each watering, applied to the root ball.</li>
+        <li><strong>Establishment</strong> takes roughly 3–4 months per inch of caliper in Florida — a 2-inch tree needs 6–8 months of this.</li>
+        <li><strong>Mulch:</strong> a 2–3 inch donut around the tree, never touching the trunk.</li>
+        <li><strong>Stakes:</strong> loose enough to let the trunk flex, and removed within a year.</li>
+      </ul>
+    </aside>
+
+    <div class="prose">
+      <h2>How often should I water a newly planted tree in Florida?</h2>
+      <p>
+        For a newly planted tree in Central Florida, water <strong>every day
+        for the first two weeks, every 2–3 days through about month three,
+        then weekly until the tree is established</strong>. This is the
+        UF/IFAS schedule for Florida, and it works because it matches how our
+        soil actually behaves:
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Time after planting</th>
+              <th>How often to water</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Weeks 1–2</td>
+              <td>Every day</td>
+            </tr>
+            <tr>
+              <td>Weeks 3–12</td>
+              <td>Every 2–3 days</td>
+            </tr>
+            <tr>
+              <td>Month 3 until established</td>
+              <td>Weekly</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Each time, give the tree about <strong>2–3 gallons per inch of trunk
+        caliper</strong> — so a 2-inch-caliper tree gets 4–6 gallons, poured
+        slowly over the root ball itself. "Established" isn't a date on the
+        calendar: figure <strong>roughly 3–4 months per inch of caliper</strong>
+        in Florida, which is how long it takes new roots to grow out of the
+        root ball and into your soil.
+      </p>
+      <p>
+        The part most new-tree instructions from up north get wrong here:
+        Central Florida sits on sand, and water percolates through it in
+        hours, not days. Soaking a new tree heavily once a week lets the root
+        ball dry out completely between drinks. In sandy soil,
+        <strong>frequency matters more than volume</strong> — smaller amounts,
+        more often, aimed at the root ball.
+      </p>
+
+      <h2>Wet season vs. dry season</h2>
+      <p>
+        Central Florida splits the year in two: a wet season from roughly
+        June through September, and a dry season from October through May.
+        Both can fool you.
+      </p>
+      <p>
+        Summer rain helps, but it doesn't replace establishment watering. An
+        afternoon thunderstorm wets the mulch and the surrounding bed, yet a
+        new tree drinks almost entirely from its original root ball for
+        months — and rain often never soaks that dense mass of roots. It's
+        easy to look at a soaked yard and a wilting tree at the same time.
+      </p>
+      <p>
+        The dry season is the quieter danger. From October through May,
+        weeks can pass without meaningful rain, and this is when newly
+        planted trees in Central Florida quietly die of thirst — especially
+        ones planted in fall, which still need their full schedule right
+        through winter. If you have irrigation, make sure a head or a
+        dedicated bubbler actually hits the root ball, not just the
+        turf and beds around it.
+      </p>
+
+      <h2>Mulch: the donut, not the volcano</h2>
+      <p>
+        Mulch is the cheapest thing you can do for a new tree — it holds
+        moisture in sandy soil, buffers root temperature, and keeps mowers
+        and string trimmers away from the trunk. The rule is
+        <strong>2–3 inches deep, spread out toward the drip line if you have
+        the room, and pulled back a few inches from the trunk</strong> so the
+        bark stays dry. From above it should look like a donut with the
+        trunk in the hole.
+      </p>
+      <p>
+        What it should never look like is a volcano — mulch piled up against
+        the trunk. Volcano mulching keeps the bark constantly damp, which
+        invites trunk rot and disease, and it encourages roots to grow up
+        into the pile and circle the trunk, where they can eventually girdle
+        and strangle the tree. If your mulch touches bark, rake it back.
+      </p>
+
+      <h2>Staking (and un-staking)</h2>
+      <p>
+        Most new trees don't need stakes. Stake only if the tree genuinely
+        can't stand on its own in wind — a large canopy on a small root
+        ball, a loose sandy site, an exposed location. If you do stake, keep
+        the straps <strong>loose enough that the trunk can still flex</strong>.
+        That movement isn't a problem to prevent; flexing is exactly what
+        builds trunk taper and the strength to stand without help.
+      </p>
+      <p>
+        Then — and this is the step everyone forgets —
+        <strong>remove the stakes within about a year</strong>. Strangled,
+        girdled trunks and tops snapped off at the strap line almost always
+        trace back to hardware that was installed with good intentions and
+        never taken off. Put a reminder on your calendar the day you plant.
+      </p>
+
+      <h2>Formative pruning in years 1–3</h2>
+      <p>
+        At planting, prune almost nothing — remove only broken or dead limbs
+        and leave the rest. The tree needs every leaf it has to grow roots.
+      </p>
+      <p>
+        Starting in year one through year three, light structural pruning is
+        where the real value is: setting <strong>one dominant central
+        leader</strong> and a set of well-spaced branches while every cut is
+        still small. A young tree shaped this way grows into a strong,
+        storm-resistant adult; one left alone can lock in codominant stems
+        and weak attachments that cost far more to correct — or fail —
+        decades later. In a place with a June-through-November hurricane
+        season, formative pruning is the cheapest hurricane prep a tree will
+        ever get. See our <a href="/services/tree-pruning/">tree pruning
+        service</a> and our <a href="/tree-care/storm-prep/">storm prep
+        guide</a> for the bigger picture, or start with
+        <a href="/tree-care/pruning-basics/">pruning basics</a>.
+      </p>
+
+      <h2>When should you fertilize a new tree?</h2>
+      <p>
+        <strong>Not at planting.</strong> A new tree can't use fertilizer
+        until it has roots to take it up, and fertilizer salts can burn a
+        stressed root ball. Skip the planting-hole fertilizer packets
+        entirely — water and mulch are what a new tree actually needs.
+      </p>
+      <p>
+        Once the tree is established, a light feeding program tuned to
+        Central Florida's sandy, fast-leaching soil makes sense — small
+        amounts that roots can catch before rain carries nutrients past
+        them. Timing matters here too: Orange, Seminole, and several other
+        Central Florida counties prohibit fertilizing from
+        <strong>June 1 through September 30</strong>, so feeding lands in
+        fall or spring. Our <a href="/services/plant-health-care/">plant
+        health care</a> program handles this on the right calendar.
+      </p>
+
+      <h2>Signs of transplant stress</h2>
+      <p>
+        Almost every transplanted tree sulks a little. The trick is telling
+        ordinary settling-in from a tree that's in real trouble:
+      </p>
+      <div class="two-col">
+        <div class="ok">
+          <h3><Icon name="lucide:check" aria-hidden="true" /> Usually normal</h3>
+          <ul>
+            <li>Some leaf scorch (browning edges) in the first summer</li>
+            <li>Dropping a portion of its leaves soon after planting</li>
+            <li>Slow or minimal top growth in year one — roots come first</li>
+          </ul>
+        </div>
+        <div class="pro">
+          <h3><Icon name="lucide:phone" aria-hidden="true" /> Worth a call</h3>
+          <ul>
+            <li>Branch tips dying back and the dieback advancing</li>
+            <li>No new growth at all by the second spring</li>
+            <li>Peeling bark, oozing, or mushrooms at the trunk base</li>
+          </ul>
+        </div>
+      </div>
+      <p>
+        The first column usually fixes itself with a corrected watering
+        schedule. The second column is worth a professional look — we have
+        certified arborists on staff for exactly this kind of assessment, and
+        catching a problem in year one is a very different conversation from
+        catching it in year five.
+      </p>
+
+      <h2>Palms are different</h2>
+      <p>
+        A quick note if your new tree is a palm. Sabal palms are typically
+        transplanted with almost no roots and regrow their entire root
+        system from the trunk, so consistent watering through establishment
+        is even more critical — UF/IFAS guidance for palms is its own
+        subject. And resist the urge to "clean up" a palm while it's
+        establishing: every green frond is feeding root regrowth, so remove
+        only fully dead fronds until the palm is clearly taking hold.
+      </p>
+    </div>
+
+    <FaqBlock faqs={faqs} />
+
+    <aside class="cta" data-reveal>
+      <h2>Rather not run the calendar yourself?</h2>
+      <p>
+        Everything on this page — the watering schedule, mulch ring, staking
+        removal, formative pruning, and first feeding — is exactly what our
+        <a href="/services/tree-care-plans/">New-Tree Establishment
+        Program</a> handles. And every <a href="/services/tree-planting/">
+        tree we plant</a> includes it, because getting a tree established is
+        the part that decides whether it makes it.
+      </p>
+      <div class="cta-actions">
+        <a class="btn primary" href="/services/tree-care-plans/">See our care plans</a>
+        <a class="btn ghost" href="/contact/">Request a free estimate</a>
+      </div>
+    </aside>
+  </div>
+</Base>
+
+<style>
+  .head { text-align: center; margin: 1rem 0 2rem; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h1 { font-size: clamp(2rem, 5vw, 2.8rem); margin: 0.3rem 0 0.75rem; }
+  .lede { color: var(--muted); font-size: 1.15rem; margin: 0 auto; max-width: 60ch; }
+
+  /* Answer-first summary box */
+  .answer-box {
+    background: var(--green-tint);
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    padding: 1.5rem 1.75rem;
+    margin: 0 0 2.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .answer-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green-dark);
+    margin-bottom: 0.75rem;
+  }
+  .answer-kicker [data-icon] { width: 18px; height: 18px; }
+  .answer-box ul { margin: 0 0 0 1.2rem; padding: 0; }
+  .answer-box li {
+    color: var(--ink-soft);
+    line-height: 1.65;
+    margin-bottom: 0.45rem;
+  }
+  .answer-box li:last-child { margin-bottom: 0; }
+  .answer-box strong { color: var(--ink); }
+
+  .prose h2 {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    margin: 2.25rem 0 0.6rem;
+  }
+  .prose h3 { font-size: 1.1rem; margin: 0 0 0.4rem; }
+  .prose p { margin: 0 0 1rem; color: var(--ink-soft); line-height: 1.7; }
+  .prose ul { margin: 0 0 1rem 1.2rem; color: var(--ink-soft); line-height: 1.7; }
+  .prose li { margin-bottom: 0.4rem; }
+  .prose strong { color: var(--ink); }
+  .prose a {
+    color: var(--green-dark);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  /* Watering schedule table */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 1.25rem 0;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface);
+  }
+  .table-wrap table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 380px;
+  }
+  .table-wrap th {
+    text-align: left;
+    background: var(--green-tint);
+    color: var(--green-dark);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.8rem 1.2rem;
+  }
+  .table-wrap td {
+    padding: 0.8rem 1.2rem;
+    border-top: 1px solid var(--border);
+    color: var(--ink-soft);
+  }
+  .table-wrap td:first-child { font-weight: 600; color: var(--ink); }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.25rem 0;
+  }
+  .two-col > div {
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+    border: 1px solid var(--border);
+  }
+  .two-col .ok { background: var(--green-tint); }
+  .two-col .pro { background: var(--surface-2); }
+  .two-col h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 1.05rem;
+    margin: 0 0 0.6rem;
+  }
+  .two-col h3 [data-icon] { width: 18px; height: 18px; color: var(--green-dark); }
+  .two-col ul { margin: 0 0 0 1.1rem; }
+  .two-col li { font-size: 0.93rem; color: var(--ink-soft); }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+  .cta {
+    margin: 3rem 0 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .cta h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin: 0 0 0.5rem; }
+  .cta p { color: var(--muted); margin: 0 auto 1.25rem; max-width: 58ch; }
+  .cta a { color: var(--green-dark); font-weight: 600; text-decoration: underline; }
+  .cta .cta-actions a { text-decoration: none; }
+  .cta-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+</style>

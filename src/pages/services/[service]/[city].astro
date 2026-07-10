@@ -37,7 +37,7 @@ const faqs = [
   { q: `How quickly can you respond in ${city.name}?`,
     a: `Most ${city.name} estimates are scheduled within 1–3 business days. Storm damage and emergency calls are prioritized — we’ll do our best to get a crew out the same day during active storm response.` },
   { q: 'Are you licensed and insured to work in this area?',
-    a: 'Yes — Sacred Tree Service LLC is licensed, insured, and carries workers’ comp. We are members of ISA and TCIA with ISA Certified Arborists on staff.' },
+    a: 'Yes — Sacred Tree Service LLC is licensed, insured, and carries workers’ compensation, and we’re members of the ISA and TCIA. Ask for our certificate of insurance any time.' },
 ];
 
 const localHook = city.hook ?? `Property owners in ${city.name} rely on us for safe, professional tree care across ${city.county} County.`;
@@ -45,7 +45,19 @@ const localHook = city.hook ?? `Property owners in ${city.name} rely on us for s
 const county = getCountyByName(city.county);
 // Cross-links: other services available in this same city, to turn each
 // long-tail page into part of a real cluster instead of an orphan.
-const otherServices = services.filter((s) => s.slug !== service.slug).slice(0, 6);
+// Curated relatedSlugs come first (the high-intent pairings), then the list
+// is filled to 6 by rotating through the rest keyed on the city slug — so
+// every service gets cross-linked from combo pages instead of `slice(0, 6)`
+// permanently starving the back half of the services array.
+const others = services.filter((s) => s.slug !== service.slug);
+const curated = (service.relatedSlugs ?? [])
+  .map((slug) => others.find((s) => s.slug === slug))
+  .filter((s): s is (typeof services)[number] => Boolean(s));
+const rest = others.filter((s) => !curated.includes(s));
+const cityHash = [...city.slug].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) % 997, 0);
+const start = rest.length > 0 ? cityHash % rest.length : 0;
+const rotated = [...rest.slice(start), ...rest.slice(0, start)];
+const otherServices = [...curated, ...rotated].slice(0, 6);
 
 const jsonLd = [
   serviceSchema({ name: service.name, description: service.description, slug: service.slug, city: city.name }),
@@ -55,7 +67,7 @@ const jsonLd = [
 
 <Base
   title={`${service.name} in ${city.name}, FL`}
-  description={`${service.blurb} Serving ${city.name} and ${city.county} County. ISA Certified Arborists, licensed & insured.`}
+  description={`${service.blurb} Serving ${city.name} and ${city.county} County. Professional crew, licensed & insured, free estimates.`}
   breadcrumbs={trail}
   jsonLd={jsonLd}
 >
@@ -71,8 +83,8 @@ const jsonLd = [
       <article>
         <p class="answer">
           <strong>Yes — Sacred Tree Service provides {service.name.toLowerCase()} in {city.name}, FL.</strong>{' '}
-          {localHook} Our ISA Certified Arborists handle each job from in-person
-          estimate through cleanup, with full licensing and insurance.
+          {localHook} Our crew handles each job from in-person estimate through
+          cleanup — one process, fully licensed and insured.
         </p>
 
         <h2>About {service.name.toLowerCase()} in {city.name}</h2>

@@ -2,18 +2,29 @@
 import Base from '../layouts/Base.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import BookingForm from '../components/BookingForm.astro';
+import FaqBlock from '../components/FaqBlock.astro';
 import { company } from '../data/company';
+import { getServiceBySlug } from '../data/services';
+import { faqSchema } from '../lib/schema';
 
 const trail = [
   { name: 'Home', url: '/' },
   { name: 'Emergency', url: '/emergency/' },
 ];
+
+// The emergency-storm-damage service already carries the high-intent Q&A
+// (insurance coverage, pricing honesty, what-to-do steps) — surface it here
+// with FAQPage markup so this page answers extraction-style queries
+// ("tree fell on my house Orlando who pays") on its own.
+const emergencyFaqs = getServiceBySlug('emergency-storm-damage')!.faqs!;
+const jsonLd = faqSchema(emergencyFaqs);
 ---
 
 <Base
   title="Emergency Tree Service in Orlando"
   description="Storm damage, fallen trees, lightning strikes — fast emergency tree response across Central Florida. Call (321) 204-8459."
   breadcrumbs={trail}
+  jsonLd={jsonLd}
 >
   <div class="emergency-banner">
     <strong>If a tree is on a structure, blocking access, or is an immediate hazard — call now.</strong>
@@ -57,6 +68,14 @@ const trail = [
           on safety: trees on occupied structures and blocked emergency access
           go first. We will give you an honest ETA when you call — no false
           promises.
+        </p>
+
+        <FaqBlock faqs={emergencyFaqs} />
+
+        <p class="prep-link">
+          Not an emergency yet? The best storm response is the one you never
+          need — see our guide to
+          <a href="/tree-care/storm-prep/">preparing your trees for hurricane season</a>.
         </p>
       </article>
 
@@ -112,6 +131,16 @@ const trail = [
   }
   .steps { padding-left: 1.2rem; }
   .steps li { margin-bottom: 0.6rem; }
+  .prep-link {
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border-left: 3px solid var(--green);
+    border-radius: 4px;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .prep-link a { color: var(--green-dark); font-weight: 700; }
   aside { position: sticky; top: 100px; }
   @media (max-width: 900px) {
     .layout { grid-template-columns: 1fr; }

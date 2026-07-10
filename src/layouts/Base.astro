@@ -1,5 +1,12 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+// Self-hosted fonts (bundled + immutable-cached under /_astro/) — replaces
+// the render-blocking Google Fonts stylesheet. Weights match actual usage:
+// Marcellus 400 for headings, Lato 400/700 (+italic) for body.
+import '@fontsource/marcellus';
+import '@fontsource/lato/400.css';
+import '@fontsource/lato/400-italic.css';
+import '@fontsource/lato/700.css';
 import Seo from '../components/Seo.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -12,12 +19,28 @@ export interface Props {
   description: string;
   canonical?: string;
   ogImage?: string;
+  ogImageAlt?: string;
   noindex?: boolean;
+  ogType?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
   breadcrumbs?: { name: string; url: string }[];
   jsonLd?: Record<string, any> | Record<string, any>[];
 }
 
-const { title, description, canonical, ogImage, noindex, breadcrumbs, jsonLd } = Astro.props;
+const {
+  title,
+  description,
+  canonical,
+  ogImage,
+  ogImageAlt,
+  noindex,
+  ogType,
+  publishedTime,
+  modifiedTime,
+  breadcrumbs,
+  jsonLd,
+} = Astro.props;
 
 const baseSchema: Record<string, any>[] = [localBusinessSchema(), websiteSchema()];
 if (breadcrumbs && breadcrumbs.length > 1) baseSchema.push(breadcrumbSchema(breadcrumbs));
@@ -32,14 +55,21 @@ const allSchema = [...baseSchema, ...extra];
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#324a16" />
-    <link rel="icon" href="/favicon.ico" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Marcellus&family=Lato:wght@300;400;700;900&display=swap"
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="alternate" type="application/rss+xml" title="Sacred Tree Service — Field Notes" href="/rss.xml" />
+    <Seo
+      title={title}
+      description={description}
+      canonical={canonical}
+      ogImage={ogImage}
+      ogImageAlt={ogImageAlt}
+      noindex={noindex}
+      ogType={ogType}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
     />
-    <Seo title={title} description={description} canonical={canonical} ogImage={ogImage} noindex={noindex} />
     <JsonLd data={allSchema} />
     <ClientRouter />
   </head>

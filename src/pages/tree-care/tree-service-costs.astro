@@ -1,0 +1,522 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import { faqSchema, articleSchema } from '../../lib/schema';
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Tree Care', url: '/tree-care/' },
+  { name: 'Costs', url: '/tree-care/tree-service-costs/' },
+];
+
+// Master price table. Every range here is the same range published on the
+// matching service page — nothing invented, nothing rounded up for effect.
+const rows = [
+  {
+    service: 'Tree removal',
+    href: '/services/tree-removal/',
+    range: '$800–$4,500',
+    note: 'Size, access, and what sits underneath. A large oak over a house with a crane runs $4,500–$12,000+.',
+  },
+  {
+    service: 'Tree pruning',
+    href: '/services/tree-pruning/',
+    range: '$400–$1,800 per tree',
+    note: 'Canopy size and how much deadwood is up there. A mature live oak usually lands $900–$2,400.',
+  },
+  {
+    service: 'Palm trimming',
+    href: '/services/palm-tree-services/',
+    range: '$150–$300 per palm',
+    note: 'Height and species — multi-palm visits bring the per-palm price down. Tall royals over 40 feet run $300–$500 each.',
+  },
+  {
+    service: 'Palm removal',
+    href: '/services/palm-tree-services/',
+    range: '$600–$1,800',
+    note: 'Size, access, and condition — dead palms (lethal bronzing, Ganoderma) need careful handling.',
+  },
+  {
+    service: 'Stump grinding',
+    href: '/services/stump-grinding/',
+    range: '$200–$650 per stump',
+    note: 'Diameter and access. Large 24-inch+ stumps run $650–$900; bundling with a removal is the better deal.',
+  },
+  {
+    service: 'Cabling & bracing',
+    href: '/services/cabling-bracing/',
+    range: '$400–$1,200 per cable',
+    note: 'Brace rods add $250–$600 each. Full systems on heritage trees run $2,000–$4,500.',
+  },
+  {
+    service: 'Arborist consultation',
+    href: '/services/arborist-consulting/',
+    range: '$300–$600',
+    note: 'Formal written reports for insurance, HOAs, or permits run $500–$1,500.',
+  },
+  {
+    service: 'Large-tree transplanting',
+    href: '/services/large-tree-transplanting/',
+    range: '$1,500–$7,500',
+    note: 'Trees over 24-inch caliper or with hard access run $5,000–$25,000+.',
+  },
+  {
+    service: 'Land clearing',
+    href: '/services/land-clearing/',
+    range: '$2,500–$5,000 per acre',
+    note: 'That is lightly wooded. Heavy hardwoods, palms, and undergrowth run $5,000–$9,000 per acre.',
+  },
+  {
+    service: 'Crane-assisted removal',
+    href: '/services/crane-assisted-removal/',
+    range: 'adds $2,000–$4,500 minimum',
+    note: 'Full crane jobs over structures typically land $4,500–$12,000 all-in.',
+  },
+  {
+    service: 'Emergency / storm work',
+    href: '/services/emergency-storm-damage/',
+    range: '+25–50% over scheduled rates',
+    note: 'After-hours crews and trees already in a failure state. Scheduled work is always cheaper.',
+  },
+];
+
+const movers = [
+  {
+    icon: 'lucide:ruler',
+    title: 'Size & height',
+    body: 'The single biggest factor. A 30-foot pine and a 70-foot live oak are different jobs with different crews, rigging, and hours — often a 5–10x price difference.',
+  },
+  {
+    icon: 'lucide:truck',
+    title: 'Access',
+    body: 'Can equipment reach the tree? A backyard behind a pool cage, a narrow side gate, or a soft lawn that can’t take machinery all mean more hand work and more time.',
+  },
+  {
+    icon: 'lucide:home',
+    title: 'What’s underneath',
+    body: 'A tree over open grass can be dropped in sections. A tree over a roof, pool enclosure, or power drop has to be rigged and lowered piece by piece — slower and pricier.',
+  },
+  {
+    icon: 'lucide:trash-2',
+    title: 'Debris & disposal',
+    body: 'Haul-away is a real cost — trucking, dump fees, chipping. Keeping mulch or firewood on-site can trim the number; make sure every quote says what’s included.',
+  },
+  {
+    icon: 'lucide:file-check',
+    title: 'Permits',
+    body: 'Many Central Florida cities and counties protect mature trees — especially live oaks. Permit applications and arborist documentation add cost, but skipping them adds fines.',
+  },
+  {
+    icon: 'lucide:construction',
+    title: 'Crane time',
+    body: 'When a tree is too big or too tight to rig conventionally, a crane is the safe answer — and it adds $2,000–$4,500 minimum for the machine, operator, and setup.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'What is the cheapest way to remove a tree in Orlando?',
+    a: 'Schedule it before it becomes an emergency. A small tree in an open yard, booked in advance, sits at the bottom of the range — a 30-foot pine with clear access typically runs $800–$1,200 in the Orlando area, while emergency work runs 25–50% above scheduled rates. Bundling multiple trees or stumps into one visit also lowers the per-tree price, since the crew and equipment are already on site. Be careful with quotes that seem too good: a crew without insurance and workers’ comp can cost you far more than the savings if something goes wrong on your property.',
+  },
+  {
+    q: 'Do you charge for estimates?',
+    a: 'No. Sacred Tree Service gives free written, itemized estimates for tree work anywhere in our greater Orlando service area — we walk the property, look at the actual trees, and put the number in writing, usually within 1–3 business days. A paid arborist consultation ($300–$600) is a different product: a documented professional opinion for insurance, an HOA, or a permit, where you are paying for judgment and paperwork rather than a quote.',
+  },
+  {
+    q: 'Does homeowners insurance cover tree removal?',
+    a: 'Usually only when the tree fell on an insured structure — a house, garage, or fence. In that case your policy typically covers removing the tree from the structure and repairing the damage. A tree that fell in the yard without hitting anything is usually not covered, and under almost every Florida policy, a neighbor’s tree that falls onto your property is your insurer’s claim, not theirs. Sacred Tree Service provides photos, scope, and invoice documentation formatted for insurance claims at no extra charge.',
+  },
+  {
+    q: 'Why do quotes vary so much between tree service companies?',
+    a: 'Because you are not always comparing the same job. Licensed, insured companies with workers’ comp, trained climbers, and proper equipment carry real costs that a pickup-truck crew does not — and that gap shows up in the price. Quotes also differ in what they include: haul-away, stump grinding, and cleanup are line items some companies quietly leave out, then add back later. Compare what is in writing, not just the bottom number — our guide to choosing a tree service covers exactly what to check.',
+  },
+  {
+    q: 'Is it cheaper to have several trees done at once?',
+    a: 'Yes. Multi-tree property visits in the Orlando area are priced as one job — meaningfully less per tree than separate visits, because the crew, equipment, and travel are already covered. The same goes for stumps: multi-stump grinding on the same property is priced together. If you are having one tree removed or pruned, that is the right moment to ask about the others.',
+  },
+];
+
+const title = 'What Tree Service Costs in Orlando & Central Florida (2026)';
+const description =
+  'Honest 2026 price ranges for tree removal, pruning, palm trimming, and stump grinding in the Orlando area — what moves the price, and why every quote is free.';
+
+const jsonLd = [
+  faqSchema(faqs),
+  articleSchema({
+    title,
+    description,
+    url: '/tree-care/tree-service-costs/',
+    published: '2026-07-08',
+  }),
+];
+---
+
+<Base title={title} description={description} breadcrumbs={trail} jsonLd={jsonLd}>
+  <div class="container narrow">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head" data-reveal>
+      <span class="kicker">Pricing guide</span>
+      <h1>What Tree Service Costs in Orlando &amp; Central Florida</h1>
+      <p class="lede">
+        Straight answers on price from a company that would rather save your
+        tree than sell you a removal — typical Orlando-metro ranges for every
+        service, what actually moves the number, and why the real quote always
+        happens in person, free.
+      </p>
+    </header>
+
+    <div class="prose">
+      <h2>The short answer</h2>
+      <p>
+        Most residential tree work in Orlando and Central Florida costs between
+        about <strong>$150</strong> (trimming a single palm on a multi-palm
+        visit) and <strong>$4,500</strong> (removing a large tree). Tree
+        removal typically runs $800–$4,500, pruning $400–$1,800 per tree, palm
+        trimming $150–$300 per palm, and stump grinding $200–$650 per stump.
+        Big trees over structures, crane time, and emergency response push
+        prices well above those ranges. Every job we do is quoted in person, in writing, free —
+        the table below is for orientation, not a menu.
+      </p>
+
+      <div class="table-wrap" data-reveal>
+        <table>
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Typical range</th>
+              <th>What moves the price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr>
+                <td><a href={r.href}>{r.service}</a></td>
+                <td class="range">{r.range}</td>
+                <td>{r.note}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">
+        All ranges are the same numbers published on our individual service
+        pages — follow the links for the full picture on each.
+      </p>
+
+      <h2>How much does tree removal cost in Orlando?</h2>
+      <p>
+        Residential tree removal in the Orlando metro typically runs
+        <strong>$800–$4,500</strong>, depending on size, access, proximity to
+        structures, and disposal. A 30-foot pine in an open yard sits at the
+        low end ($800–$1,200); a 70-foot live oak overhanging a house and pool
+        with crane access runs $4,500–$12,000+. Stump grinding is usually quoted
+        separately. Full details on our
+        <a href="/services/tree-removal/">tree removal</a> page — and if you
+        want a tree planted where the old one stood,
+        <a href="/services/tree-planting/">same-visit planting</a> typically
+        runs $350–$1,500 per tree installed.
+      </p>
+
+      <h2>How much does tree pruning cost in Orlando?</h2>
+      <p>
+        Single-tree pruning in the Orlando area typically runs
+        <strong>$400–$1,800</strong> depending on size and access. A mature
+        live oak with deadwood and structural work usually lands $900–$2,400.
+        Multi-tree property visits are priced as one job — less per tree than
+        individual visits. See
+        <a href="/services/tree-pruning/">tree pruning &amp; trimming</a> for
+        what a proper ANSI A300 prune includes (and why we never top trees).
+      </p>
+
+      <h2>How much does palm trimming cost in Central Florida?</h2>
+      <p>
+        Standard palm trimming runs <strong>$150–$300 per palm</strong>
+        depending on height, species, and how overdue the trim is — multi-palm
+        visits bring the per-palm price down. Tall royal palms over 40 feet
+        can run $300–$500 each because they require climbing or a bucket.
+        Removing a dead palm — lethal bronzing and late-stage Ganoderma are
+        the usual Central Florida reasons — typically runs
+        <strong>$600–$1,800</strong> depending on size and access. One honest
+        money-saver: UF/IFAS guidance says palms only need dead fronds removed,
+        roughly every 12–18 months — if someone is selling you quarterly
+        trims, you are overpaying and hurting the palm. More on our
+        <a href="/services/palm-tree-services/">palm tree services</a> page.
+      </p>
+
+      <h2>How much does stump grinding cost?</h2>
+      <p>
+        Single-stump grinding in the Orlando area typically runs
+        <strong>$200–$650</strong> depending on diameter, root flare, and
+        access; large stumps (24-inch+ diameter, old hardwood) run $650–$900.
+        Pricing is by diameter and access, small standalone stump visits carry
+        a service minimum, and multi-stump jobs on the same property are
+        priced together — bundling the grind with a removal is almost always
+        the better deal. Details on our
+        <a href="/services/stump-grinding/">stump grinding</a> page.
+      </p>
+
+      <h2>How much does cabling or bracing a tree cost?</h2>
+      <p>
+        A single cable installation in a residential Central Florida setting
+        typically runs <strong>$400–$1,200 per cable</strong>; bracing rods add
+        roughly $250–$600 per rod. Most jobs involve 1–3 attachment points,
+        while heritage trees with multiple failure points can run $2,000–$4,500
+        for a full system. It is often the cheapest way to keep a good tree —
+        see <a href="/services/cabling-bracing/">cabling &amp; bracing</a> for
+        when it is (and isn’t) the right call.
+      </p>
+
+      <h2>How much does an arborist consultation cost?</h2>
+      <p>
+        Basic on-site consultations and informal risk assessments in Central
+        Florida typically run <strong>$300–$600</strong>. Formal written
+        reports — the kind insurance carriers, HOAs, and municipalities
+        accept — run $500–$1,500 depending on tree count and required
+        documentation, and pre-purchase inspections of properties with
+        significant canopy typically fall $400–$900. A consultation is not an
+        estimate (those are free); you are paying for documented professional
+        judgment. See
+        <a href="/services/arborist-consulting/">arborist consulting &amp; risk
+        assessment</a>.
+      </p>
+
+      <h2>What does it cost to transplant a large tree?</h2>
+      <p>
+        Typical residential moves run <strong>$1,500–$7,500</strong>. Trees
+        over 24 inches in trunk caliper or with hard access can run
+        $5,000–$25,000 or more — distance, crane needs, species, and soil
+        disposal all swing the price significantly, which is why we quote every
+        move in person. If a heritage oak is in the wrong spot, moving it can
+        beat removing it — see
+        <a href="/services/large-tree-transplanting/">large tree
+        transplanting</a>.
+      </p>
+
+      <h2>How much does land clearing cost per acre?</h2>
+      <p>
+        Selective clearing of a lightly wooded acre in Central Florida
+        typically runs <strong>$2,500–$5,000</strong>. Heavily wooded acreage
+        with mature hardwoods, palms, and undergrowth runs
+        <strong>$5,000–$9,000 per acre</strong>, and multi-acre commercial work
+        is quoted per project. Tree density, stump handling, debris disposal,
+        and specimen-tree preservation are the variables — details on our
+        <a href="/services/land-clearing/">land &amp; lot clearing</a> page.
+      </p>
+
+      <h2>How much does crane-assisted removal cost?</h2>
+      <p>
+        Crane work adds <strong>$2,000–$4,500 minimum</strong> to a
+        conventional removal in the Orlando area — sometimes more for larger
+        cranes or extended boom reach. A full crane-assisted removal of a large
+        hardwood over a structure typically lands
+        <strong>$4,500–$12,000</strong>, including the crane, climbing crew,
+        rigging, and cleanup, all on one quote. When a tree hangs over a roof
+        or pool enclosure, the crane is usually the safest money you can
+        spend — see <a href="/services/crane-assisted-removal/">crane-assisted
+        removal</a>.
+      </p>
+
+      <h2>How much more does emergency tree work cost?</h2>
+      <p>
+        Expect <strong>25–50% above</strong> the equivalent scheduled rate.
+        Emergency response means after-hours crews, expedited scheduling, and
+        more complex rigging because the tree is already in a failure state.
+        We post our rates honestly and don’t price-gouge during storms — but
+        the cheapest emergency call is the one you never have to make, which
+        is what pruning and a risk assessment before hurricane season (June
+        through November) are for. See
+        <a href="/services/emergency-storm-damage/">emergency &amp; storm
+        response</a>.
+      </p>
+
+      <h2>What actually moves the price?</h2>
+      <p>
+        Two trees with the same trunk can be quoted thousands of dollars apart
+        for good reasons. When you look at a tree service quote in Central
+        Florida, these six factors are doing most of the work:
+      </p>
+      <div class="grid">
+        {movers.map((m) => (
+          <article class="card">
+            <span class="ico" aria-hidden="true"><Icon name={m.icon} /></span>
+            <h3>{m.title}</h3>
+            <p>{m.body}</p>
+          </article>
+        ))}
+      </div>
+
+      <h2>Why we quote in person — and always free</h2>
+      <p>
+        We don’t give sight-unseen quotes, and we’d be wary of any company
+        that does. The factors above — access, what’s underneath, the actual
+        condition of the wood — can’t be judged from a phone call or a photo,
+        and a number invented over the phone either pads the price to cover
+        surprises or grows once the crew shows up.
+      </p>
+      <p>
+        Instead, we walk the property, look at the actual trees, and put a
+        <strong>free written, itemized estimate</strong> in your hands —
+        usually within 1–3 business days of your call. The number covers the
+        whole job: takedown, cleanup, haul-away, and anything else we discussed,
+        with stump grinding itemized so you can take it or leave it. No hidden
+        fees, no on-the-day extras, and no pressure — if the tree can be saved
+        for less than it costs to remove it, we will tell you so. For what
+        else to check before you hire anyone (including us), see our guide on
+        <a href="/tree-care/how-to-choose-a-tree-service/">how to choose a
+        tree service</a>.
+      </p>
+
+      <p class="note">
+        These are typical Orlando-metro ranges as of 2026, drawn from the same
+        numbers we publish on each service page. Every property is different —
+        soil, access, tree condition, and local permit rules all matter — so
+        treat this page as orientation, and the free in-person estimate as the
+        real answer.
+      </p>
+    </div>
+
+    <FaqBlock faqs={faqs} />
+
+    <aside class="cta" data-reveal>
+      <h2>Want a real number for your trees?</h2>
+      <p>
+        Free written, itemized estimates across the greater Orlando area from
+        our Apopka base — usually within 1–3 business days. If the tree is
+        worth saving, we’ll tell you that first.
+      </p>
+      <div class="cta-actions">
+        <a class="btn primary" href="/contact/">Request a free estimate</a>
+        <a class="btn ghost" href="tel:+13212048459">Call (321) 204-8459</a>
+      </div>
+    </aside>
+  </div>
+</Base>
+
+<style>
+  .head { text-align: center; margin: 1rem 0 2rem; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h1 { font-size: clamp(2rem, 5vw, 2.8rem); margin: 0.3rem 0 0.75rem; }
+  .lede { color: var(--muted); font-size: 1.15rem; margin: 0 auto; max-width: 60ch; }
+
+  .prose h2 {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    margin: 2.25rem 0 0.6rem;
+  }
+  .prose h3 { font-size: 1.1rem; margin: 0 0 0.4rem; }
+  .prose p { margin: 0 0 1rem; color: var(--ink-soft); line-height: 1.7; }
+  .prose strong { color: var(--ink); }
+  .prose a {
+    color: var(--green-dark);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  /* Master price table */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    margin: 1.25rem 0 0.75rem;
+  }
+  table {
+    width: 100%;
+    min-width: 680px;
+    border-collapse: collapse;
+    font-size: 0.93rem;
+  }
+  thead th {
+    text-align: left;
+    padding: 0.8rem 1.1rem;
+    background: var(--surface-2);
+    color: var(--ink);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--border-strong);
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 0.8rem 1.1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  td.range { color: var(--ink); font-weight: 600; }
+  tbody td a {
+    color: var(--green-dark);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  tbody td a:hover { text-decoration: underline; }
+  .table-note {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 0;
+  }
+
+  /* Price-mover cards */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 1.25rem 0 0.5rem;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+  }
+  .ico {
+    display: inline-grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--green-tint);
+    color: var(--green-dark);
+    margin-bottom: 0.7rem;
+  }
+  .ico [data-icon] { width: 22px; height: 22px; }
+  .card h3 { font-size: 1.05rem; margin: 0 0 0.35rem; }
+  .card p { color: var(--muted); margin: 0; font-size: 0.93rem; line-height: 1.55; }
+
+  .note {
+    background: var(--highlight-bg);
+    border: 1px solid var(--highlight-border);
+    color: var(--highlight-ink);
+    border-radius: 12px;
+    padding: 0.9rem 1.2rem;
+    font-size: 0.95rem;
+    margin-top: 1.5rem;
+  }
+
+  .cta {
+    margin: 3rem 0 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .cta h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin: 0 0 0.5rem; }
+  .cta p { color: var(--muted); margin: 0 auto 1.25rem; max-width: 52ch; }
+  .cta-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+</style>

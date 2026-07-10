@@ -1,0 +1,582 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import BookingForm from '../../components/BookingForm.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import { getServiceBySlug } from '../../data/services';
+import { cities } from '../../data/cities';
+import { serviceSchema, faqSchema } from '../../lib/schema';
+
+const service = getServiceBySlug('tree-care-plans')!;
+
+const trail = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: service.name, url: `/services/${service.slug}/` },
+];
+
+// The three programs — the heart of the page. Each card gets a cadence
+// pill, a plain-English framing line, the concrete inclusions, and one
+// cross-link into the service it builds on.
+const programs = [
+  {
+    icon: 'lucide:sprout',
+    name: 'New-Tree Establishment Program',
+    window: 'Years 1–3',
+    body: 'The first one to three years after planting decide whether a young tree makes it — and Florida’s sandy soils and split wet/dry seasons make establishment different here than anywhere up north.',
+    includes: [
+      'Watering guidance tuned to sandy soil — in sand, frequency matters more than volume',
+      'Monitoring for transplant stress',
+      'Mulch-ring maintenance',
+      'Staking removal at the right time — usually within the first year',
+      'Formative structural pruning in years 1–3',
+      'First deep-root feeding once the tree is ready for it',
+    ],
+    note: 'Folds into any planting job we do — and works just as well for trees someone else planted.',
+    linkHref: '/services/tree-planting/',
+    linkLabel: 'Pairs with tree planting & installation',
+  },
+  {
+    icon: 'lucide:clipboard-check',
+    name: 'Annual Tree Care Plan',
+    window: 'Property-wide',
+    body: 'The core plan: the same crew walking the same property every season, catching problems at the scouting stage — with written findings after every visit, so you always know where your trees stand.',
+    includes: [
+      'Annual property walk with a certified arborist on staff',
+      'Spring scout with soil sampling',
+      'Storm-season prep check each spring, before hurricane season',
+      'Summer monitoring through the June–September fertilizer blackout',
+      'Fall deep-root fertilization once restrictions lift',
+      'Written findings at every visit',
+    ],
+    note: 'We treat only what scouting confirms — never a pre-paid spray calendar.',
+    linkHref: '/services/plant-health-care/',
+    linkLabel: 'Built on our Plant Health Care approach',
+  },
+  {
+    icon: 'lucide:palmtree',
+    name: 'Palm Protection Program',
+    window: 'Every 3–4 months',
+    body: 'For palms under lethal bronzing pressure — the disease spreading through Central Florida that cannot be cured once a palm shows symptoms. Prevention is the only play, and the schedule is the whole game.',
+    includes: [
+      'OTC (oxytetracycline) trunk injections every 3–4 months, per UF/IFAS protocol',
+      'Symptom checks on every visit — bronzing fronds, spear leaf condition',
+      'Frond care on the UF/IFAS cadence: only dead or dying fronds, never a “hurricane cut”',
+    ],
+    note: 'An injection cadence is genuinely hard to keep up on your own — the plan is what keeps it from slipping.',
+    linkHref: '/services/palm-tree-services/',
+    linkLabel: 'See our full palm tree services',
+  },
+];
+
+// A plan year, mapped to the actual Central Florida calendar.
+const phases = [
+  {
+    n: '01',
+    title: 'Spring scout & written plan',
+    time: 'Feb–Apr',
+    body: 'The year starts with a walk of the whole property: soil sampling, pest and disease scouting, a look at every tree and palm on the plan. You get written findings and the season’s plan — what needs doing, what can wait, and what needs nothing at all.',
+  },
+  {
+    n: '02',
+    title: 'Storm-season prep check',
+    time: 'May–Jun',
+    body: 'Before hurricane season opens in June, we check the things storms find first: weak branch unions, deadwood, over-heavy canopy, staking still on young trees. Any structural pruning gets scheduled to the ANSI A300 standard — cleaning and reduction, never topping.',
+  },
+  {
+    n: '03',
+    title: 'Summer monitoring',
+    time: 'Jun–Sep',
+    body: 'Orange, Seminole, and other Central Florida counties prohibit fertilizing from June 1 to September 30, so summer is for watching, not feeding. We monitor for the wet-season problems — fungal issues, scale, borers, early lethal bronzing symptoms — and treat only what scouting confirms. Palm injections continue on their own 3–4 month cadence.',
+  },
+  {
+    n: '04',
+    title: 'Fall feeding & winter structural work',
+    time: 'Oct–Jan',
+    body: 'When the blackout lifts on October 1, sandy Central Florida soils get their deep-root fertilization — sand leaches nutrients fast, and the fall feeding carries trees into the dry season. The cool months that follow are the best window for structural pruning, so that work gets lined up while defects are still easy to see.',
+  },
+];
+
+// Who gets the most out of a plan.
+const whoFor = [
+  {
+    icon: 'lucide:sprout',
+    title: 'You just planted — or are about to',
+    body: 'The establishment years decide whether a young tree makes it, and they run on a schedule most owners understandably lose track of. The establishment program puts watering, monitoring, and formative pruning on ours instead.',
+    linkHref: '/tree-care/new-tree-care/',
+    linkLabel: 'Read the new-tree care guide',
+  },
+  {
+    icon: 'lucide:trees',
+    title: 'Mature canopy worth protecting',
+    body: 'Big live oaks and established shade trees are the most valuable things in the yard — and the most expensive to lose. An annual walk catches weak unions, decay, and early decline while they are still fixable problems.',
+  },
+  {
+    icon: 'lucide:palmtree',
+    title: 'Palm-heavy landscapes',
+    body: 'Where lethal bronzing is active, the every-3–4-months injection protocol is what keeps healthy palms healthy. A plan means the cadence never slips — and every visit doubles as a symptom check across the whole stand.',
+  },
+  {
+    icon: 'lucide:building-2',
+    title: 'HOAs, rentals & commercial',
+    body: 'Many trees, one accountable team. Written findings after every visit give boards and owners a documented care record — useful for budgeting, insurance, and proving the canopy is being looked after.',
+    linkHref: '/commercial/',
+    linkLabel: 'Commercial & HOA tree care',
+  },
+];
+
+const cityList = cities.slice(0, 18);
+const jsonLd = [
+  serviceSchema({
+    name: service.name,
+    description: service.description,
+    slug: service.slug,
+    offers: [
+      {
+        name: 'New-Tree Establishment Program',
+        description:
+          'Years 1–3 of care for newly planted trees: watering guidance for sandy Florida soil, transplant-stress monitoring, mulch and staking maintenance, formative structural pruning, and first deep-root feeding.',
+      },
+      {
+        name: 'Annual Tree Care Plan',
+        description:
+          'Property-wide plan with an annual assessment walk, spring scouting and soil sampling, storm-season prep checks, summer monitoring, and fall deep-root fertilization — with written findings each visit.',
+      },
+      {
+        name: 'Palm Protection Program',
+        description:
+          'Preventive oxytetracycline (OTC) trunk injections every 3–4 months per UF/IFAS protocol for palms under lethal bronzing pressure, plus frond care on the UF/IFAS cadence.',
+      },
+    ],
+  }),
+  faqSchema(service.faqs!),
+];
+---
+
+<Base
+  title="Tree Care Plans & Year-Round Maintenance in Orlando, FL"
+  description="Year-round tree care on a plan: annual assessment walks, seasonal monitoring, new-tree establishment & palm protection. Free property walk — greater Orlando."
+  breadcrumbs={trail}
+  jsonLd={jsonLd}
+>
+  <div class="container">
+    <Breadcrumbs trail={trail} />
+
+    <header class="head" data-reveal>
+      <span class="icon-hero" aria-hidden="true"><Icon name={service.icon} /></span>
+      <span class="kicker">Tree care plans &amp; ongoing maintenance</span>
+      <h1>One crew. Year-round care.</h1>
+      <p class="lede">
+        The same team that knows your property, walking it season after season
+        — catching problems at the scouting stage, not the storm stage. Every
+        plan starts with a free property walk and a written plan.
+      </p>
+    </header>
+
+    <section class="framing" data-reveal aria-labelledby="framing-heading">
+      <div class="framing-inner">
+        <span class="kicker">How care plans work</span>
+        <h2 id="framing-heading">Why a plan beats a crisis.</h2>
+        <p>
+          Most tree problems are cheap at the scouting stage and expensive in
+          a storm. A scale infestation spotted on a spring walk is a targeted
+          treatment; found a year later, it’s a declining canopy. A weak
+          branch union flagged in May is a pruning cut; found by an August
+          thunderstorm, it’s a limb on the roof. The whole point of a care
+          plan is to be the ones who find these things first — on the same
+          property, year after year, so nothing gets a running start.
+        </p>
+        <p>
+          Every plan begins the same way: a free property walk and a written
+          plan — what your trees need, what they don’t, and what it costs,
+          before anything starts. There are no pre-paid spray calendars here;
+          we treat only what scouting confirms, the same IPM-first approach
+          behind our <a href="/services/plant-health-care/">Plant Health Care</a> program.
+          And plans run in simple annual terms — we earn the renewal with
+          results.
+        </p>
+      </div>
+    </section>
+
+    <section class="programs" aria-labelledby="programs-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">The three programs</span>
+        <h2 id="programs-heading">What’s in a Sacred Tree Service care plan?</h2>
+        <p>
+          A Sacred Tree Service care plan is assembled from three programs —
+          new-tree establishment, an annual property-wide plan, and palm
+          protection. Use one or combine them; the free walk tells us which
+          ones your property actually needs.
+        </p>
+      </header>
+      <div class="programs-grid" data-reveal data-reveal-stagger>
+        {programs.map((p) => (
+          <article class="program-card">
+            <span class="ico"><Icon name={p.icon} /></span>
+            <header class="program-head">
+              <h3>{p.name}</h3>
+              <span class="window">{p.window}</span>
+            </header>
+            <p class="program-body">{p.body}</p>
+            <ul class="includes">
+              {p.includes.map((i) => (
+                <li>{i}</li>
+              ))}
+            </ul>
+            <p class="program-note">{p.note}</p>
+            <a class="card-link" href={p.linkHref}>{p.linkLabel} →</a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="process" aria-labelledby="process-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">A plan year</span>
+        <h2 id="process-heading">What does a plan year look like in Central Florida?</h2>
+        <p>
+          Central Florida sets the schedule: a wet season from June to
+          September with a county fertilizer blackout in Orange, Seminole, and
+          other counties, hurricane season from June through November, and a
+          cool, dry window that’s ideal for
+          <a href="/services/tree-pruning/">structural pruning</a>. A plan
+          year works with that calendar, not against it.
+        </p>
+      </header>
+      <ol class="phases" data-reveal data-reveal-stagger>
+        {phases.map((p) => (
+          <li class="phase">
+            <span class="phase-n">{p.n}</span>
+            <div class="phase-body">
+              <header>
+                <h3>{p.title}</h3>
+                <span class="phase-time">{p.time}</span>
+              </header>
+              <p>{p.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="who" aria-labelledby="who-heading">
+      <header class="section-head" data-reveal>
+        <span class="kicker">Who it’s for</span>
+        <h2 id="who-heading">Who are tree care plans for?</h2>
+        <p>
+          Any greater Orlando property with trees worth keeping — but four
+          kinds of owners get the most out of putting care on a calendar.
+        </p>
+      </header>
+      <div class="who-grid" data-reveal data-reveal-stagger>
+        {whoFor.map((w) => (
+          <article class="tile">
+            <span class="ico"><Icon name={w.icon} /></span>
+            <h3>{w.title}</h3>
+            <p>{w.body}</p>
+            {w.linkHref && (
+              <a class="card-link" href={w.linkHref}>{w.linkLabel} →</a>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <div class="layout">
+      <article class="cities-faq">
+        <h2>Cities we serve</h2>
+        <p>
+          We run tree care plans from our Apopka, FL base across the greater
+          Orlando area:
+        </p>
+        <ul class="cities">
+          {cityList.map((c) => (
+            <li><a href={`/services/${service.slug}/${c.slug}/`}>Tree Care Plans in {c.name}</a></li>
+          ))}
+        </ul>
+        <FaqBlock faqs={service.faqs!} />
+      </article>
+      <aside>
+        <BookingForm
+          heading="Start with a free property walk"
+          subheading="We walk the property, tell you what your trees need — and what they don’t — and put the plan and the price in writing before anything starts."
+          context="Tree Care Plans"
+        />
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .head {
+    text-align: center;
+    margin: 1rem 0 2.5rem;
+  }
+  .icon-hero {
+    display: inline-grid;
+    place-items: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(75, 112, 33, 0.15), rgba(104, 204, 209, 0.12));
+    color: var(--green-dark);
+    margin-bottom: 1rem;
+  }
+  .icon-hero [data-icon] { width: 40px; height: 40px; }
+  .kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.5rem;
+  }
+  .head h1 {
+    font-size: clamp(2rem, 4.6vw, 2.8rem);
+    margin: 0.4rem 0 0.75rem;
+  }
+  .lede {
+    color: var(--muted);
+    max-width: 60ch;
+    margin: 0 auto;
+    font-size: 1.15rem;
+  }
+
+  .section-head {
+    text-align: center;
+    max-width: 62ch;
+    margin: 0 auto 2.25rem;
+  }
+  .section-head h2 {
+    font-size: clamp(1.6rem, 3.2vw, 2.1rem);
+    margin: 0.4rem 0 0.6rem;
+  }
+  .section-head p {
+    color: var(--muted);
+    margin: 0;
+  }
+  .section-head a {
+    color: var(--green-dark);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  /* Framing band */
+  .framing {
+    margin: 3rem auto 4rem;
+    max-width: 760px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 2.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .framing h2 {
+    font-size: clamp(1.5rem, 3vw, 1.9rem);
+    margin: 0.4rem 0 1rem;
+  }
+  .framing p {
+    margin: 0 0 0.85rem;
+    font-size: 1.02rem;
+    color: var(--ink-soft);
+    line-height: 1.65;
+  }
+  .framing p:last-child { margin-bottom: 0; }
+  .framing a {
+    color: var(--green-dark);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  /* Program cards — the heart of the page */
+  .programs { padding: 3rem 0; }
+  .programs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+  .program-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.6rem;
+    transition: transform 0.25s var(--easing), border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .program-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+  }
+  .ico {
+    display: inline-grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--green-tint), color-mix(in srgb, var(--teal) 18%, transparent));
+    color: var(--green-dark);
+    margin-bottom: 0.85rem;
+  }
+  .ico [data-icon] { width: 24px; height: 24px; }
+  .program-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+  }
+  .program-head h3 { font-size: 1.15rem; margin: 0; }
+  .window {
+    font-size: 0.8rem;
+    color: var(--green-dark);
+    background: var(--green-tint);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .program-body {
+    color: var(--ink-soft);
+    margin: 0 0 0.85rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  .includes {
+    margin: 0 0 0.85rem;
+    padding: 0 0 0 1.1rem;
+    color: var(--muted);
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  .includes li { margin-bottom: 0.35rem; }
+  .includes li::marker { color: var(--green); }
+  .program-note {
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-style: italic;
+    margin: 0 0 0.85rem;
+    line-height: 1.5;
+  }
+  .card-link {
+    margin-top: auto;
+    color: var(--green-dark);
+    font-weight: 600;
+    font-size: 0.92rem;
+    text-decoration: none;
+  }
+  .card-link:hover { text-decoration: underline; }
+  @media (max-width: 980px) { .programs-grid { grid-template-columns: 1fr; } }
+
+  /* Plan-year phases */
+  .process { padding: 3rem 0; }
+  .phases {
+    list-style: none;
+    padding: 0;
+    max-width: 880px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1.25rem;
+  }
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem 1.75rem;
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  .phase-n {
+    font-family: 'Marcellus', Georgia, serif;
+    font-size: 2rem;
+    color: var(--green);
+    line-height: 1;
+  }
+  .phase-body header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: baseline;
+    margin-bottom: 0.4rem;
+  }
+  .phase-body h3 {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  .phase-time {
+    font-size: 0.85rem;
+    color: var(--green-dark);
+    background: var(--green-tint);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+  .phase-body p { margin: 0; color: var(--ink-soft); line-height: 1.6; }
+  @media (max-width: 600px) {
+    .phase { grid-template-columns: 1fr; padding: 1.25rem; }
+    .phase-n { font-size: 1.5rem; }
+  }
+
+  /* Who-it's-for tiles */
+  .who { padding: 3rem 0 4rem; }
+  .who-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+  .tile {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: transform 0.25s var(--easing), border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .tile:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+  }
+  .tile h3 { font-size: 1.05rem; margin: 0 0 0.3rem; }
+  .tile p { color: var(--muted); margin: 0 0 0.85rem; font-size: 0.93rem; line-height: 1.55; }
+  .tile p:last-of-type { margin-bottom: 0.85rem; }
+  @media (max-width: 980px) { .who-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .who-grid { grid-template-columns: 1fr; } }
+
+  /* Bottom layout: cities + FAQ + form */
+  .layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 3rem;
+    align-items: start;
+    margin-top: 2rem;
+  }
+  .cities-faq h2 {
+    font-size: 1.5rem;
+    margin: 2rem 0 0.85rem;
+  }
+  .cities {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    columns: 2;
+    gap: 1rem;
+  }
+  .cities li { margin-bottom: 0.4rem; }
+  .cities a { color: var(--green-dark); text-decoration: none; }
+  .cities a:hover { text-decoration: underline; }
+  aside { position: sticky; top: 100px; }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { position: static; }
+    .cities { columns: 1; }
+  }
+</style>

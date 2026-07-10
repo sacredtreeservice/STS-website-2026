@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 
 const all = await getCollection('blog', ({ data }) => !data.draft);
@@ -28,7 +29,16 @@ const fmt = (d: Date) =>
           <li>
             <a href={`/blog/${p.id}/`}>
               {p.data.coverImage ? (
-                <div class="img"><img src={p.data.coverImage.src} alt={p.data.coverAlt ?? p.data.title} loading="lazy" /></div>
+                <div class="img">
+                  <Image
+                    src={p.data.coverImage}
+                    alt={p.data.coverAlt ?? p.data.title}
+                    width={800}
+                    widths={[400, 800]}
+                    sizes="(max-width: 800px) 100vw, 400px"
+                    loading="lazy"
+                  />
+                </div>
               ) : (
                 <div class="img placeholder"><Icon name="lucide:leaf" /></div>
               )}
@@ -42,7 +52,7 @@ const fmt = (d: Date) =>
                   <span class="author">
                     {p.data.author}
                     {p.data.isaCertified && (
-                      <span class="isa"><Icon name="lucide:badge-check" /> ISA</span>
+                      <span class="isa"><Icon name="lucide:badge-check" /> Arborist-reviewed</span>
                     )}
                   </span>
                   <time>{fmt(p.data.publishedAt)}</time>
