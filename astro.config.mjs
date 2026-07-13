@@ -46,9 +46,13 @@ export default defineConfig({
   server: { port: 1234, host: true },
   integrations: [
     sitemap({
-      // /book-a-call/ is a hidden ad landing page (noindex). Keep it out of the
-      // sitemap entirely so crawlers are never even pointed at it.
-      filter: (page) => !page.replace(SITE, '').replace(/\/+$/, '').endsWith('/book-a-call'),
+      // Hidden pages (noindex): /book-a-call/ is an ad landing page, /workflow/
+      // is the staff field pricing guide. Keep both out of the sitemap entirely
+      // so crawlers are never even pointed at them.
+      filter: (page) => {
+        const path = page.replace(SITE, '').replace(/\/+$/, '');
+        return !['/book-a-call', '/workflow'].includes(path);
+      },
       // No lastmod, deliberately: stamping the build time on all ~580 URLs
       // every deploy is a provably false freshness signal, and Google
       // ignores lastmod site-wide once it detects that. Honest silence

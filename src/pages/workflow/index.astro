@@ -1,0 +1,568 @@
+---
+// Hidden field pricing guide — /workflow/ — for sales reps + owner only.
+// NOT linked from anywhere on the site; staff type the URL manually.
+// Kept out of search: meta noindex below + excluded from the sitemap in
+// astro.config.mjs (same treatment as /book-a-call/).
+//
+// The password gate is convenience-only, verified in client-side JS — anyone
+// who views source can read it. That's by design: prices aren't secret, the
+// gate just keeps casual visitors out. To change the password, edit PASS in
+// the gate script below. Changing it re-locks every remembered device.
+//
+// Content mirrors PRICING-GUIDE.md v1.3 (master doc in ~/Documents/Sacred
+// Tree MSA). The .md, the Jobber catalog, and this page change together.
+//
+// UX: POS-style — categories collapsed on launch, tap a tile to add it to
+// the ticket, adjust quantities in the ticket drawer at the bottom.
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Field Guide — Sacred Tree Service</title>
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <style is:inline>
+    :root{
+      --bg:#F7F6F2; --card:#FFFFFF; --ink:#1C221A; --muted:#5C665A; --line:#DDE2D8;
+      --accent:#2F5233; --accent-ink:#FFFFFF; --chip:#EDF2EA;
+      --good:#2E7D32; --warn:#B26A00; --bad:#B3261E; --bad-bg:#FBEAE8; --warn-bg:#FBF1E0; --good-bg:#E9F3E9;
+    }
+    @media (prefers-color-scheme: dark){:root{
+      --bg:#141813; --card:#1D231B; --ink:#E8EBE4; --muted:#9AA694; --line:#333B30;
+      --accent:#7FB069; --accent-ink:#10150E; --chip:#252D22;
+      --good:#81C784; --warn:#E0A64E; --bad:#EF8A80; --bad-bg:#3A211E; --warn-bg:#372B18; --good-bg:#1F3320;
+    }}
+    *{box-sizing:border-box; margin:0}
+    html,body{background:var(--bg); color:var(--ink);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      -webkit-text-size-adjust:100%}
+
+    /* ── Password gate ── */
+    #gate{min-height:100dvh; display:flex; align-items:center; justify-content:center; padding:20px}
+    #gate[hidden]{display:none} /* author display:flex would otherwise beat the hidden attr */
+    .gate-card{background:var(--card); border:1px solid var(--line); border-radius:12px;
+      padding:28px 24px; max-width:340px; width:100%; text-align:center}
+    .gate-card h1{font-size:1.05rem; font-weight:800; letter-spacing:-.01em}
+    .gate-card .gsub{color:var(--muted); font-size:.78rem; margin:4px 0 18px}
+    .gate-card input{width:100%; height:46px; text-align:center; font-size:1.05rem; font-weight:600;
+      border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--ink)}
+    .gate-card input:focus{outline:2px solid var(--accent); outline-offset:-1px}
+    .gate-card button{width:100%; margin-top:10px; height:46px; border:none; border-radius:8px;
+      background:var(--accent); color:var(--accent-ink); font-size:.9rem; font-weight:700; cursor:pointer}
+    #gateErr{color:var(--bad); background:var(--bad-bg); border-radius:7px;
+      font-size:.76rem; font-weight:600; padding:7px 10px; margin-top:10px}
+
+    /* ── Guide ── */
+    .wrap{max-width:720px; margin:0 auto; padding:16px 14px 220px}
+    header h1{font-size:1.35rem; font-weight:800; letter-spacing:-.01em}
+    header .sub{color:var(--muted); font-size:.8rem; margin-top:2px}
+    .rules{display:flex; flex-wrap:wrap; gap:6px; margin:12px 0 4px}
+    .rule{background:var(--chip); border:1px solid var(--line); border-radius:6px;
+      padding:5px 9px; font-size:.72rem; font-weight:600; color:var(--ink)}
+    .rule b{color:var(--accent)}
+    .dbh{font-size:.72rem; color:var(--muted); margin:6px 0 14px}
+    section.cat{background:var(--card); border:1px solid var(--line); border-radius:10px; margin-bottom:12px; overflow:hidden}
+    .cat h2{font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; font-weight:800;
+      padding:11px 14px; color:var(--accent); border-bottom:1px solid var(--line);
+      display:flex; justify-content:space-between; align-items:center; gap:10px; cursor:pointer; user-select:none}
+    .cat.collapsed h2{border-bottom:none}
+    .cat h2 .hleft{display:flex; align-items:center; gap:8px; text-align:left}
+    .cat h2 .chev{display:inline-block; font-size:.65rem; transition:transform .15s}
+    .cat.collapsed .chev{transform:rotate(-90deg)}
+    .cat h2 .catnote{font-size:.68rem; font-weight:600; color:var(--muted); text-transform:none; letter-spacing:0; text-align:right}
+    .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:8px; padding:12px}
+    .collapsed .grid{display:none}
+    .tile{position:relative; text-align:left; border:1px solid var(--line); border-radius:9px;
+      background:var(--bg); color:var(--ink); padding:9px 10px 8px; cursor:pointer; font:inherit;
+      touch-action:manipulation; display:flex; flex-direction:column; gap:3px; min-height:76px}
+    .tile:active{border-color:var(--accent)}
+    .tile.on{border-color:var(--accent); background:var(--chip)}
+    .tile .tname{font-size:.8rem; font-weight:700; line-height:1.25;
+      display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+    .tile .tnote{font-size:.62rem; color:var(--muted); line-height:1.3;
+      display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+    .tile .tprice{font-size:.74rem; color:var(--muted); font-weight:600; margin-top:auto}
+    .tile .tprice b{color:var(--ink); font-variant-numeric:tabular-nums}
+    .tile .badge{position:absolute; top:-7px; right:-7px; min-width:22px; height:22px; padding:0 6px;
+      border-radius:11px; background:var(--accent); color:var(--accent-ink); font-size:.72rem; font-weight:800;
+      display:flex; align-items:center; justify-content:center; font-variant-numeric:tabular-nums}
+    .tile .badge:empty{display:none}
+
+    /* ── Ticket drawer + totals bar ── */
+    .totals{position:fixed; left:0; right:0; bottom:0; background:var(--card); border-top:2px solid var(--accent);
+      box-shadow:0 -4px 18px rgba(0,0,0,.12); z-index:10}
+    .totals .inner{max-width:720px; margin:0 auto; padding:10px 14px}
+    #ticket{max-height:32vh; overflow-y:auto; margin-bottom:6px; border-bottom:1px solid var(--line)}
+    .tline{display:flex; align-items:center; gap:8px; padding:6px 0; border-top:1px solid var(--line)}
+    .tline:first-child{border-top:none}
+    .tline .ti{flex:1; min-width:0}
+    .tline .ti .n{font-size:.78rem; font-weight:600; line-height:1.2}
+    .tline .ti .u{font-size:.68rem; color:var(--muted); font-variant-numeric:tabular-nums}
+    .tline .qc{display:flex; align-items:center}
+    .tline .qc button{width:36px; height:36px; font-size:1.1rem; font-weight:700; border:1px solid var(--line);
+      background:var(--chip); color:var(--ink); cursor:pointer; touch-action:manipulation}
+    .tline .qc button:first-child{border-radius:7px 0 0 7px}
+    .tline .qc button:last-child{border-radius:0 7px 7px 0}
+    .tline .qc button:active{background:var(--accent); color:var(--accent-ink)}
+    .tline .qc input{width:46px; height:36px; text-align:center; font-size:.92rem; font-weight:700;
+      border:1px solid var(--line); border-left:none; border-right:none; background:var(--card); color:var(--ink);
+      font-variant-numeric:tabular-nums}
+    .tline .qc input:focus{outline:2px solid var(--accent); outline-offset:-2px}
+    .tline .lamt{font-size:.8rem; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums;
+      min-width:62px; text-align:right}
+    .trow{display:flex; justify-content:space-between; align-items:baseline; font-size:.82rem; padding:1px 0}
+    .trow.big{font-size:1.15rem; font-weight:800}
+    .trow .amt{font-variant-numeric:tabular-nums; font-weight:700}
+    #sumRow{cursor:pointer; user-select:none}
+    .flag{border-radius:7px; padding:7px 10px; font-size:.76rem; font-weight:600; margin-top:6px}
+    .flag.bad{background:var(--bad-bg); color:var(--bad)}
+    .flag.warn{background:var(--warn-bg); color:var(--warn)}
+    .flag.good{background:var(--good-bg); color:var(--good)}
+    .controls{display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; align-items:center}
+    .toggle{display:flex; align-items:center; gap:6px; font-size:.76rem; font-weight:600; color:var(--muted)}
+    .toggle input{width:18px; height:18px; accent-color:var(--accent)}
+    .daysin{display:flex; align-items:center; gap:6px; font-size:.76rem; font-weight:600; color:var(--muted)}
+    .daysin input{width:56px; height:34px; text-align:center; border:1px solid var(--line); border-radius:7px;
+      background:var(--bg); color:var(--ink); font-weight:700; font-size:.9rem}
+    .btn{border:none; border-radius:8px; padding:9px 14px; font-size:.8rem; font-weight:700; cursor:pointer}
+    .btn.primary{background:var(--accent); color:var(--accent-ink)}
+    .btn.ghost{background:var(--chip); color:var(--ink); border:1px solid var(--line)}
+    .footer-note{font-size:.68rem; color:var(--muted); margin-top:14px; line-height:1.5}
+    @media (prefers-reduced-motion: no-preference){ .tile{transition:border-color .1s, background .1s} }
+  </style>
+</head>
+<body>
+
+<div id="gate">
+  <form class="gate-card" id="gateForm">
+    <h1>Sacred Tree Service</h1>
+    <div class="gsub">Team access — ask the office if you need the password.</div>
+    <input type="password" id="gatePass" autocomplete="current-password" autofocus
+      placeholder="Password" aria-label="Password" />
+    <button type="submit">Open field guide</button>
+    <div id="gateErr" hidden>Wrong password — check with the office.</div>
+  </form>
+</div>
+
+<div id="app" hidden>
+<div class="wrap">
+  <header>
+    <h1>Sacred Tree Service — Field Pricing Guide</h1>
+    <div class="sub">v1.3 · Effective Jul 8, 2026 · These are the prices. Qty × amount. No improvising. · Master: PRICING-GUIDE.md · Costs: STS-Master-Cost-Book.xlsx</div>
+  </header>
+
+  <div class="rules">
+    <span class="rule"><b>$750</b> job minimum (standalone)</span>
+    <span class="rule"><b>Never</b> below book — owner sign-off only</span>
+    <span class="rule"><b>DBH required</b> on every removal &amp; big prune</span>
+    <span class="rule">Removals: discount = <b>plan credit only</b></span>
+    <span class="rule">&gt;20 mi out: <b>+$150 trip</b> or $1,500 min</span>
+    <span class="rule">≥$2,500: collect <b>30% deposit</b></span>
+  </div>
+  <div class="dbh">DBH = trunk diameter at 4.5 ft. No caliper? Tape the circumference and divide by 3.14. When between bands, price the bigger band. Tap a category to open it, tap an item to add it to the ticket.</div>
+
+  <div id="catalog"></div>
+
+  <div class="footer-note">
+    v1.3 · Rate basis: verified medians from 1,444 historical line items + in-house unit cost build-ups (commercial lines) + cost floors recomputed on the real 4-man crew (a crew-day must bill $3,500+; 2-man detachment days $1,750+; consulting/report visits exempt from the job minimum). Packages (Plant &amp; Establish, Full Canopy, Remove &amp; Renew, Oak Health, pond tiers) are sum-of-book — see PRICING-GUIDE.md Section 16.
+    Member rate = −10% for signed MSA / Annual Plan clients only. Crane &amp; specialty rentals ×1.15 · plant material ×1.5 · subbed licensed work ×1.15.
+    Storm work (members): book + 15% cap. Non-members: emergency rates, 50% deposit, card on file.
+    Master document: PRICING-GUIDE.md — this calculator is a rendering of it; the .md and the Jobber catalog change together, owner + one admin only.
+  </div>
+</div>
+
+<div class="totals">
+  <div class="inner">
+    <div id="flags"></div>
+    <div id="ticket" style="display:none"></div>
+    <div class="trow" id="sumRow"><span id="lineCount">No items yet — tap an item to build the quote</span><span class="amt" id="subtotal"></span></div>
+    <div class="trow" id="memberRow" style="display:none"><span>Member rate (−10%)</span><span class="amt" id="memberAmt"></span></div>
+    <div class="trow" id="minRow" style="display:none"><span>Job minimum applied</span><span class="amt">$750</span></div>
+    <div class="trow big"><span>Quote total</span><span class="amt" id="total">$0</span></div>
+    <div class="trow" id="depositRow" style="display:none; color:var(--warn)"><span id="depositLabel"></span><span class="amt" id="depositAmt"></span></div>
+    <div class="controls">
+      <label class="toggle"><input type="checkbox" id="member" /> MSA / Plan member</label>
+      <label class="toggle"><input type="checkbox" id="addon" /> Add-on to existing visit</label>
+      <span class="daysin">Crew-days on site: <input type="number" id="days" min="0" step="0.5" placeholder="—" /></span>
+      <button class="btn primary" id="copy">Copy quote</button>
+      <button class="btn ghost" id="reset">Reset</button>
+    </div>
+  </div>
+</div>
+</div><!-- /#app -->
+
+<script is:inline>
+// ── Gate ── convenience lock only; the password is visible in this source.
+(function(){
+  const PASS = 'sacredcrew';           // ← change the password here
+  const KEY  = 'sts_workflow_pass';    // remembered per device after first unlock
+  const gate = document.getElementById('gate');
+  const app  = document.getElementById('app');
+  function unlock(){ gate.hidden = true; app.hidden = false; }
+  try { if (localStorage.getItem(KEY) === PASS) unlock(); } catch (e) {}
+  document.getElementById('gateForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('gatePass');
+    if (input.value.trim() === PASS) {
+      try { localStorage.setItem(KEY, PASS); } catch (err) {}
+      unlock();
+    } else {
+      document.getElementById('gateErr').hidden = false;
+      input.value = '';
+      input.focus();
+    }
+  });
+})();
+</script>
+
+<script is:inline>
+// ── Field pricing guide v1.3 ── mirrors PRICING-GUIDE.md; edit both together.
+const CATALOG = [
+  { cat:'Palm pruning', note:'batch small palms or the minimum applies', items:[
+    ['Queen palm','per palm',125],
+    ['Sabal palm','per palm',100],
+    ['Washingtonia / fan palm','per palm',125],
+    ['Sylvester / date palm','per palm',150],
+    ['Royal palm','per palm',175],
+    ['Canary Island / large date palm','per palm',450],
+    ['Robellini / small palm','per palm',40,'batch ≥10 · add-on only, never a standalone day'],
+    ['Palm fertilization (on-site add-on)','per palm',50,'$150 min'],
+  ]},
+  { cat:'Hardwood pruning', note:'size by DBH at 4.5 ft', items:[
+    ['Ornamental / crepe myrtle','per tree',250],
+    ['Canopy tree — ≤12 in DBH','per tree',350],
+    ['Canopy tree — 12–24 in DBH','per tree',600],
+    ['Canopy tree — 24–36 in DBH','per tree',900],
+    ['Canopy — >36 in / over structure','per tree',1500,'base — owner reviews before send'],
+    ['Crown reduction — ≤12 in DBH','per tree',500],
+    ['Crown reduction — 12–24 in DBH','per tree',900],
+    ['Crown reduction — 24–36 in DBH','per tree',1300],
+    ['Crown reduction — >36 in / over structure','per tree',2000,'base — owner reviews'],
+    ['Deadwood-only — ≤12 in','per tree',250],
+    ['Deadwood-only — 12–24 in','per tree',450],
+    ['Deadwood-only — 24–36 in','per tree',700],
+    ['Deadwood-only — >36 in','per tree',1200],
+    ['Young-tree structural prune (<6 in DBH)','per tree',150],
+    ['Clearance pruning (roof / line / utility)','per tree',500,'min — price as DBH band if larger'],
+    ['Moss removal — small tree','per tree',150],
+    ['Moss removal — 12–36 in DBH','per tree',350],
+    ['Moss removal — large oak (>36 in)','per tree',700],
+  ]},
+  { cat:'Volume pruning — commercial / HOA', note:'20+ trees, owner approval + MSA pitch required', items:[
+    ['Oaks — 25+ trees','per tree',275],
+    ['Magnolias / ornamentals — 20+ trees','per tree',110],
+  ]},
+  { cat:'Tree removal', note:'record DBH · never discount outright', items:[
+    ['Removal — ≤12 in DBH','per tree',500],
+    ['Removal — 12–24 in DBH','per tree',1000],
+    ['Removal — 24–36 in DBH','per tree',2500],
+    ['Removal — >36 in / crane / over structure','per job',3500,'min — price as crew-days, crane at cost ×1.15'],
+    ['Palm removal — standard','per palm',525],
+    ['Palm removal — tall (>30 ft)','per palm',750],
+    ['Tri-planted palm cluster','per trunk',400],
+  ]},
+  { cat:'Stump grinding', note:'2-man detachment basis — detachment day bills ≥$1,750', items:[
+    ['Stump — ≤12 in','per stump',175],
+    ['Stump — 13–24 in','per stump',350],
+    ['Stump — >24 in','per stump',550,'+$5/in over 24, added at quote'],
+    ['Grind + prep for replant (10 in below grade)','per stump',400],
+    ['Grinder-only visit charge','per visit',300,'standalone stump trips'],
+  ]},
+  { cat:'Hedges & cleanup', note:'debris lines = debris-only visits; haul-away is inside every service price', items:[
+    ['Hedge trimming','per crew-hour',110,'$175 min per run'],
+    ['Hedge removal','per crew-hour',110,'$300 min'],
+    ['Debris haul — dump-trailer load','per load',500],
+    ['Debris haul — grapple load (residential)','per load',1250],
+    ['Debris haul — grapple load (commercial)','per load',2000],
+    ['Weekend / priority premium','per grapple load',300],
+    ['Property cleanup','per crew-hour',110,'$750 min'],
+  ]},
+  { cat:'Planting & installation', note:'plant material billed at landed cost ×1.5, itemized separately', items:[
+    ['Install — 15 gal tree / palm','per tree',225],
+    ['Install — 30 gal tree','per tree',400,'labor; + material ×1.5'],
+    ['Install — 45 gal tree','per tree',500,'labor; + material ×1.5'],
+    ['Install — 65 gal tree','per tree',750,'labor; + material ×1.5'],
+    ['Install — field-dug / B&B specimen','per tree',800],
+    ['Shrub install — 3–7 gal','per plant',25,'install labor; + material ×1.5'],
+    ['Small transplant (palm / hedge / young oak)','per plant',500],
+    ['Tree transplant — ≤4 in caliper','per tree',1750],
+    ['Tree transplant — 4–8 in caliper','per tree',3500,'+ equipment ×1.15'],
+    ['Watering bag, installed & filled','per bag',35],
+    ['Establishment watering visit (≤20 trees)','per visit',350],
+    ['Root barrier plates','per plate',75,'$600 min'],
+    ['Mulch — installed','per yard',140],
+    ['Pine straw','per bale',7,'40-bale min'],
+    ['Sod — St. Augustine','per pallet',650,'installed'],
+    ['Topsoil — placed','per yard',100],
+    ['Delivery run','per run',100,'flat; trip charge >20 mi'],
+  ]},
+  { cat:'Land clearing & brush', note:'price as crew-days + machines — phase, don’t discount', items:[
+    ['Clearing crew day','per day',5000,'floor $3,500'],
+    ['Forestry mulching','per acre',3500],
+    ['Brush hog adder','per day',600],
+    ['Excavator (standalone mobilization)','per day',6000,'incl. operator'],
+  ]},
+  { cat:'Commercial vegetation & sitework — UNIT RATES', note:'in-house build-ups (v1.3) · takeoff × rate · 25% deposit/phase · net-15', items:[
+    ['Pond maintenance — 1/4-acre','per quarterly visit',1000,'scope: half-day detachment'],
+    ['Pond maintenance — 1/2-acre','per quarterly visit',1950,'scope: half crew-day'],
+    ['Pond maintenance — full acre','per quarterly visit',3500,'HARD CAP 1.0 crew-day'],
+    ['Concrete flume','per LF',150,'$2,500 small-pour min · heavy access bills adders on top'],
+    ['Concrete flatwork / aprons','per CY placed',950],
+    ['Paver work','per SF',20,'premium material ×1.5 on top'],
+    ['Hydroseed — standard, first acre','per acre',9000,'add’l acre $8,500'],
+    ['Hydroseed — standard, small area','per 1,000 sf',400,'$1,250 mobilization min'],
+    ['Hydroseed — BFM slope mix, first acre','per acre',17500],
+    ['Hydroseed — BFM, small area','per 1,000 sf',800],
+    ['Erosion repair','per SY restored',55,'min $1,750 + machine adder'],
+    ['Rip-rap / stone armor','per ton placed',175,'$2,000 min · never discount'],
+    ['Pipe — HDPE 12 / 18 / 24 in','per LF',200,'18in $225 · 24in $250 · $3,500 min'],
+    ['Pipe — RCP 12 / 18 / 24 in','per LF',275,'18in $300 · 24in $350'],
+    ['Herbicide — terrestrial','per acre',500,'licensed; sub ×1.15 until FDACS'],
+    ['Herbicide — aquatic','per acre',1150,'visit min $950'],
+    ['Grading — machine + operator','per machine-hr',200,'4-hr min'],
+    ['Grading — finish grade','per 1,000 sf',225],
+    ['Grate / structure reinstall','each',350,'add-on only'],
+    ['Demolition (landscape / hardscape)','per job',3000,'min'],
+    ['Pond cleanup — hand crew (add-on)','per visit',350],
+    ['Sod — commercial restoration','per pallet installed',650],
+    ['Littoral shelf planting','per plug',2.5,'+ material ×1.5 · $1,500 project min'],
+    ['NPDES / HOA compliance report','per report',250],
+    ['Vegetation maintenance visit (general)','per visit',2500,'25–35% of initial clearing phase'],
+  ]},
+  { cat:'Equipment adders — beyond the base rig', note:'equipment never makes a job cheaper · bills on top of visit minimums · qty = days', items:[
+    ['Mini excavator (3–5t)','per day',550,'half-day $400'],
+    ['Mid excavator (8–15t, machine-only)','per day',1000,'standalone w/ operator $6,000'],
+    ['Skid steer / CTL','per day',600,'half-day $400'],
+    ['CTL forestry package','per day',1100,'T&M only'],
+    ['Trencher','per day',350],
+    ['Concrete package (mixer+screed+compactor)','per day',450],
+    ['Air-spade + compressor','per day',350,'beyond standard RCX only'],
+    ['Water truck 2,000 gal','per day',500],
+    ['Dumpster pull 30 yd','per pull',700],
+    ['Crane 25t / 40t / 60t+ w/ operator','per day',1850,'40t $2,550 · 60t $3,450 · invoice ×1.15 governs'],
+    ['Grapple truck — project day minimum','per day',1250],
+    ['Stump grinder — T&M day adder','per day',350],
+  ]},
+  { cat:'Crew day rates', note:'floors $3,500 / $1,950 — never under · detachment day (stumps/PHC) ≥$1,750', items:[
+    ['Full crew day (4-person)','per day',5000],
+    ['Half day','per half-day',2500],
+  ]},
+  { cat:'Plant health & reports', note:'the recurring hook — pitch Cambistat on every oak', items:[
+    ['Cambistat','per DBH-inch',10,'$150 min per tree · annual'],
+    ['Fertilization / soil treatment','per application',150],
+    ['Soil amendments','per application',300],
+    ['Root-collar excavation / air-spade','per tree',450,'each add’l tree same visit $300'],
+    ['Girdling-root correction (with RCX)','per tree',250,'add-on'],
+    ['Arborist letter','per letter',250,'consulting — job minimum exempt'],
+    ['Certified letter (permit support)','per letter',200],
+    ['TRAQ / Level II assessment','per report',450],
+    ['Construction-impact consultation','per visit',500],
+    ['Tree preservation plan (development)','per plan',1500,'+$150/tree over 10 · fee credits toward Plan/MSA'],
+    ['Permitting process','per permit',250,'+ municipal fees pass-through'],
+  ]},
+];
+
+const fmt = n => '$' + Math.round(n).toLocaleString('en-US');
+const qty = {}; // id -> qty
+let idSeq = 0;
+const items = [];
+let ticketOpen = true;
+
+// Build the catalog: collapsed category accordions holding tap-to-add tiles.
+const catRoot = document.getElementById('catalog');
+CATALOG.forEach(group => {
+  const sec = document.createElement('section'); sec.className = 'cat collapsed';
+  const h = document.createElement('h2');
+  h.innerHTML = `<span class="hleft"><span class="chev">▾</span><span>${group.cat}</span></span><span class="catnote">${group.note || ''}</span>`;
+  h.addEventListener('click', () => sec.classList.toggle('collapsed'));
+  sec.appendChild(h);
+  const grid = document.createElement('div'); grid.className = 'grid';
+  group.items.forEach(([name, unit, price, note]) => {
+    const id = 'i' + (idSeq++);
+    items.push({ id, name, unit, price, note: note || '', cat: group.cat, catNote: group.note || '' });
+    const tile = document.createElement('button');
+    tile.type = 'button'; tile.className = 'tile'; tile.dataset.id = id;
+    tile.innerHTML = `
+      <span class="badge" id="b-${id}"></span>
+      <span class="tname">${name}</span>
+      ${note ? `<span class="tnote">${note}</span>` : ''}
+      <span class="tprice"><b>${fmt(price)}</b> ${unit}</span>`;
+    grid.appendChild(tile);
+  });
+  sec.appendChild(grid);
+  catRoot.appendChild(sec);
+});
+
+// Tap a tile → +1 on the ticket.
+catRoot.addEventListener('click', e => {
+  const tile = e.target.closest('.tile');
+  if (!tile) return;
+  const id = tile.dataset.id;
+  qty[id] = (qty[id] || 0) + 1;
+  renderTicket();
+  recalc();
+});
+
+function currentLines() {
+  return items.filter(it => (qty[it.id] || 0) > 0)
+    .map(it => ({ ...it, q: qty[it.id], total: qty[it.id] * it.price }));
+}
+
+// Ticket drawer: quantities are adjusted here, POS-style.
+const ticketEl = document.getElementById('ticket');
+
+function renderTicket() {
+  const lines = currentLines();
+  ticketEl.innerHTML = lines.map(l => `
+    <div class="tline">
+      <div class="ti">
+        <div class="n">${l.name}</div>
+        <div class="u">${fmt(l.price)} ${l.unit}</div>
+      </div>
+      <div class="qc">
+        <button type="button" aria-label="decrease" data-id="${l.id}" data-d="-1">−</button>
+        <input type="number" min="0" step="1" inputmode="numeric" data-id="${l.id}" value="${l.q}">
+        <button type="button" aria-label="increase" data-id="${l.id}" data-d="1">+</button>
+      </div>
+      <div class="lamt" id="la-${l.id}">${fmt(l.total)}</div>
+    </div>`).join('');
+  ticketEl.style.display = (lines.length && ticketOpen) ? '' : 'none';
+}
+
+ticketEl.addEventListener('click', e => {
+  const b = e.target.closest('button[data-id]');
+  if (!b) return;
+  const id = b.dataset.id, d = parseInt(b.dataset.d, 10);
+  qty[id] = Math.max(0, (qty[id] || 0) + d);
+  renderTicket();
+  recalc();
+});
+// Typing a qty directly: patch in place so the input keeps focus…
+ticketEl.addEventListener('input', e => {
+  if (!e.target.matches('input[data-id]')) return;
+  const id = e.target.dataset.id;
+  qty[id] = Math.max(0, parseFloat(e.target.value) || 0);
+  const it = items.find(x => x.id === id);
+  const la = document.getElementById('la-' + id);
+  if (la) la.textContent = fmt((qty[id] || 0) * it.price);
+  recalc();
+});
+// …then rebuild on blur so zeroed lines drop off.
+ticketEl.addEventListener('change', () => { renderTicket(); recalc(); });
+
+// Tap the summary row to show/hide the ticket.
+document.getElementById('sumRow').addEventListener('click', () => {
+  ticketOpen = !ticketOpen;
+  renderTicket();
+  recalc();
+});
+
+['member','addon','days'].forEach(id => document.getElementById(id).addEventListener('input', recalc));
+
+function recalc() {
+  const lines = currentLines();
+  let sub = 0;
+  items.forEach(it => {
+    const q = qty[it.id] || 0;
+    sub += q * it.price;
+    const badge = document.getElementById('b-' + it.id);
+    badge.textContent = q > 0 ? q : '';
+    badge.closest('.tile').classList.toggle('on', q > 0);
+  });
+
+  const member = document.getElementById('member').checked;
+  const addon = document.getElementById('addon').checked;
+  const memberOff = member ? sub * 0.10 : 0;
+  let total = sub - memberOff;
+
+  const minRow = document.getElementById('minRow');
+  const applyMin = !addon && !member && total > 0 && total < 750;
+  minRow.style.display = applyMin ? 'flex' : 'none';
+  if (applyMin) total = 750;
+
+  document.getElementById('subtotal').textContent = lines.length ? fmt(sub) : '';
+  document.getElementById('lineCount').textContent = lines.length
+    ? `${ticketOpen ? '▾' : '▸'} ${lines.length} line item${lines.length > 1 ? 's' : ''} — subtotal`
+    : 'No items yet — tap an item to build the quote';
+  const mr = document.getElementById('memberRow');
+  mr.style.display = member && sub > 0 ? 'flex' : 'none';
+  document.getElementById('memberAmt').textContent = '−' + fmt(memberOff);
+  document.getElementById('total').textContent = fmt(total);
+
+  const depRow = document.getElementById('depositRow');
+  if (total >= 10000) {
+    depRow.style.display = 'flex';
+    document.getElementById('depositLabel').textContent = 'Commercial >$10k — collect 25% deposit + progress billing';
+    document.getElementById('depositAmt').textContent = fmt(total * 0.25);
+  } else if (total >= 2500) {
+    depRow.style.display = 'flex';
+    document.getElementById('depositLabel').textContent = 'Collect 30% deposit to schedule';
+    document.getElementById('depositAmt').textContent = fmt(total * 0.30);
+  } else depRow.style.display = 'none';
+
+  const flags = document.getElementById('flags');
+  flags.innerHTML = '';
+  const days = parseFloat(document.getElementById('days').value) || 0;
+  if (days > 0 && total > 0) {
+    const perDay = total / days;
+    let cls = 'good', msg = `✓ ${fmt(perDay)}/crew-day — clears the $3,500 floor`;
+    if (perDay < 3000) { cls = 'bad'; msg = `✗ ${fmt(perDay)}/crew-day — BELOW FLOOR. Raise price or cut scope. Owner sign-off required to send.`; }
+    else if (perDay < 3500) { cls = 'warn'; msg = `⚠ ${fmt(perDay)}/crew-day — under the $3,500 target. Tighten scope or add work to the stop.`; }
+    const f = document.createElement('div'); f.className = 'flag ' + cls; f.textContent = msg;
+    flags.appendChild(f);
+  }
+  const removalLines = lines.filter(l => l.cat === 'Tree removal');
+  if (removalLines.length) {
+    const f = document.createElement('div'); f.className = 'flag warn';
+    f.textContent = 'Removal on quote → record DBH per tree in Jobber before sending. Offer stump grinding + a replant. Discount only as plan credit.';
+    flags.appendChild(f);
+  }
+}
+
+// Copy quote: full descriptions — grouped by category (with its guidance note),
+// each line carries unit pricing and the item's book note.
+document.getElementById('copy').addEventListener('click', async () => {
+  const lines = currentLines();
+  if (!lines.length) return;
+  const member = document.getElementById('member').checked;
+  let out = 'SACRED TREE SERVICE — QUOTE ' + new Date().toLocaleDateString('en-US') + '\n';
+  let lastCat = null;
+  lines.forEach(l => {
+    if (l.cat !== lastCat) {
+      out += '\n' + l.cat.toUpperCase() + (l.catNote ? ' — ' + l.catNote : '') + '\n';
+      lastCat = l.cat;
+    }
+    out += `• ${l.name}\n`;
+    out += `  ${l.q} × ${fmt(l.price)} ${l.unit} = ${fmt(l.total)}\n`;
+    if (l.note) out += `  ${l.note}\n`;
+  });
+  const sub = lines.reduce((a, l) => a + l.total, 0);
+  out += `\nSubtotal: ${fmt(sub)}\n`;
+  if (member) out += `Member rate (−10%): −${fmt(sub * 0.10)}\n`;
+  if (document.getElementById('minRow').style.display !== 'none') out += 'Job minimum applied: $750\n';
+  out += `TOTAL: ${document.getElementById('total').textContent}\n`;
+  const dep = document.getElementById('depositRow');
+  if (dep.style.display !== 'none') out += document.getElementById('depositLabel').textContent + ': ' + document.getElementById('depositAmt').textContent + '\n';
+  try { await navigator.clipboard.writeText(out); }
+  catch (e) { /* clipboard unavailable (non-https) — button still confirms below */ }
+  const btn = document.getElementById('copy');
+  btn.textContent = 'Copied ✓'; setTimeout(() => btn.textContent = 'Copy quote', 1500);
+});
+
+document.getElementById('reset').addEventListener('click', () => {
+  Object.keys(qty).forEach(k => qty[k] = 0);
+  document.getElementById('member').checked = false;
+  document.getElementById('addon').checked = false;
+  document.getElementById('days').value = '';
+  renderTicket();
+  recalc();
+});
+recalc();
+</script>
+
+</body>
+</html>
