@@ -73,5 +73,7 @@ export default defineConfig({
   // Responsive content images: markdown/collection images emit srcset+sizes
   // automatically instead of shipping the full-resolution original into a
   // 760px column (blog photos are 2200px/1MB+ without this).
-  image: { layout: 'constrained' },
+  // breakpoints: content images are never wider than ~1200px on this site;
+  // without this Astro emitted 8 variants up to 2200w into a 760px column.
+  image: { layout: 'constrained', breakpoints: [640, 768, 1024, 1280, 1600] },
 });

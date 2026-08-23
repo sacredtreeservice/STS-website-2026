@@ -36,7 +36,11 @@ const imageAlt = ogImageAlt ?? fullTitle;
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalUrl} />
-{noindex && <meta name="robots" content="noindex, nofollow" />}
+{noindex ? (
+  <meta name="robots" content="noindex, nofollow" />
+) : (
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+)}
 
 <meta property="og:type" content={ogType} />
 <meta property="og:locale" content="en_US" />
@@ -52,7 +56,7 @@ const imageAlt = ogImageAlt ?? fullTitle;
 <meta property="og:site_name" content={company.brandName} />
 {ogType === 'article' && publishedTime && <meta property="article:published_time" content={publishedTime} />}
 {ogType === 'article' && modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
-{ogType === 'article' && <meta property="article:author" content={company.brandName} />}
+{ogType === 'article' && <meta property="article:author" content={new URL('/about/', Astro.site ?? 'https://sacredtreeservice.com').toString()} />}
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={fullTitle} />

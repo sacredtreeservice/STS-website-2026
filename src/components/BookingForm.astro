@@ -28,12 +28,19 @@ export interface Props {
    * into GHL for attribution, Lantern can add a hidden "source page" field.
    */
   context?: string;
+  /**
+   * Load the iframe eagerly. Use on /contact/ where the form IS the page; the
+   * default lazy load is right for the ~600 service/city pages where it sits
+   * far below the fold.
+   */
+  eager?: boolean;
 }
 
 const {
   heading = 'Request a Free Estimate',
   subheading = "Send us your details and we'll reach out to schedule — a real person confirms the timing with you.",
   context,
+  eager = false,
 } = Astro.props;
 ---
 
@@ -48,8 +55,8 @@ const {
     <iframe
       src={GHL_FORM_SRC}
       id={mountId}
-      title={GHL_FORM_NAME}
-      loading="lazy"
+      title="Free estimate request form"
+      loading={eager ? 'eager' : 'lazy'}
       data-layout="{'id':'INLINE'}"
       data-trigger-type="alwaysShow"
       data-trigger-value=""
@@ -116,18 +123,23 @@ const {
   }
   .ghl-mount {
     margin: 1.25rem 0 0.75rem;
+    /* Reserve the height on the WRAPPER, not just the iframe. form_embed.js
+       takes the iframe out of flow (position:absolute; left:-9999px) while the
+       form initialises, so an iframe-only min-height collapsed to 0 and then
+       re-expanded — CLS 0.755 on /contact/ (PSI, 2026-08). Heights measured
+       on the live form: 719 px in the 626 px desktop column, 891 px at 375 px. */
+    min-height: 735px;
   }
   .ghl-mount iframe {
     width: 100%;
-    /* Reserve height so the form's late arrival doesn't shift layout (CLS);
-       form_embed.js adjusts the real height once the iframe reports it. */
     min-height: 719px;
     border: none;
     border-radius: 8px;
     display: block;
   }
   @media (max-width: 600px) {
-    .ghl-mount iframe { min-height: 820px; }
+    .ghl-mount { min-height: 905px; }
+    .ghl-mount iframe { min-height: 891px; }
   }
   .fallback-call {
     margin: 1rem 0 0;
