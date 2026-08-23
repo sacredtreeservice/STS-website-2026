@@ -9,7 +9,8 @@ One task a week. Small model does the work. Human merges. Numbers logged monthly
 | `SCHEDULE.md` | 52 dated weeks → recipe. Status ticks. Sidecars (monthly measure / GBP). |
 | `LOG.md` | What actually shipped each week (append-only). |
 | `METRICS.md` | Monthly numbers + the 15 tracking queries + AI prompt log. |
-| `inbox/` | Owner drops photos/facts; model writes off-site packs to `inbox/out/`. |
+| `inbox/` | Owner drops photos/facts (gitignored); model writes sanitized off-site packs to `inbox/out/`. |
+| Google Doc "Sacred Tree Service — Brand Source of Truth (fill-in)" (consultant's Drive, private) | Fill-in-the-blank intake the owner completes; every fact in `company.ts` / schema / listings traces back to it. |
 | `../docs/AUDIT-2026-08-23.md` | The audit this system was built from. |
 | `../scripts/qa/check-dist.mjs` | Deterministic post-build QA (`npm run qa`). Must pass before any PR. |
 | `../.claude/skills/sts-weekly/` | `/sts-weekly` — runs this week's row end-to-end. |
