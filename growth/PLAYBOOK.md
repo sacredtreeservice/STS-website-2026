@@ -125,8 +125,7 @@ redirects verified with curl; QA passes; sitemap count drops by ~210 in phase 1.
 **Plus the citations pass (E2):** add outbound links to UF/IFAS EDIS (palm pruning, lethal bronzing,
 fertilization), ISA/treesaregood.org, ANSI A300 (tcia.org), NOAA hurricane season, wherever those
 names already appear. Target ≥ 1 authoritative link per guide/post/service page.
-**Accept:** grep for each banned string returns 0; QA passes; reviewer line added where
-`isaCertified: true`.
+**Accept:** grep for each banned string returns 0; QA passes.
 
 ### FIX-PERF — fonts, images, dead weight
 **Files:** `src/layouts/Base.astro`, `astro.config.mjs`, `src/components/Header.astro`,
@@ -203,7 +202,8 @@ General content rules (see BRAND.md): answer-first (direct 1–2 sentence answer
 question-phrased H1/H2, then detail), at least one number/range/date, ≥ 1 authoritative outbound
 link, ≥ 2 internal links (service page + city/county page), FAQ block (3–5 Q&A, no duplicate
 questions vs the site — grep first), visible "Reviewed/Updated <date>", Article schema with
-image, reviewer line when the content is arboricultural. 700–1,400 words. No filler.
+image, company/field-team voice (not the owner's first person) when the content is arboricultural.
+700–1,400 words. No filler.
 
 Where new pages live: guides → `src/pages/tree-care/<slug>.astro` (copy `storm-prep.astro` as the
 template; it already wires Seo/Breadcrumbs/FaqBlock/Article); field notes → `src/content/blog/`.
@@ -240,7 +240,7 @@ cadence & season, common pests/diseases (UF/IFAS links), protected status (link 
 plant-or-avoid, care-plan tie-in, 3–5 FAQs. Add a card on `florida-tree-species.astro`.
 
 ### CONTENT-PROBLEM [topic] — `/tree-care/<slug>/`
-Diagnosis-style guide (arborist-reviewed voice): symptoms, look-alikes, what's treatable vs not,
+Diagnosis-style guide (company/field-team voice): symptoms, look-alikes, what's treatable vs not,
 what we do, urgency without fear, UF/IFAS citation, photos if inbox has them, FAQs.
 Topics queue: lethal bronzing (we already rank #8 for it), laurel wilt, pine bark beetles,
 lightning-struck tree, "dead or dormant?", root damage to hardscape, Spanish/ball moss &
@@ -266,9 +266,9 @@ city, species, the problem, what we did, what we found/declined, anything we fla
 size, crew/equipment, outcome. Without these the recipe can't run — use the listed fallback.
 **Steps:** resize photos ≤ 1600 px into `src/content/blog/<slug>/`; descriptive alt text; post
 500–900 words: H1 = job + tree + outcome; H2s "The setup / What we did / What we found / Why we
-didn't [remove/top]"; owner voice for ops, reviewer line for anything diagnostic; `ogImage` 1200×630
+didn't [remove/top]"; owner voice for ops, company voice for anything diagnostic; `ogImage` 1200×630
 JPG under `public/og/`; frontmatter `author: "Alexander Satoski"`, `authorRole: "ISA Tree Service
-Operator"`, `isaCertified: true` only with the reviewer line; link the service + city pages; one CTA.
+Operator"`, `isaCertified` per the owner's call; link the service + city pages; one CTA.
 Draft 1 GBP post from it (≤ 1,500 chars + photo) into `growth/inbox/out/`.
 
 ### CONTENT-REFRESH [pages]
@@ -350,7 +350,7 @@ city/county "urban forestry" resource pages (permit guide as the hook), UF/IFAS 
 Owner grants access: Google Search Console (domain property), Bing Webmaster Tools (import from
 GSC; enable IndexNow with the key from FIX-SITEMAP), GBP Performance, PSI/CrUX. Optional: Vercel
 Web Analytics (toggle in Vercel; `@vercel/analytics` is not needed for static — the Vercel
-dashboard works) or GA4 if the agency wants it. Create `growth/METRICS.md` with the baseline table.
+dashboard works). Create `growth/METRICS.md` with the baseline table.
 
 ### MEASURE-MONTHLY (sidecar, first week of month)
 Log to `growth/METRICS.md`: GSC clicks/impressions/avg position (28 d), top 10 queries, top 10

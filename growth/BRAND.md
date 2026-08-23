@@ -35,9 +35,12 @@ this file wins — stop and flag it.
 | Voice | Who | Allowed to say | Not allowed |
 |---|---|---|---|
 | **Owner / ops** | Alexander Satoski, ISA Tree Service Operator | what we did, how crews work, process, pricing, philosophy, what we declined and why | diagnosis, disease ID, risk ratings, "as an arborist" |
-| **Arborist-reviewed** | "Reviewed by the ISA Certified Arborist on the Sacred Tree Service field team" (no name, no number) | biology, disease, pruning science, risk assessment | cert numbers, personal names |
+| **Company / field-team voice** | "our arborists", "the field team" — the company speaking, no individual names or cert numbers | biology, disease, pruning science, risk assessment | cert numbers, personal names |
 
-Blog frontmatter: `isaCertified: true` ONLY when the reviewer line is actually in the post.
+The site's existing "Arborist-reviewed" badge (`isaCertified: true` in blog frontmatter) is a label the
+owner controls — set it when the owner says the content reflects the staff arborists' practice. It is
+NOT an approval step: nobody outside the owner, the office manager and the website consultant reviews
+or signs off on content. No arborist sign-off gate, ever.
 
 ## Citation rules (every guide/post links at least one)
 
@@ -68,7 +71,11 @@ Blog frontmatter: `isaCertified: true` ONLY when the reviewer line is actually i
   address, no non-public phone, no passwords, no raw customer photos (`growth/inbox/` is gitignored).
 - Dark mode was removed on purpose. Don't reintroduce it.
 - Chat widget was removed at admin staff's request. Don't reintroduce it.
-- Don't name the marketing agency's tools or "Edgeful" anywhere on the site.
+- Don't name Lantern Media, GoHighLevel, or "Edgeful" anywhere on the site.
+- Ownership: sacredtreeservice.com (code, Vercel, GitHub) is built and run by the website consultant
+  (skuld) personally. Lantern Media has no control over the site (their old site was replaced); Lantern
+  only supplies the GoHighLevel lead form / SMS / CRM pieces embedded in it. Decisions are made by the
+  owner, the office manager and the consultant — no other approvals needed.
 
 ## Deploy rules
 

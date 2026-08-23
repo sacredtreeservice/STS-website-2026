@@ -39,7 +39,7 @@ exact inputs needed into `growth/inbox/out/needed-w<NN>.md`, commit that, and st
 - Follow PLAYBOOK steps literally. Touch only the files the recipe names unless a step requires another.
 - Content: answer-first, numbers/dates, ≥1 authoritative outbound link (UF/IFAS · ISA · ANSI A300/TCIA ·
   NOAA · the official ordinance/statute), ≥2 internal links, FAQ block with no duplicate questions
-  (`grep -rn "q: '" src` first), visible date, reviewer line for arboricultural content, Article schema
+  (`grep -rn "q: '" src` first), visible date, company/field-team voice for arboricultural content (never the owner's first person), Article schema
   with image. Facts and price ranges ONLY from `src/data/company.ts`, `src/data/services.ts`, existing
   pages, or the owner's inbox file — never invented. Verify every ordinance/statute/date you cite by
   fetching the official page THIS session (WebFetch) and cite its URL.

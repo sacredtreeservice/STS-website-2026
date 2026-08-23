@@ -1,8 +1,11 @@
-# Access we need to measure anything — owner / agency checklist (drafted 2026-08-23)
+# Access we need to measure anything — owner checklist (drafted 2026-08-23)
 
-Plain English: right now nobody on the website side can see how Google, Bing or the Business
-Profile are treating sacredtreeservice.com. Three free dashboards hold those numbers. The owner
-(or Lantern Media, if they hold the Google account) grants access once; after that every monthly
+Context: the website itself (code, Vercel hosting, GitHub) is built and run by the website
+consultant (skuld) personally — no agency involved. What's missing is access to Google's and
+Bing's dashboards about the site and to the Google Business Profile, which sit under whoever's
+Google account set them up (owner, office manager, or Lantern Media if they created the GBP — the
+source-of-truth doc, section 8, records who). Three free dashboards hold those numbers. Whoever
+holds each login grants access once; after that every monthly
 check-in logs real numbers into `growth/METRICS.md` and the weekly work can be steered by data
 instead of guesses. Until then we are flying blind.
 
@@ -13,7 +16,7 @@ whoever holds the accounts, and have them do the three steps below. ~20 minutes 
 What it shows: which searches show the site, clicks, average position, which pages are indexed,
 errors, and (since June 2026) a "Generative AI" report — impressions in AI Overviews / AI Mode.
 
-Do this (owner or Lantern, whoever controls the domain / Google account):
+Do this (whoever controls the GoDaddy domain / the Google account):
 1. Go to https://search.google.com/search-console → "Add property" → **Domain** → `sacredtreeservice.com`.
 2. Google gives a TXT record. Add it at GoDaddy → My Products → sacredtreeservice.com → DNS →
    Add record: Type `TXT`, Name `@`, Value = the `google-site-verification=…` string. Save, then
@@ -38,7 +41,7 @@ What it shows: calls, direction requests, website clicks, how people found the p
 how often Google's AI summaries showed it. It is also where posts, Q&A, services, hours, photos
 and review replies are managed — the biggest local ranking lever we have.
 
-Do this (whoever owns the profile — owner or Lantern):
+Do this (whoever owns the profile — per section 8 of the source-of-truth doc):
 1. https://business.google.com → select Sacred Tree Service → **Business Profile settings → People
    and access → Add** → the consultant's email → role **Manager** (not Owner).
 2. While in there, confirm: business type = **Service-area business** with the street address
