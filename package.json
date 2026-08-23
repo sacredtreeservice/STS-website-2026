@@ -9,7 +9,9 @@
     "dev": "astro dev --port 1234 --host",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "qa": "astro build && node scripts/qa/check-dist.mjs",
+    "qa:check": "node scripts/qa/check-dist.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

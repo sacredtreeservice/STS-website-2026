@@ -9,7 +9,13 @@ import { cities } from '../../data/cities';
 import { serviceSchema, faqSchema } from '../../lib/schema';
 
 export async function getStaticPaths() {
-  return services.map((s) => ({ params: { service: s.slug }, props: { service: s } }));
+  // Services with a hand-built page under src/pages/services/<slug>.astro are
+  // skipped here — otherwise Astro emits a "route collision" warning for each.
+  // (Declared inside: getStaticPaths runs in isolation and can't see module-scope consts.)
+  const CUSTOM_PAGES = new Set(['tree-planting', 'tree-care-plans', 'plant-health-care', 'large-tree-transplanting']);
+  return services
+    .filter((s) => !CUSTOM_PAGES.has(s.slug))
+    .map((s) => ({ params: { service: s.slug }, props: { service: s } }));
 }
 
 const { service } = Astro.props;
@@ -54,7 +60,7 @@ const jsonLd = [serviceSchema({ name: service.name, description: service.descrip
 >
   <div class="container">
     <Breadcrumbs trail={trail} />
-    <header class="head" data-reveal>
+    <header class="head">
       <span class="icon-hero" aria-hidden="true"><Icon name={service.icon} /></span>
       <h1>{service.name}</h1>
       <p class="lede">{service.blurb}</p>

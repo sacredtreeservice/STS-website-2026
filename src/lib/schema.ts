@@ -32,6 +32,9 @@ const areaServed: Record<string, any>[] = [
 ];
 
 // ── Hours: appointment-based, 7 days, with emergency response noted ────
+// Mirror the GBP hours exactly. No Sunday spec: a 00:00–23:59 Sunday entry
+// reads to parsers as "open all day Sunday" and contradicts GBP. After-hours
+// emergency/storm response is stated in prose, not as opening hours.
 const openingHoursSpecification = [
   {
     '@type': 'OpeningHoursSpecification',
@@ -39,19 +42,17 @@ const openingHoursSpecification = [
     opens: '08:00',
     closes: '18:00',
   },
-  {
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: ['Sunday'],
-    opens: '00:00',
-    closes: '23:59',
-    description: 'Emergency / storm response only',
-  },
 ];
 
 export const localBusinessSchema = () => {
   const schema: Record<string, any> = {
     '@context': 'https://schema.org',
-    '@type': 'TreeRemovalService',
+    // Real schema.org types only. 'TreeRemovalService' is NOT a schema.org
+    // type (schema.org/TreeRemovalService → 404) and made the whole business
+    // node unparseable; HomeAndConstructionBusiness is the closest valid
+    // LocalBusiness subtype. additionalType names the trade (Wikidata: arboriculture).
+    '@type': ['HomeAndConstructionBusiness', 'LocalBusiness'],
+    additionalType: 'https://www.wikidata.org/wiki/Q127213',
     '@id': `${SITE}#business`,
     name: company.legalName,
     alternateName: company.brandName,
@@ -239,7 +240,9 @@ export const articleSchema = (a: {
     author,
     publisher: { '@id': `${SITE}#business` },
   };
-  if (a.image) schema.image = [new URL(a.image, SITE).toString()];
+  // Article rich results require an image; fall back to the brand share card so
+  // every Article node is eligible instead of silently dropped.
+  schema.image = [new URL(a.image ?? '/assets/og-image.jpg', SITE).toString()];
   return schema;
 };
 

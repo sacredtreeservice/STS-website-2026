@@ -46,12 +46,12 @@ export default defineConfig({
   server: { port: 1234, host: true },
   integrations: [
     sitemap({
-      // Hidden pages (noindex): /book-a-call/ is an ad landing page, /workflow/
-      // is the staff field pricing guide. Keep both out of the sitemap entirely
-      // so crawlers are never even pointed at them.
+      // Hidden page (noindex): /book-a-call/ is the quick-office-call landing
+      // page. Keep it out of the sitemap entirely so crawlers are never even
+      // pointed at it.
       filter: (page) => {
         const path = page.replace(SITE, '').replace(/\/+$/, '');
-        return !['/book-a-call', '/workflow'].includes(path);
+        return path !== '/book-a-call';
       },
       // No lastmod, deliberately: stamping the build time on all ~580 URLs
       // every deploy is a provably false freshness signal, and Google
@@ -73,5 +73,7 @@ export default defineConfig({
   // Responsive content images: markdown/collection images emit srcset+sizes
   // automatically instead of shipping the full-resolution original into a
   // 760px column (blog photos are 2200px/1MB+ without this).
-  image: { layout: 'constrained' },
+  // breakpoints: content images are never wider than ~1200px on this site;
+  // without this Astro emitted 8 variants up to 2200w into a 760px column.
+  image: { layout: 'constrained', breakpoints: [640, 768, 1024, 1280, 1600] },
 });

@@ -22,3 +22,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# growth loop: raw owner material (photos with GPS, voice-note facts) must never hit the public repo.
+# README and the sanitized owner packs in out/ stay tracked.
+growth/inbox/*
+!growth/inbox/README.md
+!growth/inbox/out/
