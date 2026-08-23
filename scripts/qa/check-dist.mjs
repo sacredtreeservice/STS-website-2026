@@ -15,8 +15,7 @@
 //             confirming https://schema.org/<Type> is a real page);
 //             at most one LocalBusiness-ish node per page; @id graph sane
 //   links     every internal href resolves to a file in dist (or a known
-//             non-HTML asset); no links to /book-a-call/ or /workflow/ from
-//             indexable pages
+//             non-HTML asset); /book-a-call/ (hidden) linked only from /contact/
 //   images    every <img> has alt (empty alt allowed only with role=presentation)
 //   robots    noindex pages are NOT in the sitemap; sitemap URLs exist in dist
 //   freshness company.ts review-count "Last verified" date < 60 days old
@@ -48,7 +47,6 @@ const KNOWN_TYPES = new Set([
   'MonetaryAmount', 'QuantitativeValue', 'PropertyValue', 'Certification',
 ]);
 const BUSINESS_TYPES = new Set(['LocalBusiness', 'HomeAndConstructionBusiness', 'ProfessionalService', 'Organization']);
-const HIDDEN = ['/book-a-call/', '/workflow/'];
 const ASSET_EXT = /\.(jpg|jpeg|png|webp|avif|svg|gif|ico|css|js|mjs|xml|txt|json|webmanifest|pdf|woff2?|mp4|webm)$/i;
 
 const errors = [];
@@ -193,7 +191,6 @@ for (const file of files) {
     stats.links++;
     const path = href.startsWith('/') ? href : new URL(href, SITE + url).pathname;
     if (!fileForUrl(path)) err(rel, `broken internal link ${href}`);
-    if (!noindex && path.startsWith('/workflow/')) err(rel, `indexable page links to staff page ${href}`);
     if (!noindex && path.startsWith('/book-a-call/') && url !== '/contact/') warn(rel, `links to hidden ad page ${href} (only /contact/ does this by design)`);
     if (!ASSET_EXT.test(path) && !path.endsWith('/') && !path.includes('#')) warn(rel, `internal link without trailing slash: ${href}`);
   }

@@ -8,105 +8,76 @@
 
 User-agent: GPTBot
 Allow: /
-Disallow: /workflow/
 
 User-agent: ChatGPT-User
 Allow: /
-Disallow: /workflow/
 
 User-agent: OAI-SearchBot
 Allow: /
-Disallow: /workflow/
 
 User-agent: ClaudeBot
 Allow: /
-Disallow: /workflow/
 
 User-agent: Claude-User
 Allow: /
-Disallow: /workflow/
 
 User-agent: Claude-SearchBot
 Allow: /
-Disallow: /workflow/
 
 User-agent: Claude-Web
 Allow: /
-Disallow: /workflow/
 
 User-agent: anthropic-ai
 Allow: /
-Disallow: /workflow/
 
 User-agent: PerplexityBot
 Allow: /
-Disallow: /workflow/
 
 User-agent: Perplexity-User
 Allow: /
-Disallow: /workflow/
 
 User-agent: Google-Extended
 Allow: /
-Disallow: /workflow/
 
 User-agent: GoogleOther
 Allow: /
-Disallow: /workflow/
 
 User-agent: Applebot-Extended
 Allow: /
-Disallow: /workflow/
 
 User-agent: CCBot
 Allow: /
-Disallow: /workflow/
 
 User-agent: cohere-ai
 Allow: /
-Disallow: /workflow/
 
 User-agent: cohere-training-data-crawler
 Allow: /
-Disallow: /workflow/
 
 User-agent: Amazonbot
 Allow: /
-Disallow: /workflow/
 
 User-agent: Meta-ExternalAgent
 Allow: /
-Disallow: /workflow/
 
 User-agent: Meta-ExternalFetcher
 Allow: /
-Disallow: /workflow/
 
 User-agent: Bytespider
 Allow: /
-Disallow: /workflow/
 
 User-agent: DuckAssistBot
 Allow: /
-Disallow: /workflow/
 
 User-agent: YouBot
 Allow: /
-Disallow: /workflow/
 
 User-agent: MistralAI-User
 Allow: /
-Disallow: /workflow/
 
 # ── Everyone else ────────────────────────────────────────────────
 User-agent: *
 Allow: /
-Disallow: /workflow/
-
-# /workflow/ is the staff-only field guide, not a public page. It is disallowed
-# in EVERY group above on purpose: a bot with its own User-agent group ignores
-# the "*" rules entirely, so the line has to be repeated per bot. The page is
-# also noindex via <meta> and X-Robots-Tag.
 
 Sitemap: https://sacredtreeservice.com/sitemap-index.xml
 

@@ -58,13 +58,11 @@ https://validator.schema.org after deploy → 0 errors; Rich Results Test shows 
    ]
    ```
    (Owner alternative: Vercel → Project → Domains → set `www` to "Redirect to sacredtreeservice.com".)
-2. Add header block for `/workflow/(.*)` and `/book-a-call/(.*)`:
-   `{ "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" }`.
-3. Flag to owner (do not do yourself): `/workflow/` shows internal cost basis behind a client-side
-   password that is visible in page source. Recommend moving it to SkuldTree or deleting the
-   cost-basis lines. Owner call.
+2. Header block for `/book-a-call/(.*)`: `{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }`.
+3. `/workflow/` (staff pricing guide) was deleted outright in W1 — internal pricing does not belong on
+   the site or in the public repo.
 **Accept:** after deploy `curl -sI https://www.sacredtreeservice.com/services/` → `308` to apex;
-`curl -sI https://sacredtreeservice.com/workflow/` shows `x-robots-tag`.
+`curl -sI https://sacredtreeservice.com/workflow/` → `404`.
 
 ### FIX-GEO — HQ is Apopka, make the data say so
 **Why:** `cities.ts` distances are measured from Orlando (`orlando: 0`, `apopka: 9`) and
@@ -189,7 +187,7 @@ manually after each merge (or from the skill). Bing/Copilot only; Google ignores
 `googleReviewCount` from the live GBP and bump `Last verified:`; surface "N+ Google reviews (as
 of <month year>)" in llms.txt and /reviews/; rewrite README (it's still starter boilerplate);
 fix DEPLOYMENT.md stale numbers. Consider `src/data/pricing.ts` as the one source for every
-published range (services FAQs, cost guide, /workflow/).
+published range (services FAQs, cost guide); the owner's private price book is the upstream.
 **Accept:** `grep -rn "321) 204" src` returns only `company.ts`; QA freshness warning gone.
 
 ### FIX-DEPS — keep the stack current

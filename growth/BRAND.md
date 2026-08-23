@@ -60,9 +60,12 @@ Blog frontmatter: `isaCertified: true` ONLY when the reviewer line is actually i
 
 - The lead form is a **request** form (GoHighLevel). Customers must NOT self-book appointments.
   Don't add calendars, booking widgets, or "pick a time" language on public pages.
-- `/workflow/` (staff pricing guide) is hidden (noindex, out of sitemap) — never link it from any
-  public page. `/book-a-call/` (quick office call, GHL calendar) is also noindex/out of sitemap and is
-  linked only from `/contact/` by design — don't add more links to it, don't "promote" it.
+- `/book-a-call/` (quick office call, GHL calendar) is noindex/out of sitemap and is linked only
+  from `/contact/` by design — don't add more links to it, don't "promote" it.
+- The old `/workflow/` staff pricing guide was DELETED 2026-08-23 (it leaked internal pricing from a
+  public repo). Internal pricing never goes on the website or in this repo again — it lives in
+  SkuldTree / the owner's own docs. The repo is PUBLIC on GitHub: nothing internal, no street
+  address, no non-public phone, no passwords, no raw customer photos (`growth/inbox/` is gitignored).
 - Dark mode was removed on purpose. Don't reintroduce it.
 - Chat widget was removed at admin staff's request. Don't reintroduce it.
 - Don't name the marketing agency's tools or "Edgeful" anywhere on the site.
