@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { company } from '../data/company';
+import { company, fullAddress } from '../data/company';
 import { services } from '../data/services';
 import { cities } from '../data/cities';
 import { counties } from '../data/counties';
@@ -44,7 +44,7 @@ export const GET: APIRoute = () => {
   out.push(`- Brand name: ${company.brandName}`);
   out.push(`- Tagline: ${company.tagline}`);
   out.push(`- Founded: ${company.founded}`);
-  out.push(`- Based in: Apopka, FL — centrally located to serve the greater Orlando area`);
+  out.push(`- Address: ${fullAddress} — centrally located to serve the greater Orlando area`);
   out.push(`- Phone: ${company.phone}`);
   out.push(`- Email: ${company.email}`);
   out.push(`- Website: ${SITE}`);
@@ -54,7 +54,7 @@ export const GET: APIRoute = () => {
   out.push(`- Google rating: ${company.googleAverageRating.toFixed(1)} stars (5-star average across our reviews)`);
   out.push(`- Credentials: ${company.credentials.join('; ')}`);
   out.push(`- Memberships: ${company.memberships.join('; ')}`);
-  out.push(`- Social: ${company.social.facebook}`);
+  out.push(`- Profiles: ${Object.values(company.social).filter(Boolean).join(' · ')}`);
   out.push('');
 
   // ── 3. Services catalog ──────────────────────────────────────────

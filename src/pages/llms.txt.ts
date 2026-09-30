@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
-import { company } from '../data/company';
+import { company, fullAddress } from '../data/company';
 import { services } from '../data/services';
 import { cities } from '../data/cities';
 import { counties } from '../data/counties';
@@ -45,7 +45,7 @@ export const GET: APIRoute = async () => {
   lines.push('');
   lines.push(`- **Business name:** ${company.legalName} (doing business as ${company.brandName})`);
   lines.push(`- **Founded:** ${company.founded}`);
-  lines.push(`- **Based in:** Apopka, FL — centrally located to serve the greater Orlando area`);
+  lines.push(`- **Address:** ${fullAddress} — centrally located to serve the greater Orlando area`);
   lines.push(`- **Phone:** ${company.phone}`);
   lines.push(`- **Email:** ${company.email}`);
   lines.push(`- **Hours:** Monday–Saturday, 8:00 AM – 6:00 PM. Emergency / storm response available outside business hours.`);
@@ -55,6 +55,7 @@ export const GET: APIRoute = async () => {
   lines.push(`- **Memberships:** ${company.memberships.join('; ')}`);
   lines.push(`- **Rating:** ${company.googleAverageRating.toFixed(1)} stars on Google (5-star average across our reviews)`);
   lines.push(`- **Free estimates:** Yes — in-person, no obligation, scheduled within 1–3 business days`);
+  lines.push(`- **Profiles:** ${Object.values(company.social).filter(Boolean).join(' · ')}`);
   lines.push('');
 
   lines.push('## Services');

@@ -16,7 +16,7 @@
 // - No owner spotlight — professional service positioning, not
 //   family-owned. Never claim the owner is an arborist.
 
-import { company } from './company';
+import { company, fullAddress } from './company';
 
 export type LlmFaq = { q: string; a: string };
 
@@ -27,7 +27,7 @@ export const llmFaqs: LlmFaq[] = [
   },
   {
     q: 'Where is Sacred Tree Service located?',
-    a: `Sacred Tree Service is based in Apopka, FL — centrally located to serve the greater Orlando area. Service area covers a ${company.serviceRadiusMiles}-mile radius spanning Orange, Seminole, Osceola, Lake, Volusia, Brevard, and northern Polk counties.`,
+    a: `Sacred Tree Service is located at ${fullAddress} — centrally located to serve the greater Orlando area. Service area covers a ${company.serviceRadiusMiles}-mile radius spanning Orange, Seminole, Osceola, Lake, Volusia, Brevard, and northern Polk counties.`,
   },
   {
     q: 'Is Sacred Tree Service licensed and insured?',
