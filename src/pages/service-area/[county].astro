@@ -8,8 +8,9 @@ import CtaBand from '../../components/CtaBand.astro';
 import { counties } from '../../data/counties';
 import { cities } from '../../data/cities';
 import { services } from '../../data/services';
-import { faqSchema } from '../../lib/schema';
+import { faqSchema, webPageSchema } from '../../lib/schema';
 import { company } from '../../data/company';
+import { SERVICE_AREA_UPDATED } from '../../data/cities';
 
 export async function getStaticPaths() {
   return counties.map((c) => ({ params: { county: c.slug }, props: { county: c } }));
@@ -27,13 +28,17 @@ const countyCities = cities
   .filter((c) => c.county === county.county)
   .sort((a, b) => a.miles - b.miles);
 
-const cityList = countyCities.map((c) => c.name).join(', ');
+const placeLabel = (c: (typeof cities)[number]) => (c.neighborhoodOf ? `${c.name} (${c.neighborhoodOf})` : c.name);
+const cityList = countyCities.map(placeLabel).join(', ');
+const n = countyCities.length;
+const placesNoun = n === 1 ? 'community' : 'cities and communities';
 const closestMi = countyCities[0]?.miles ?? null;
+const pageUrl = `/service-area/${county.slug}/`;
 
 const faqs = [
   {
     q: `Does Sacred Tree Service work in ${county.name}?`,
-    a: `Yes. ${county.name} is fully inside the 50-mile service radius we cover from our Apopka, FL base in the greater Orlando area. We serve ${countyCities.length} cities and communities in ${county.county} County, including ${cityList}.`,
+    a: `Yes. ${county.name} is fully inside the 50-mile service radius we cover from our Apopka, FL base in the greater Orlando area. We serve ${n} ${placesNoun} in ${county.county} County, including ${cityList}.`,
   },
   {
     q: `What tree services are available in ${county.county} County?`,
@@ -73,16 +78,19 @@ const itemList = {
     '@type': 'ListItem',
     position: i + 1,
     url: `https://sacredtreeservice.com/service-area/${c.slug}/`,
-    name: `${c.name}, FL`,
+    name: c.neighborhoodOf ? `${c.name}, ${c.neighborhoodOf}, FL` : `${c.name}, FL`,
   })),
 };
+
+const pageTitle = `Tree Service in ${county.name} — Sacred Tree Service`;
+const pageDescription = `Professional tree care across ${county.name}. ${county.region}. Tree removal, pruning, palm care, and emergency response across ${n} ${n === 1 ? 'community' : 'cities'}. Licensed & insured. Free estimates.`;
 ---
 
 <Base
-  title={`Tree Service in ${county.name} — Sacred Tree Service`}
-  description={`Professional tree care across ${county.name}. ${county.region}. Tree removal, pruning, palm care, and emergency response across ${countyCities.length} cities. Licensed & insured. Free estimates.`}
+  title={pageTitle}
+  description={pageDescription}
   breadcrumbs={trail}
-  jsonLd={[faqSchema(faqs), countyServiceSchema, itemList]}
+  jsonLd={[faqSchema(faqs), countyServiceSchema, itemList, webPageSchema({ url: pageUrl, name: pageTitle, description: pageDescription, dateModified: SERVICE_AREA_UPDATED })]}
 >
   <div class="container">
     <Breadcrumbs trail={trail} />
@@ -93,9 +101,12 @@ const itemList = {
       <p class="lede">{county.blurb}</p>
       {closestMi !== null && (
         <p class="meta">
-          Closest community to our Apopka base:
-          <strong>{countyCities[0].name}</strong> (~{closestMi} mi).
-          Coverage: <strong>{countyCities.length}</strong> cities &amp; communities across {county.county} County.
+          {closestMi === 0 ? (
+            <>Home base: <strong>{countyCities[0].name}</strong>.</>
+          ) : (
+            <>Closest community to our Apopka base: <strong>{countyCities[0].name}</strong> (~{closestMi} mi).</>
+          )}{' '}
+          Coverage: <strong>{n}</strong> {n === 1 ? 'community' : 'cities & communities'} across {county.county} County.
         </p>
       )}
     </header>
@@ -109,8 +120,8 @@ const itemList = {
               <li>
                 <a href={`/service-area/${c.slug}/`}>
                   <Icon name="lucide:map-pin" />
-                  <span>{c.name}</span>
-                  <em>{c.miles} mi</em>
+                  <span>{placeLabel(c)}</span>
+                  <em>{c.miles === 0 ? 'home base' : `${c.miles} mi`}</em>
                 </a>
               </li>
             ))}

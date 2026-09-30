@@ -103,7 +103,8 @@ export const GET: APIRoute = () => {
       out.push(`Cities and communities served in ${c.name}:`);
       for (const ci of inCounty) {
         const label = ci.neighborhoodOf ? `${ci.name} (${ci.neighborhoodOf} neighborhood, ZIP ${ci.zip})` : `${ci.name}, FL`;
-        out.push(`- ${label} — ~${ci.miles} mi from our Apopka, FL base — ${SITE}/service-area/${ci.slug}/`);
+        const where = ci.miles === 0 ? 'our home base' : `~${ci.miles} mi from our Apopka, FL base`;
+        out.push(`- ${label} — ${where} — ${SITE}/service-area/${ci.slug}/`);
       }
       out.push('');
     }

@@ -70,7 +70,7 @@ const byCounty = cities.reduce<Record<string, typeof cities>>((acc, c) => {
                 <a href={`/service-area/${c.slug}/`}>
                   <Icon name="lucide:map-pin" />
                   <span>{c.name}</span>
-                  <em>{c.neighborhoodOf ? `${c.neighborhoodOf} · ${c.zip}` : `${c.miles} mi`}</em>
+                  <em>{c.neighborhoodOf ? `${c.neighborhoodOf} · ${c.zip}` : c.miles === 0 ? 'home base' : `${c.miles} mi`}</em>
                 </a>
               </li>
             ))}

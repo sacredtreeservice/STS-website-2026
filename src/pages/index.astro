@@ -53,9 +53,13 @@ const regions = [
       'millenia',
       'hunters-creek',
       'lake-nona',
-      'belle-isle',
-      'pine-hills',
     ),
+  },
+  {
+    name: 'Winter Park & the Orlando metro',
+    subtitle: 'Winter Park · Maitland · Pine Hills · Belle Isle',
+    countyHref: '/service-area/orange-county/',
+    cities: pick('winter-park', 'maitland', 'pine-hills', 'belle-isle'),
   },
   {
     name: 'West Orange County',
@@ -65,11 +69,9 @@ const regions = [
   },
   {
     name: 'North Metro · Seminole County',
-    subtitle: 'Winter Park · Longwood · Lake Mary · Sanford',
+    subtitle: 'Longwood · Lake Mary · Sanford · Oviedo',
     countyHref: '/service-area/seminole-county/',
     cities: pick(
-      'winter-park',
-      'maitland',
       'altamonte-springs',
       'longwood',
       'casselberry',

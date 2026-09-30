@@ -56,7 +56,7 @@ const related = (service.relatedSlugs ?? [])
   .filter((s): s is (typeof services)[number] => Boolean(s));
 
 // Answer-shaped opener: a liftable, self-contained answer before context.
-const directAnswer = `Sacred Tree Service provides ${service.name.toLowerCase()} throughout Orlando and Central Florida, within a 50-mile radius of our Apopka, FL base. Work is performed to ANSI A300 and Z133 standards by a licensed, insured crew with ISA Certified Arborists on staff. Estimates are free and in person — call (321) 204-8459.`;
+const directAnswer = `Sacred Tree Service provides ${service.name.toLowerCase()} throughout Orlando and Central Florida, within a 50-mile radius of our Apopka, FL base. The work is done by a licensed, insured crew that works to national standards (ANSI A300 pruning, ANSI Z133 safety), with ISA Certified Arborists on staff. Estimates are free and in person — call (321) 204-8459.`;
 
 const jsonLd = [serviceSchema({ name: service.name, description: service.description, slug: service.slug }), faqSchema(faqs)];
 ---
@@ -107,13 +107,16 @@ const jsonLd = [serviceSchema({ name: service.name, description: service.descrip
         )}
 
         <h2>Cities we serve</h2>
-        <p>We provide {service.shortName.toLowerCase()} services across Central Florida, including:</p>
+        <p>
+          We provide {service.shortName.toLowerCase()} services across Central Florida, including the places below
+          {hasComboPages ? ' — our core service cities and Orlando neighborhoods each have their own page for this service' : ''}:
+        </p>
         {neighborhoods.length > 0 && (
           <div class="county-group">
             <h3>Orlando neighborhoods</h3>
             <ul class="cities">
               {neighborhoods.map((c) => (
-                <li><a href={placeHref(c)}>{service.shortName} in {c.name}</a></li>
+                <li><a href={placeHref(c)}>{hasComboPages && c.tier === 1 ? `${service.shortName} in ${c.name}` : c.name}</a></li>
               ))}
             </ul>
           </div>
@@ -123,7 +126,7 @@ const jsonLd = [serviceSchema({ name: service.name, description: service.descrip
             <h3>{group.county} County</h3>
             <ul class="cities">
               {group.cities.map((c) => (
-                <li><a href={placeHref(c)}>{service.shortName} in {c.name}</a></li>
+                <li><a href={placeHref(c)}>{hasComboPages && c.tier === 1 ? `${service.shortName} in ${c.name}` : c.name}</a></li>
               ))}
             </ul>
           </div>

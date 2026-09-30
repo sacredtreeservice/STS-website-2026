@@ -66,7 +66,9 @@ export const cities: City[] = [
     slug: 'apopka',
     name: 'Apopka',
     county: 'Orange',
-    miles: 8,
+    // Home base. The city centroid is ~8 straight-line miles from the HQ,
+    // but the page copy treats miles === 0 as "our home base".
+    miles: 0,
     tier: 1,
     hook: 'Known as the “Indoor Foliage Capital,” Apopka properties often feature specimen trees worth preserving — and it’s where we’re based.',
     intro:
@@ -104,7 +106,7 @@ export const cities: City[] = [
     county: 'Orange',
     miles: 14,
     tier: 1,
-    hook: 'Ocoee’s mature oak canopy sits close to homes across much of the city, which makes structural pruning the difference between a long-lived tree and a liability.',
+    hook: 'Ocoee’s mature oak canopy sits close to homes across much of the city, which makes structural pruning the routine work that keeps those trees long-lived.',
     intro:
       'Ocoee blends older homes near downtown and Starke Lake with newer subdivisions that filled in along the SR-429 corridor. The established sections carry a healthy live oak and laurel oak canopy, while the lakefront lots add cypress at the water’s edge. As the West Orange area keeps growing, a lot of the work here is balancing preserved mature shade trees against new construction nearby.',
     species: ['live oak', 'laurel oak', 'water oak', 'bald cypress', 'sabal palm'],
@@ -140,7 +142,7 @@ export const cities: City[] = [
     county: 'Seminole',
     miles: 14,
     tier: 1,
-    hook: 'Altamonte Springs’ 1970s-era subdivisions are full of laurel oaks now reaching the end of a naturally short lifespan — a species that tends to fail with little warning.',
+    hook: 'Altamonte Springs’ 1970s-era subdivisions are full of laurel oaks now in the later part of a naturally shorter lifespan, which makes periodic assessment worthwhile.',
     intro:
       'Altamonte Springs filled in heavily through the 1970s and 80s, and the subdivisions around Lake Orienta and Cranes Roost carry a dense laurel oak canopy from that era. Those laurel oaks are now reaching the age where interior decay and weak unions become a concern. Sitting in the I-4 corridor, the city sees its share of storm wind, so proactive structural pruning is a routine ask here.',
     species: ['laurel oak', 'water oak', 'live oak', 'sabal palm', 'slash pine'],
@@ -204,7 +206,7 @@ export const cities: City[] = [
     tier: 1,
     neighborhoodOf: 'Orlando',
     zip: '32819',
-    hook: 'Dr. Phillips’ large lots and lakefront properties hold some of the biggest specimen live oaks in Orange County, often with structural defects hidden high in the canopy.',
+    hook: 'Dr. Phillips’ large lots and lakefront properties carry mature specimen live oaks, where the pruning decisions that matter are made high in the canopy rather than from the ground.',
     intro:
       'Dr. Phillips takes its name from the citrus pioneer whose groves once covered this area near the Big Sand Lake chain, and today it is one of the metro’s premier residential districts. The estate lots blend mature live oaks with sabal and queen palms across well-kept landscapes. With high property values and prominent specimen trees, preservation pruning and tree health are usually the priority over removal.',
     species: ['live oak', 'laurel oak', 'sabal palm', 'queen palm', 'southern magnolia'],
@@ -303,6 +305,8 @@ export const cities: City[] = [
     miles: 33,
     tier: 1,
     neighborhoodOf: 'Orlando',
+    // Lake Nona spans 32827 (Medical City / Town Center) and 32832 (the
+    // job-data pocket, "Lake Nona South"). 32827 is the neighborhood core.
     zip: '32827',
     hook: 'Lake Nona’s newer developments are full of young trees still in their establishment years — the window where structural pruning does the most long-term good.',
     intro:
@@ -550,7 +554,7 @@ export const cities: City[] = [
     tier: 2,
     hook: 'Osteen’s acreage lots run from pine flatwoods down to the St. Johns River floodplain, so one property can carry upland pines, hammock oaks, and low-ground cypress — each with different needs.',
     intro:
-      'Osteen is an unincorporated rural community in southwest Volusia County, with Deltona to the north, Lake Monroe to the west, the St. Johns River to the south, and State Road 415 as its main road. Lots here are large — acreage, pasture, and horse properties — and the native cover shifts from pine flatwoods and oak hammock on the higher ground to cypress and floodplain swamp toward the river. Typical work is practical: taking down pines and crowded oaks near homes, barns, and driveways, clearing along fence lines and pasture edges, and cleaning up the big hammock oaks that shade older homesteads.',
+      'Osteen is an unincorporated rural community in southwest Volusia County, with Deltona to the north, Lake Monroe to the west, the St. Johns River to the south, and State Road 415 as its main road. Lots here are large — acreage, pasture, and horse properties — and the native cover shifts from pine flatwoods and oak hammock on the higher ground to cypress and floodplain swamp toward the river. Typical work is practical: thinning crowded pines and oaks near homes, barns, and driveways, clearing along fence lines and pasture edges, and preservation pruning on the big hammock oaks that shade older homesteads.',
     species: ['live oak', 'slash pine', 'longleaf pine', 'bald cypress', 'sabal palm', 'laurel oak'],
     landmarks: ['State Road 415', 'Lemon Bluff Park', 'Hickory Bluff Preserve', 'Lake Monroe Conservation Area'],
   },

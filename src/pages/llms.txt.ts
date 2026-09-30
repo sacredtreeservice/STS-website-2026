@@ -79,7 +79,8 @@ export const GET: APIRoute = async () => {
   lines.push('## Primary service cities');
   lines.push('');
   for (const c of primaryCities) {
-    lines.push(`- [${c.name}, FL](${SITE}/service-area/${c.slug}/) — ${c.county} County, ~${c.miles} mi from our Apopka base. ${c.hook}`);
+    const where = c.miles === 0 ? 'our home base' : `~${c.miles} mi from our Apopka base`;
+    lines.push(`- [${c.name}, FL](${SITE}/service-area/${c.slug}/) — ${c.county} County, ${where}. ${c.hook}`);
   }
   lines.push('');
 

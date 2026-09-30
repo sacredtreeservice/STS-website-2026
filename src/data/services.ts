@@ -39,7 +39,7 @@ export const services: Service[] = [
       },
       {
         q: 'When is the best time to prune trees in Florida?',
-        a: 'Late winter through early spring (January–March) is ideal for most species — the tree is dormant, structural defects are visible, and there is time to push new growth before summer. Oaks specifically should be pruned in cooler months to reduce oak wilt risk. Storm-damaged or dead wood should be removed whenever found, regardless of season. Palms follow different rules.',
+        a: 'Late winter through early spring (January–March) is ideal for most species — the tree is dormant, structural defects are visible, and there is time to push new growth before summer. Oaks specifically are best pruned in the cooler months, while they are dormant. Storm-damaged or dead wood should be removed whenever found, regardless of season. Palms follow different rules.',
       },
       {
         q: 'Why don’t you "top" trees?',

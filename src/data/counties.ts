@@ -105,7 +105,7 @@ export const counties: County[] = [
     slug: 'brevard-county',
     county: 'Brevard',
     name: 'Brevard County, FL',
-    region: 'Space Coast — Titusville, Cocoa, the Indian River',
+    region: 'Space Coast — Titusville and the Indian River',
     blurb:
       'On the Space Coast, salt spray, coastal wind, and sandy soils all change how trees behave. Our Brevard service area covers Titusville and the north Brevard corridor at the edge of our 50-mile radius.',
     highlights: ['Titusville'],
