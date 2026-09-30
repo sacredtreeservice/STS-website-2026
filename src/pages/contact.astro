@@ -37,8 +37,10 @@ const trail = [
           <a href={`mailto:${company.email}`}>{company.email}</a>
         </p>
         <p>
-          <strong>Based in</strong><br />
-          Apopka, FL — centrally located to serve the greater Orlando area.
+          <strong>Address</strong><br />
+          {company.address.street}<br />
+          {company.address.city}, {company.address.region} {company.address.postal}<br />
+          Centrally located to serve the greater Orlando area.
         </p>
         <p class="hours">
           <strong>Hours</strong><br />

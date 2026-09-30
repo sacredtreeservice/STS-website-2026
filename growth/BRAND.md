@@ -14,7 +14,9 @@ this file wins — stop and flag it.
 - Company is an ISA and TCIA **member** (not "accredited", not "certified company").
 - Licensed · Insured · Workers' Comp. Certificate of insurance available on request.
 - Phone (321) 204-8459 · sacredtreeservice@gmail.com.
-- Public location = **"Apopka, FL"** only. No street address, no ZIP, no map pin copy. Ever.
+- Public address = **5844 Round Lake Rd, Apopka, FL 32712** (owner decision 2026-09-30, reversing
+  the earlier city-only rule). One NAP record everywhere: site, schema, /llms.txt, every listing.
+  Source of truth is `company.address` — never hand-type the address in copy.
 - Serves greater Orlando, ~50-mile radius, 7 counties (Orange, Seminole, Osceola, Lake,
   Volusia, Brevard, Polk). Hours Mon–Sat 8–6; **after-hours emergency/storm response** —
   write it that way, not "24/7" (schema hours say Sunday = emergency only).
@@ -67,8 +69,7 @@ or signs off on content. No arborist sign-off gate, ever.
   from `/contact/` by design — don't add more links to it, don't "promote" it.
 - The old `/workflow/` staff pricing guide was DELETED 2026-08-23 (it leaked internal pricing from a
   public repo). Internal pricing never goes on the website or in this repo again — it lives in
-  SkuldTree / the owner's own docs. The repo is PUBLIC on GitHub: nothing internal, no street
-  address, no non-public phone, no passwords, no raw customer photos (`growth/inbox/` is gitignored).
+  SkuldTree / the owner's own docs. The repo is PUBLIC on GitHub: nothing internal, no non-public phone, no passwords, no raw customer photos (`growth/inbox/` is gitignored).
 - Dark mode was removed on purpose. Don't reintroduce it.
 - Chat widget was removed at admin staff's request. Don't reintroduce it.
 - Don't name Lantern Media, GoHighLevel, or "Edgeful" anywhere on the site.

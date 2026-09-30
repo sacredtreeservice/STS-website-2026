@@ -28,3 +28,7 @@ pnpm-debug.log*
 growth/inbox/*
 !growth/inbox/README.md
 !growth/inbox/out/
+
+# Vercel CLI link + local env (OIDC token)
+.vercel
+.env*.local

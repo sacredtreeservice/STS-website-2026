@@ -4,7 +4,7 @@
 // format that AI assistants (ChatGPT, Claude, Perplexity, Gemini)
 // like to lift verbatim into summary cards.
 import { Icon } from 'astro-icon/components';
-import { company } from '../data/company';
+import { company, fullAddress } from '../data/company';
 import { counties } from '../data/counties';
 
 const facts = [
@@ -20,8 +20,8 @@ const facts = [
   },
   {
     icon: 'lucide:map-pin',
-    label: 'Based in',
-    value: 'Apopka, FL — centrally located to serve the greater Orlando area',
+    label: 'Address',
+    value: `${fullAddress} — centrally located to serve the greater Orlando area`,
   },
   {
     icon: 'lucide:phone',
