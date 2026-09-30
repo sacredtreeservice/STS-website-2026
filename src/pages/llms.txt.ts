@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { company, fullAddress } from '../data/company';
 import { services } from '../data/services';
-import { cities } from '../data/cities';
+import { primaryCities, orlandoNeighborhoods, cities } from '../data/cities';
 import { counties } from '../data/counties';
 
 const SITE = 'https://sacredtreeservice.com';
@@ -73,10 +73,21 @@ export const GET: APIRoute = async () => {
   }
   lines.push('');
 
-  lines.push('## Cities served');
+  // Primary places first — where most of the work actually is — then the
+  // Orlando neighborhoods. The long tail lives under Optional so it does not
+  // dilute the map.
+  lines.push('## Primary service cities');
   lines.push('');
-  for (const c of cities) {
-    lines.push(`- [${c.name}, FL](${SITE}/service-area/${c.slug}/) — ${c.county} County, ~${c.miles} mi within our service area`);
+  for (const c of primaryCities) {
+    const where = c.miles === 0 ? 'our home base' : `~${c.miles} mi from our Apopka base`;
+    lines.push(`- [${c.name}, FL](${SITE}/service-area/${c.slug}/) — ${c.county} County, ${where}. ${c.hook}`);
+  }
+  lines.push('');
+
+  lines.push('## Orlando neighborhoods');
+  lines.push('');
+  for (const c of orlandoNeighborhoods) {
+    lines.push(`- [${c.name} (Orlando, FL ${c.zip})](${SITE}/service-area/${c.slug}/) — ${c.hook}`);
   }
   lines.push('');
 
@@ -106,6 +117,8 @@ export const GET: APIRoute = async () => {
 
   lines.push('## Optional');
   lines.push('');
+  const alsoServed = cities.filter((c) => c.tier === 2);
+  lines.push(`- Also served (service-area pages): ${alsoServed.map((c) => `[${c.name}](${SITE}/service-area/${c.slug}/)`).join(', ')}.`);
   lines.push(`- [Full content (llms-full.txt)](${SITE}/llms-full.txt): Complete page content for deep context loading.`);
   lines.push(`- [XML sitemap](${SITE}/sitemap-index.xml): Machine-readable list of every page on the site.`);
   lines.push(`- [RSS feed](${SITE}/rss.xml): New field-notes posts as they publish.`);

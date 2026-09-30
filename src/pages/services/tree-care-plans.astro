@@ -5,7 +5,7 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import BookingForm from '../../components/BookingForm.astro';
 import FaqBlock from '../../components/FaqBlock.astro';
 import { getServiceBySlug } from '../../data/services';
-import { cities } from '../../data/cities';
+import { matrixCities } from '../../data/cities';
 import { serviceSchema, faqSchema } from '../../lib/schema';
 
 const service = getServiceBySlug('tree-care-plans')!;
@@ -126,7 +126,9 @@ const whoFor = [
   },
 ];
 
-const cityList = cities.slice(0, 18);
+// Tier-2 service: no per-city pages (docs/service-area-data-2026-09.md), so
+// the city links go to each place's service-area page.
+const cityList = matrixCities;
 const jsonLd = [
   serviceSchema({
     name: service.name,
@@ -292,7 +294,7 @@ const jsonLd = [
         </p>
         <ul class="cities">
           {cityList.map((c) => (
-            <li><a href={`/services/${service.slug}/${c.slug}/`}>Tree Care Plans in {c.name}</a></li>
+            <li><a href={`/service-area/${c.slug}/`}>Tree Care Plans in {c.name}</a></li>
           ))}
         </ul>
         <FaqBlock faqs={service.faqs!} />

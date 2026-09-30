@@ -4,10 +4,10 @@ import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import BookingForm from '../../components/BookingForm.astro';
 import FaqBlock from '../../components/FaqBlock.astro';
-import { cities } from '../../data/cities';
+import { cities, SERVICE_AREA_UPDATED } from '../../data/cities';
 import { services } from '../../data/services';
 import { getCountyByName } from '../../data/counties';
-import { faqSchema } from '../../lib/schema';
+import { faqSchema, webPageSchema } from '../../lib/schema';
 
 export async function getStaticPaths() {
   return cities.map((c) => ({ params: { city: c.slug }, props: { city: c } }));
@@ -15,46 +15,81 @@ export async function getStaticPaths() {
 
 const { city } = Astro.props;
 
+const isHood = Boolean(city.neighborhoodOf);
+const placeLine = isHood ? `${city.name}, a neighborhood of ${city.neighborhoodOf}, FL` : `${city.name}, FL`;
+const placeShort = isHood ? `${city.name}, ${city.neighborhoodOf}` : `${city.name}, FL`;
+const areaLine = isHood ? `${city.name} and the surrounding ${city.neighborhoodOf} area` : `${city.name} and ${city.county} County`;
+const isHome = city.miles === 0;
+// Neighborhood pages that roll up under this city (Orlando only, today).
+const neighborhoods = cities.filter((c) => c.neighborhoodOf === city.name);
+
+const url = `/service-area/${city.slug}/`;
 const trail = [
   { name: 'Home', url: '/' },
   { name: 'Service Area', url: '/service-area/' },
-  { name: city.name, url: `/service-area/${city.slug}/` },
+  { name: city.name, url },
 ];
 
+// Tier-1 places carry a page per core service; everywhere else the service
+// link goes to the main service page (the work is the same, the page isn't
+// duplicated).
+const coreServices = services.filter((s) => s.tier === 1);
+const moreServices = services.filter((s) => s.tier !== 1);
+const serviceHref = (slug: string) => (city.tier === 1 ? `/services/${slug}/${city.slug}/` : `/services/${slug}/`);
+
 const faqs = [
-  { q: `Does Sacred Tree Service work in ${city.name}, FL?`,
-    a: `Yes. ${city.name} sits well within the greater Orlando area we serve from our Apopka, FL base — inside our 50-mile service radius. We provide full tree care services across ${city.county} County.` },
+  { q: `Does Sacred Tree Service work in ${city.name}${isHood ? '' : ', FL'}?`,
+    a: isHood
+      ? `Yes. ${city.name} is a neighborhood of ${city.neighborhoodOf}${city.zip ? ` (ZIP ${city.zip})` : ''} and one of the areas where we work most. We're based in Apopka, FL, about ${city.miles} miles away — well inside our 50-mile service radius.`
+      : isHome
+        ? `Yes. ${city.name} is our home base — Sacred Tree Service is headquartered here, at the center of our 50-mile service radius. We provide full tree care services across ${city.county} County.`
+        : `Yes. ${city.name} sits well within the greater Orlando area we serve from our Apopka, FL base — about ${city.miles} miles away, inside our 50-mile service radius. We provide full tree care services across ${city.county} County.` },
   { q: `What tree services are available in ${city.name}?`,
-    a: 'We provide tree removal, pruning, stump grinding, palm tree services, emergency storm response, crane-assisted removal, plant health care, cabling and bracing, land clearing, and arborist consulting.' },
+    a: 'We provide tree removal, pruning, stump grinding, tree planting, palm tree services, land clearing, plant health care, cabling and bracing, crane-assisted removal, arborist consulting, and emergency storm response.' },
   { q: 'How do I request an estimate?',
     a: `Call (321) 204-8459 or submit the form on this page. We schedule free in-person estimates in ${city.name} typically within 1–3 business days.` },
 ];
 
-const localHook = city.hook ?? `Sacred Tree Service has worked across ${city.name} and ${city.county} County, helping homeowners and property managers care for the trees that define their landscapes.`;
+const localHook = city.hook ?? `Sacred Tree Service has worked across ${areaLine}, helping homeowners and property managers care for the trees that define their landscapes.`;
 
 const county = getCountyByName(city.county);
+
+// Answer-shaped opener: the direct answer to "does this company work here,
+// and what do they do" before any supporting context.
+const directAnswer = `Yes — Sacred Tree Service provides tree removal, pruning, stump grinding, tree planting and palm care in ${placeLine}. We are licensed, insured and carry workers’ compensation, with ISA Certified Arborists on staff and free in-person estimates typically scheduled within 1–3 business days. Call (321) 204-8459.`;
+
+const title = `Tree Service in ${placeShort}`;
+const description = `Tree removal, pruning, stump grinding and palm care in ${placeLine}. Professional crew, licensed & insured. Free estimates.`;
+
+const jsonLd = [faqSchema(faqs), webPageSchema({ url, name: title, description, dateModified: SERVICE_AREA_UPDATED })];
+
+const updated = new Date(`${SERVICE_AREA_UPDATED}T12:00:00Z`).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
 ---
 
-<Base
-  title={`Tree Service in ${city.name}, FL`}
-  description={`Tree removal, pruning, and emergency tree care in ${city.name}, FL. Professional crew, licensed & insured. Free estimates.`}
-  breadcrumbs={trail}
-  jsonLd={[faqSchema(faqs)]}
->
+<Base title={title} description={description} breadcrumbs={trail} jsonLd={jsonLd}>
   <div class="container">
     <Breadcrumbs trail={trail} />
 
     <header class="head">
-      <h1>Tree Service in {city.name}, FL</h1>
+      <h1>Tree Service in {placeShort}</h1>
       <p class="lede">
-        Professional tree care for {city.name} and {city.county} County
-        from our Apopka, FL base — well inside the greater Orlando area we cover.
+        {isHome ? (
+          <>Professional tree care for {areaLine} from our home base right here in Apopka, FL.</>
+        ) : (
+          <>Professional tree care for {areaLine} from our Apopka, FL base — about {city.miles} miles away, well inside the greater Orlando area we cover.</>
+        )}
       </p>
     </header>
 
     <div class="layout">
       <article>
-        <p class="answer">{localHook}</p>
+        <p class="answer"><strong>{directAnswer}</strong></p>
+        <p class="hook">{localHook}</p>
 
         {city.intro && <p>{city.intro}</p>}
         {city.species && city.species.length > 0 && (
@@ -63,15 +98,30 @@ const county = getCountyByName(city.county);
         {city.landmarks && city.landmarks.length > 0 && (
           <p class="meta-line"><strong>Areas we cover:</strong> {city.landmarks.join(', ')}.</p>
         )}
-        {county && (
+        {isHood && (
+          <p class="meta-line">{city.name} is part of <a href="/service-area/orlando/">Orlando</a>{county && <>, in our <a href={`/service-area/${county.slug}/`}>{county.name}</a> service area</>}.</p>
+        )}
+        {!isHood && county && (
           <p class="meta-line">{city.name} is part of our <a href={`/service-area/${county.slug}/`}>{county.name}</a> service area.</p>
+        )}
+
+        {neighborhoods.length > 0 && (
+          <>
+            <h2>{city.name} neighborhoods we serve</h2>
+            <p>The parts of {city.name} where we work most each have their own page:</p>
+            <ul class="hoods">
+              {neighborhoods.map((n) => (
+                <li><a href={`/service-area/${n.slug}/`}>{n.name}{n.zip ? ` · ${n.zip}` : ''}</a></li>
+              ))}
+            </ul>
+          </>
         )}
 
         <h2>Tree care services in {city.name}</h2>
         <ul class="services">
-          {services.map((s) => (
+          {coreServices.map((s) => (
             <li>
-              <a href={`/services/${s.slug}/${city.slug}/`}>
+              <a href={serviceHref(s.slug)}>
                 <span class="ico" aria-hidden="true"><Icon name={s.icon} /></span>
                 <span class="text">
                   <strong>{s.name}</strong>
@@ -82,21 +132,38 @@ const county = getCountyByName(city.county);
           ))}
         </ul>
 
+        <h3>Also available in {city.name}</h3>
+        <ul class="services more">
+          {moreServices.map((s) => (
+            <li>
+              <a href={`/services/${s.slug}/`}>
+                <span class="ico" aria-hidden="true"><Icon name={s.icon} /></span>
+                <span class="text">
+                  <strong>{s.name}</strong>
+                  <em>{s.blurb}</em>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
         <h2>Why {city.name} property owners choose us</h2>
         <ul class="checks">
           <li>One process on every job — assessment, written scope, execution, cleanup.</li>
           <li>Member of ISA and TCIA — bound by national best-practice standards.</li>
-          <li>Local to Orlando — one crew, fast scheduling across the metro.</li>
+          <li>Local to the Orlando area — one crew, fast scheduling across the metro.</li>
           <li>Fully licensed and insured with workers’ comp coverage.</li>
         </ul>
 
         <FaqBlock faqs={faqs} />
+
+        <p class="updated">Page updated {updated}.</p>
       </article>
 
       <aside>
         <BookingForm
           heading={`Free Estimate in ${city.name}`}
-          context={`${city.name}, FL — general tree service estimate`}
+          context={`${placeShort} — general tree service estimate`}
         />
       </aside>
     </div>
@@ -114,6 +181,7 @@ const county = getCountyByName(city.county);
     margin: 0 0 1.5rem;
     border-radius: 4px;
   }
+  .hook { margin: 0 0 1.25rem; color: var(--ink-soft); }
   .meta-line {
     font-size: 0.95rem;
     color: var(--ink-soft);
@@ -127,6 +195,7 @@ const county = getCountyByName(city.county);
     align-items: start;
   }
   article h2 { font-size: 1.5rem; margin: 2rem 0 0.85rem; }
+  article h3 { font-size: 1.1rem; margin: 1.5rem 0 0.6rem; color: var(--green-dark); }
   .services {
     list-style: none;
     padding: 0;
@@ -166,6 +235,12 @@ const county = getCountyByName(city.county);
     font-size: 0.85rem;
     color: var(--muted);
   }
+  .hoods { list-style: none; padding: 0; margin: 0 0 0.5rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.4rem 0.75rem; }
+  .hoods a { color: var(--green-dark); text-decoration: none; font-weight: 600; }
+  .hoods a:hover { text-decoration: underline; }
+  @media (max-width: 600px) { .hoods { grid-template-columns: 1fr 1fr; } }
+  .services.more a { padding: 0.6rem 0.85rem; }
+  .services.more .ico { width: 30px; height: 30px; }
   .checks { list-style: none; padding: 0; }
   .checks li { padding-left: 1.5rem; position: relative; margin-bottom: 0.5rem; }
   .checks li::before {
@@ -175,6 +250,7 @@ const county = getCountyByName(city.county);
     color: var(--green);
     font-weight: 700;
   }
+  .updated { margin-top: 2rem; font-size: 0.85rem; color: var(--muted); }
   aside { position: sticky; top: 100px; }
   @media (max-width: 900px) {
     .layout { grid-template-columns: 1fr; }

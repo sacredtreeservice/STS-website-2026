@@ -5,7 +5,7 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import BookingForm from '../../components/BookingForm.astro';
 import FaqBlock from '../../components/FaqBlock.astro';
 import { getServiceBySlug } from '../../data/services';
-import { cities } from '../../data/cities';
+import { matrixCities } from '../../data/cities';
 import { serviceSchema, faqSchema } from '../../lib/schema';
 
 const service = getServiceBySlug('tree-planting')!;
@@ -103,7 +103,8 @@ const reasons = [
   },
 ];
 
-const cityList = cities.slice(0, 18);
+// Tier-1 service: every tier-1 place has a tree-planting page.
+const cityList = matrixCities;
 const jsonLd = [
   serviceSchema({ name: service.name, description: service.description, slug: service.slug }),
   faqSchema(service.faqs!),

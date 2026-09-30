@@ -4,15 +4,21 @@ import Base from '../../../layouts/Base.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import BookingForm from '../../../components/BookingForm.astro';
 import FaqBlock from '../../../components/FaqBlock.astro';
-import { services } from '../../../data/services';
-import { cities } from '../../../data/cities';
+import { matrixServices } from '../../../data/services';
+import { matrixCities, SERVICE_AREA_UPDATED } from '../../../data/cities';
 import { getCountyByName } from '../../../data/counties';
-import { serviceSchema, faqSchema } from '../../../lib/schema';
+import { serviceSchema, faqSchema, webPageSchema } from '../../../lib/schema';
 
+// Only tier-1 services × tier-1 places get a page here. The tiering comes
+// from nine months of real quote data (docs/service-area-data-2026-09.md):
+// six services are ~99% of revenue, and 22 places are where the work is.
+// Every other service/city combination 308s to the parent service page
+// (vercel.json), so the site stops publishing hundreds of near-identical
+// doorway pages.
 export async function getStaticPaths() {
   const out = [];
-  for (const s of services) {
-    for (const c of cities) {
+  for (const s of matrixServices) {
+    for (const c of matrixCities) {
       out.push({
         params: { service: s.slug, city: c.slug },
         props: { service: s, city: c },
@@ -24,68 +30,86 @@ export async function getStaticPaths() {
 
 const { service, city } = Astro.props;
 
+const isHood = Boolean(city.neighborhoodOf);
+// "Dr. Phillips, a neighborhood of Orlando, FL" / "Sanford, FL"
+const placeLine = isHood ? `${city.name}, a neighborhood of ${city.neighborhoodOf}, FL` : `${city.name}, FL`;
+// Short form for titles/H1: "Dr. Phillips, Orlando" / "Sanford, FL"
+const placeShort = isHood ? `${city.name}, ${city.neighborhoodOf}` : `${city.name}, FL`;
+const areaLine = isHood ? `${city.name} and the surrounding ${city.neighborhoodOf} area` : `${city.name} and ${city.county} County`;
+const isHome = city.miles === 0;
+
+const url = `/services/${service.slug}/${city.slug}/`;
 const trail = [
   { name: 'Home', url: '/' },
   { name: 'Services', url: '/services/' },
   { name: service.name, url: `/services/${service.slug}/` },
-  { name: city.name, url: `/services/${service.slug}/${city.slug}/` },
+  { name: city.name, url },
 ];
 
-const faqs = [
-  { q: `Do you provide ${service.name.toLowerCase()} in ${city.name}, FL?`,
-    a: `Yes. Sacred Tree Service serves ${city.name} and the surrounding ${city.county} County area for ${service.name.toLowerCase()}. We're based in Apopka, FL — centrally located to reach ${city.name} well inside our 50-mile service radius.` },
+// Two place-specific answers plus the first two real service FAQs (the ones
+// with price ranges and timing) — so the page answers the questions people
+// actually ask about this service here, not three boilerplate ones.
+const placeFaqs = [
+  { q: `Do you provide ${service.name.toLowerCase()} in ${city.name}?`,
+    a: isHome
+      ? `Yes. Sacred Tree Service serves ${areaLine} for ${service.name.toLowerCase()}. Apopka is our home base, so ${city.name} jobs are as local as it gets.`
+      : `Yes. Sacred Tree Service serves ${areaLine} for ${service.name.toLowerCase()}. We're based in Apopka, FL — about ${city.miles} miles from ${city.name}, well inside our 50-mile service radius.` },
   { q: `How quickly can you respond in ${city.name}?`,
     a: `Most ${city.name} estimates are scheduled within 1–3 business days. Storm damage and emergency calls are prioritized — we’ll do our best to get a crew out the same day during active storm response.` },
-  { q: 'Are you licensed and insured to work in this area?',
-    a: 'Yes — Sacred Tree Service LLC is licensed, insured, and carries workers’ compensation, and we’re members of the ISA and TCIA. Ask for our certificate of insurance any time.' },
 ];
+const faqs = [...placeFaqs, ...(service.faqs ?? []).slice(0, 2)];
 
 const localHook = city.hook ?? `Property owners in ${city.name} rely on us for safe, professional tree care across ${city.county} County.`;
 
+// Answer-shaped opener: a self-contained, liftable direct answer to the
+// question this page exists for — before any supporting context. This is
+// the sentence an AI assistant or a featured snippet quotes.
+const whereLine = isHome
+  ? `Apopka is our home base — we are headquartered here.`
+  : `We work ${city.name} from our Apopka, FL base, about ${city.miles} miles away and well inside our 50-mile service radius.`;
+const directAnswer = `Yes — Sacred Tree Service provides ${service.name.toLowerCase()} in ${placeLine}. ${whereLine} Licensed, insured, workers’ comp, ISA Certified Arborists on staff, and free in-person estimates usually scheduled within 1–3 business days. Call (321) 204-8459.`;
+
 const county = getCountyByName(city.county);
-// Cross-links: other services available in this same city, to turn each
-// long-tail page into part of a real cluster instead of an orphan.
-// Curated relatedSlugs come first (the high-intent pairings), then the list
-// is filled to 6 by rotating through the rest keyed on the city slug — so
-// every service gets cross-linked from combo pages instead of `slice(0, 6)`
-// permanently starving the back half of the services array.
-const others = services.filter((s) => s.slug !== service.slug);
-const curated = (service.relatedSlugs ?? [])
-  .map((slug) => others.find((s) => s.slug === slug))
-  .filter((s): s is (typeof services)[number] => Boolean(s));
-const rest = others.filter((s) => !curated.includes(s));
-const cityHash = [...city.slug].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) % 997, 0);
-const start = rest.length > 0 ? cityHash % rest.length : 0;
-const rotated = [...rest.slice(start), ...rest.slice(0, start)];
-const otherServices = [...curated, ...rotated].slice(0, 6);
+// The other core services available on their own page in this place.
+const otherServices = matrixServices.filter((s) => s.slug !== service.slug);
+
+const title = `${service.name} in ${placeShort}`;
+const description = `${service.name} in ${placeShort} — licensed & insured, ISA Certified Arborists on staff, free in-person estimates.`;
 
 const jsonLd = [
-  serviceSchema({ name: service.name, description: service.description, slug: service.slug, city: city.name }),
+  serviceSchema({
+    name: service.name,
+    description: service.description,
+    slug: service.slug,
+    city: city.name,
+    citySlug: city.slug,
+    neighborhoodOf: city.neighborhoodOf,
+  }),
   faqSchema(faqs),
+  webPageSchema({ url, name: title, description, dateModified: SERVICE_AREA_UPDATED }),
 ];
+
+const updated = new Date(`${SERVICE_AREA_UPDATED}T12:00:00Z`).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
 ---
 
-<Base
-  title={`${service.name} in ${city.name}, FL`}
-  description={`${service.blurb} Serving ${city.name} and ${city.county} County. Professional crew, licensed & insured, free estimates.`}
-  breadcrumbs={trail}
-  jsonLd={jsonLd}
->
+<Base title={title} description={description} breadcrumbs={trail} jsonLd={jsonLd}>
   <div class="container">
     <Breadcrumbs trail={trail} />
 
     <header class="head">
-      <h1>{service.name} in {city.name}, FL</h1>
+      <h1>{service.name} in {placeShort}</h1>
       <p class="lede">{service.blurb}</p>
     </header>
 
     <div class="layout">
       <article>
-        <p class="answer">
-          <strong>Yes — Sacred Tree Service provides {service.name.toLowerCase()} in {city.name}, FL.</strong>{' '}
-          {localHook} Our crew handles each job from in-person estimate through
-          cleanup — one process, fully licensed and insured.
-        </p>
+        <p class="answer"><strong>{directAnswer}</strong></p>
+        <p class="hook">{localHook} Our crew handles each job from in-person estimate through cleanup — one process, fully licensed and insured.</p>
 
         <h2>About {service.name.toLowerCase()} in {city.name}</h2>
         <p>{service.description}</p>
@@ -105,10 +129,26 @@ const jsonLd = [
 
         <h2>Serving {city.name} and nearby</h2>
         <p>
-          Sacred Tree Service is based in Apopka, FL — centrally located to
-          reach {city.name} and the rest of the greater Orlando area{city.miles > 0 ? `, roughly ${city.miles} miles from our base` : ''}.
-          We work across {county ? <a href={`/service-area/${county.slug}/`}>{county.name}</a> : `${city.county} County`} and the
-          broader Central Florida region within a 50-mile service radius.
+          {isHood ? (
+            <>
+              {city.name} is a neighborhood of {city.neighborhoodOf}{city.zip ? ` (ZIP ${city.zip})` : ''}, and one of the
+              Orlando-area neighborhoods where we work most. We're based in Apopka, FL — roughly {city.miles} miles away — and cover
+              all of <a href="/service-area/orlando/">Orlando</a> and {county ? <a href={`/service-area/${county.slug}/`}>{county.name}</a> : `${city.county} County`} within
+              our 50-mile service radius.
+            </>
+          ) : isHome ? (
+            <>
+              Sacred Tree Service is headquartered in Apopka, FL and works across{' '}
+              {county ? <a href={`/service-area/${county.slug}/`}>{county.name}</a> : `${city.county} County`} and the broader
+              Central Florida region within a 50-mile service radius of home.
+            </>
+          ) : (
+            <>
+              Sacred Tree Service is based in Apopka, FL — roughly {city.miles} miles from {city.name} — and works across{' '}
+              {county ? <a href={`/service-area/${county.slug}/`}>{county.name}</a> : `${city.county} County`} and the broader
+              Central Florida region within a 50-mile service radius.
+            </>
+          )}
         </p>
 
         <h2>What to expect</h2>
@@ -134,15 +174,17 @@ const jsonLd = [
             ))}
           </ul>
           <p class="related-foot">
-            See <a href={`/service-area/${city.slug}/`}>all tree services in {city.name}</a>{county && <>, part of our <a href={`/service-area/${county.slug}/`}>{county.name}</a> service area</>}.
+            See <a href={`/service-area/${city.slug}/`}>all tree services in {city.name}</a>{isHood && <>, our <a href="/service-area/orlando/">Orlando</a> page</>}{county && <>, and our <a href={`/service-area/${county.slug}/`}>{county.name}</a> service area</>}.
           </p>
         </nav>
+
+        <p class="updated">Page updated {updated}.</p>
       </article>
 
       <aside>
         <BookingForm
           heading={`Free ${service.shortName} Estimate in ${city.name}`}
-          context={`${service.name} — ${city.name}, FL`}
+          context={`${service.name} — ${placeShort}`}
         />
       </aside>
     </div>
@@ -160,6 +202,7 @@ const jsonLd = [
     margin: 0 0 2rem;
     border-radius: 4px;
   }
+  .hook { margin: 0 0 2rem; color: var(--ink-soft); }
   .layout {
     display: grid;
     grid-template-columns: 1.6fr 1fr;
@@ -205,6 +248,7 @@ const jsonLd = [
   .related ul a:hover { border-color: var(--border-strong); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
   .related ul [data-icon] { width: 16px; height: 16px; opacity: 0.7; flex-shrink: 0; }
   .related-foot { font-size: 0.92rem; color: var(--muted); margin: 0; }
+  .updated { margin-top: 2rem; font-size: 0.85rem; color: var(--muted); }
   @media (max-width: 520px) { .related ul { grid-template-columns: 1fr; } }
   aside { position: sticky; top: 100px; }
   @media (max-width: 900px) {
