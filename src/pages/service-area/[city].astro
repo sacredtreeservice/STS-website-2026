@@ -49,6 +49,10 @@ const localHook = city.hook ?? `Sacred Tree Service has worked across ${areaLine
 
 const county = getCountyByName(city.county);
 
+// Answer-shaped opener: the direct answer to "does this company work here,
+// and what do they do" before any supporting context.
+const directAnswer = `Yes — Sacred Tree Service provides tree removal, pruning, stump grinding, tree planting and palm care in ${placeLine}. We are licensed, insured and carry workers’ compensation, with ISA Certified Arborists on staff and free in-person estimates typically scheduled within 1–3 business days. Call (321) 204-8459.`;
+
 const title = `Tree Service in ${placeShort}`;
 const description = `Tree removal, pruning, stump grinding and palm care in ${placeLine}. Professional crew, licensed & insured. Free estimates.`;
 
@@ -76,7 +80,8 @@ const updated = new Date(`${SERVICE_AREA_UPDATED}T12:00:00Z`).toLocaleDateString
 
     <div class="layout">
       <article>
-        <p class="answer">{localHook}</p>
+        <p class="answer"><strong>{directAnswer}</strong></p>
+        <p class="hook">{localHook}</p>
 
         {city.intro && <p>{city.intro}</p>}
         {city.species && city.species.length > 0 && (
@@ -156,6 +161,7 @@ const updated = new Date(`${SERVICE_AREA_UPDATED}T12:00:00Z`).toLocaleDateString
     margin: 0 0 1.5rem;
     border-radius: 4px;
   }
+  .hook { margin: 0 0 1.25rem; color: var(--ink-soft); }
   .meta-line {
     font-size: 0.95rem;
     color: var(--ink-soft);

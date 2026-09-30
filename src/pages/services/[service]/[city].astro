@@ -58,6 +58,11 @@ const faqs = [...placeFaqs, ...(service.faqs ?? []).slice(0, 2)];
 
 const localHook = city.hook ?? `Property owners in ${city.name} rely on us for safe, professional tree care across ${city.county} County.`;
 
+// Answer-shaped opener: a self-contained, liftable direct answer to the
+// question this page exists for — before any supporting context. This is
+// the sentence an AI assistant or a featured snippet quotes.
+const directAnswer = `Yes — Sacred Tree Service provides ${service.name.toLowerCase()} in ${placeLine}. We work ${city.name} from our Apopka, FL base, about ${city.miles} miles away and well inside our 50-mile service radius. Licensed, insured, workers’ comp, ISA Certified Arborists on staff, and free in-person estimates usually scheduled within 1–3 business days. Call (321) 204-8459.`;
+
 const county = getCountyByName(city.county);
 // The other core services available on their own page in this place.
 const otherServices = matrixServices.filter((s) => s.slug !== service.slug);
@@ -97,11 +102,8 @@ const updated = new Date(`${SERVICE_AREA_UPDATED}T12:00:00Z`).toLocaleDateString
 
     <div class="layout">
       <article>
-        <p class="answer">
-          <strong>Yes — Sacred Tree Service provides {service.name.toLowerCase()} in {placeLine}.</strong>{' '}
-          {localHook} Our crew handles each job from in-person estimate through
-          cleanup — one process, fully licensed and insured.
-        </p>
+        <p class="answer"><strong>{directAnswer}</strong></p>
+        <p class="hook">{localHook} Our crew handles each job from in-person estimate through cleanup — one process, fully licensed and insured.</p>
 
         <h2>About {service.name.toLowerCase()} in {city.name}</h2>
         <p>{service.description}</p>
@@ -188,6 +190,7 @@ const updated = new Date(`${SERVICE_AREA_UPDATED}T12:00:00Z`).toLocaleDateString
     margin: 0 0 2rem;
     border-radius: 4px;
   }
+  .hook { margin: 0 0 2rem; color: var(--ink-soft); }
   .layout {
     display: grid;
     grid-template-columns: 1.6fr 1fr;

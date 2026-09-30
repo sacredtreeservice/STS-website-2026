@@ -55,6 +55,9 @@ const related = (service.relatedSlugs ?? [])
   .map((slug) => services.find((s) => s.slug === slug))
   .filter((s): s is (typeof services)[number] => Boolean(s));
 
+// Answer-shaped opener: a liftable, self-contained answer before context.
+const directAnswer = `Sacred Tree Service provides ${service.name.toLowerCase()} throughout Orlando and Central Florida, within a 50-mile radius of our Apopka, FL base. Work is performed to ANSI A300 and Z133 standards by a licensed, insured crew with ISA Certified Arborists on staff. Estimates are free and in person — call (321) 204-8459.`;
+
 const jsonLd = [serviceSchema({ name: service.name, description: service.description, slug: service.slug }), faqSchema(faqs)];
 ---
 
@@ -74,6 +77,8 @@ const jsonLd = [serviceSchema({ name: service.name, description: service.descrip
 
     <div class="layout">
       <article>
+        <p class="answer"><strong>{directAnswer}</strong></p>
+
         <h2>What this service includes</h2>
         <p>{service.description}</p>
 
@@ -161,6 +166,13 @@ const jsonLd = [serviceSchema({ name: service.name, description: service.descrip
   article h2 {
     font-size: 1.5rem;
     margin: 2rem 0 0.85rem;
+  }
+  .answer {
+    background: var(--surface);
+    border-left: 4px solid var(--green);
+    padding: 1rem 1.25rem;
+    margin: 0 0 1.5rem;
+    border-radius: 4px;
   }
   .checks {
     list-style: none;
