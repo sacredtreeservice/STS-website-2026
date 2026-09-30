@@ -172,22 +172,33 @@ export const serviceSchema = (svc: {
   description: string;
   slug: string;
   city?: string;
+  // URL segment for the city page. Required with `city` — deriving it from
+  // the name breaks on "Dr. Phillips" / "St. Cloud".
+  citySlug?: string;
+  // Set when `city` is a neighborhood (e.g. Dr. Phillips → Orlando): the
+  // areaServed becomes a Place inside that City instead of a City.
+  neighborhoodOf?: string;
   // Optional named offers (e.g. care-plan tiers). Rendered as an
   // OfferCatalog on the Service node. Deliberately no prices — plans are
   // quoted per property, and schema.org Offers are valid without price.
   offers?: { name: string; description: string }[];
 }) => {
+  const florida = { '@type': 'State', name: 'Florida' };
+  const areaServed = !svc.city
+    ? florida
+    : svc.neighborhoodOf
+      ? { '@type': 'Place', name: svc.city, containedInPlace: { '@type': 'City', name: svc.neighborhoodOf, containedInPlace: florida } }
+      : { '@type': 'City', name: svc.city, containedInPlace: florida };
+  const citySeg = svc.citySlug ?? svc.city?.toLowerCase().replace(/[^a-z0-9]+/g, '-');
   const schema: Record<string, any> = {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    name: svc.city ? `${svc.name} in ${svc.city}, FL` : svc.name,
+    name: svc.city ? `${svc.name} in ${svc.city}, ${svc.neighborhoodOf ? `${svc.neighborhoodOf}, ` : ''}FL` : svc.name,
     description: svc.description,
     provider: { '@id': `${SITE}#business` },
     serviceType: svc.name,
-    areaServed: svc.city
-      ? { '@type': 'City', name: svc.city, containedInPlace: { '@type': 'State', name: 'Florida' } }
-      : { '@type': 'State', name: 'Florida' },
-    url: svc.city ? `${SITE}/services/${svc.slug}/${svc.city.toLowerCase().replace(/\s+/g, '-')}/` : `${SITE}/services/${svc.slug}/`,
+    areaServed,
+    url: svc.city ? `${SITE}/services/${svc.slug}/${citySeg}/` : `${SITE}/services/${svc.slug}/`,
   };
   if (svc.offers && svc.offers.length > 0) {
     schema.hasOfferCatalog = {
@@ -200,6 +211,25 @@ export const serviceSchema = (svc: {
     };
   }
   return schema;
+};
+
+// WebPage node with a real dateModified — used on the service-area and
+// service × city pages, which carry no Article. Google reads dateModified
+// from WebPage as well as Article; we only emit it where the date is true.
+export const webPageSchema = (p: { url: string; name: string; description: string; dateModified: string }) => {
+  const url = new URL(p.url, SITE).toString();
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': url,
+    url,
+    name: p.name,
+    description: p.description,
+    dateModified: p.dateModified,
+    inLanguage: 'en-US',
+    isPartOf: { '@id': `${SITE}#website` },
+    about: { '@id': `${SITE}#business` },
+  };
 };
 
 export const faqSchema = (faqs: { q: string; a: string }[]) => ({

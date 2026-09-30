@@ -5,8 +5,228 @@
   "redirects": [
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "www.sacredtreeservice.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "www.sacredtreeservice.com"
+        }
+      ],
       "destination": "https://sacredtreeservice.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/service-area/edgewood/",
+      "destination": "/service-area/orange-county/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/edgewood/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/service-area/goldenrod/",
+      "destination": "/service-area/orange-county/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/goldenrod/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/service-area/meadow-woods/",
+      "destination": "/service-area/orange-county/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/meadow-woods/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/service-area/lake-buena-vista/",
+      "destination": "/service-area/orange-county/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/lake-buena-vista/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/service-area/cocoa/",
+      "destination": "/service-area/brevard-county/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/cocoa/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/plant-health-care/:city/",
+      "destination": "/services/plant-health-care/",
+      "permanent": true
+    },
+    {
+      "source": "/services/tree-care-plans/:city/",
+      "destination": "/services/tree-care-plans/",
+      "permanent": true
+    },
+    {
+      "source": "/services/arborist-consulting/:city/",
+      "destination": "/services/arborist-consulting/",
+      "permanent": true
+    },
+    {
+      "source": "/services/cabling-bracing/:city/",
+      "destination": "/services/cabling-bracing/",
+      "permanent": true
+    },
+    {
+      "source": "/services/large-tree-transplanting/:city/",
+      "destination": "/services/large-tree-transplanting/",
+      "permanent": true
+    },
+    {
+      "source": "/services/crane-assisted-removal/:city/",
+      "destination": "/services/crane-assisted-removal/",
+      "permanent": true
+    },
+    {
+      "source": "/services/emergency-storm-damage/:city/",
+      "destination": "/services/emergency-storm-damage/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/pine-hills/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/maitland/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/belle-isle/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/oakland/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/casselberry/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/fern-park/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/winter-springs/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/lake-mary/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/kissimmee/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/st-cloud/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/clermont/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/montverde/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/minneola/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/eustis/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/tavares/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/leesburg/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/debary/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/deltona/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/osteen/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/davenport/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/haines-city/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/celebration/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/four-corners/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/deland/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/orange-city/",
+      "destination": "/services/:service/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:service/titusville/",
+      "destination": "/services/:service/",
       "permanent": true
     }
   ],
@@ -14,45 +234,94 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
       ]
     },
     {
       "source": "/_astro/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/assets/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=86400"
+        }
+      ]
     },
     {
       "source": "/og/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=86400"
+        }
+      ]
     },
     {
       "source": "/llms.txt",
       "headers": [
-        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
-        { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
       ]
     },
     {
       "source": "/llms-full.txt",
       "headers": [
-        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
-        { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
       ]
     },
     {
       "source": "/book-a-call",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
     },
     {
       "source": "/book-a-call/(.*)",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
     }
   ]
 }

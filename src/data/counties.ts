@@ -31,7 +31,9 @@ export const counties: County[] = [
       'Ocoee',
       'Winter Garden',
       'Windermere',
+      'Gotha',
       'Dr. Phillips',
+      'College Park',
       'Hunters Creek',
       'Lake Nona',
     ],
@@ -52,6 +54,7 @@ export const counties: County[] = [
       'Altamonte Springs',
       'Longwood',
       'Casselberry',
+      'Winter Springs',
     ],
     localContext:
       'Seminole County’s lakefront neighborhoods carry a denser oak hammock canopy than the metro average — Lake Mary, Longwood, and Sanford all feature century-old live oaks and bald cypress along the lakes. Sanford’s historic district holds some of the oldest specimen trees in the Orlando area, and heritage tree protection is taken seriously here. The I-4 corridor through the county is a well-defined storm path, which makes proactive structural pruning a routine ask from local property owners.',
@@ -82,7 +85,7 @@ export const counties: County[] = [
       'Leesburg',
       'Minneola',
       'Groveland',
-      'Four Corners',
+      'Montverde',
     ],
     localContext:
       'Lake County’s terrain — rolling hills, 1,400+ named lakes, sandy soils — produces an unusual local canopy: bald cypress along the lake edges, live oaks in the hammocks, longleaf pine on the higher ground. Clermont’s elevation (the highest natural point in peninsular Florida) gives it a distinct micro-climate and drainage profile. Mount Dora and Eustis historic districts carry some of the oldest specimen trees in Central Florida — preservation pruning, not removal, is the routine ask here.',
@@ -104,8 +107,8 @@ export const counties: County[] = [
     name: 'Brevard County, FL',
     region: 'Space Coast — Titusville, Cocoa, the Indian River',
     blurb:
-      'On the Space Coast, salt spray, hurricane exposure, and sandy soils all change how trees behave. Our Brevard service area covers Titusville and Cocoa within our 50-mile radius.',
-    highlights: ['Titusville', 'Cocoa'],
+      'On the Space Coast, salt spray, coastal wind, and sandy soils all change how trees behave. Our Brevard service area covers Titusville and the north Brevard corridor at the edge of our 50-mile radius.',
+    highlights: ['Titusville'],
     localContext:
       'Brevard County’s Space Coast position changes the species mix dramatically: sabal, washingtonia, and queen palms dominate, while oak species are scrub varieties more salt-tolerant than their inland cousins. Lethal bronzing pressure is significant in this corridor — preventive oxytetracycline (OTC) trunk injections are routine palm-care here. Hurricane exposure is among the highest in our service area, which makes pre-storm structural pruning a recurring conversation.',
   },

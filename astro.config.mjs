@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
+import { SERVICE_AREA_UPDATED } from './src/data/cities';
 
 const SITE = 'https://sacredtreeservice.com';
 
@@ -53,14 +54,20 @@ export default defineConfig({
         const path = page.replace(SITE, '').replace(/\/+$/, '');
         return path !== '/book-a-call';
       },
-      // No lastmod, deliberately: stamping the build time on all ~580 URLs
-      // every deploy is a provably false freshness signal, and Google
-      // ignores lastmod site-wide once it detects that. Honest silence
-      // beats lying — add real per-page dates only if we ever wire them.
+      // lastmod only where we know it is true: the service-area and
+      // service × city pages carry SERVICE_AREA_UPDATED (bumped by hand when
+      // those templates or the data behind them change). Everything else
+      // stays silent — stamping the build time on every URL is a provably
+      // false freshness signal that Google learns to ignore.
       serialize(item) {
         const t = tier(item.url);
         item.priority = t.priority;
         item.changefreq = t.changefreq;
+        const path = item.url.replace(SITE, '');
+        const segs = path.split('/').filter(Boolean);
+        const isServiceArea = segs[0] === 'service-area' && segs.length === 2;
+        const isCombo = segs[0] === 'services' && segs.length === 3;
+        if (isServiceArea || isCombo) item.lastmod = SERVICE_AREA_UPDATED;
         return item;
       },
     }),

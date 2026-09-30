@@ -84,6 +84,13 @@ export const GET: APIRoute = () => {
   out.push('');
   out.push(`We serve seven counties across the greater Orlando area: ${counties.map((c) => c.county).join(', ')}.`);
   out.push('');
+  out.push(
+    `Most of our work is concentrated in Orange and Seminole counties. The places where we work most — and where each core service has its own page — are: ${cities
+      .filter((c) => c.tier === 1)
+      .map((c) => (c.neighborhoodOf ? `${c.name} (${c.neighborhoodOf})` : c.name))
+      .join(', ')}. Source: nine months of quote data, documented in the site repository (docs/service-area-data-2026-09.md).`,
+  );
+  out.push('');
   for (const c of counties) {
     const inCounty = cities.filter((ci) => ci.county === c.county).sort((a, b) => a.miles - b.miles);
     out.push(`### ${c.name}`);
@@ -95,7 +102,8 @@ export const GET: APIRoute = () => {
     if (inCounty.length > 0) {
       out.push(`Cities and communities served in ${c.name}:`);
       for (const ci of inCounty) {
-        out.push(`- ${ci.name}, FL — ~${ci.miles} mi from our Apopka, FL base — ${SITE}/service-area/${ci.slug}/`);
+        const label = ci.neighborhoodOf ? `${ci.name} (${ci.neighborhoodOf} neighborhood, ZIP ${ci.zip})` : `${ci.name}, FL`;
+        out.push(`- ${label} — ~${ci.miles} mi from our Apopka, FL base — ${SITE}/service-area/${ci.slug}/`);
       }
       out.push('');
     }

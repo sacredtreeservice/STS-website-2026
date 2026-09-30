@@ -6,6 +6,13 @@ export type Service = {
   description: string;
   icon: string;
   faqs?: { q: string; a: string }[];
+  // Tier 1 services carry the service × city matrix (see matrixCities in
+  // cities.ts). Chosen from real converted line-item revenue
+  // (docs/service-area-data-2026-09.md): removal, pruning, planting, stump
+  // grinding, palm work and clearing are ~99% of what we actually sell.
+  // Everything else keeps its own service page but is not multiplied
+  // across every city.
+  tier: 1 | 2;
   // Curated "pairs with" services rendered as cross-links on service pages.
   // Keeps the removal → planting → plant-health → care-plans loop connected
   // instead of letting array order decide which services get internal links.
@@ -18,6 +25,7 @@ export type Service = {
 export const services: Service[] = [
   {
     slug: 'tree-pruning',
+    tier: 1,
     name: 'Tree Pruning & Trimming',
     shortName: 'Pruning',
     blurb: 'Routine pruning that helps trees thrive — and prevents problems before they start.',
@@ -50,6 +58,7 @@ export const services: Service[] = [
   },
   {
     slug: 'plant-health-care',
+    tier: 2,
     name: 'Plant Health Care',
     shortName: 'Plant Health',
     blurb: 'Diagnose before you treat. Year-round monitoring, targeted pest and disease care, and fertilization built for Florida soils.',
@@ -82,6 +91,7 @@ export const services: Service[] = [
   },
   {
     slug: 'tree-care-plans',
+    tier: 2,
     name: 'Tree Care Plans & Ongoing Maintenance',
     shortName: 'Care Plans',
     blurb: 'Year-round care on a plan: establishment care for new plantings, an annual arborist walk, and seasonal plant health monitoring.',
@@ -114,6 +124,7 @@ export const services: Service[] = [
   },
   {
     slug: 'arborist-consulting',
+    tier: 2,
     name: 'Arborist Consulting & Risk Assessment',
     shortName: 'Consulting',
     blurb: 'Certified arborist evaluations, reports, and tree risk assessments.',
@@ -142,6 +153,7 @@ export const services: Service[] = [
   },
   {
     slug: 'cabling-bracing',
+    tier: 2,
     name: 'Cabling & Bracing',
     shortName: 'Cabling',
     blurb: 'Structural support that gives strong-but-vulnerable trees more good years.',
@@ -170,6 +182,7 @@ export const services: Service[] = [
   },
   {
     slug: 'large-tree-transplanting',
+    tier: 2,
     name: 'Large Tree Transplanting',
     shortName: 'Transplanting',
     blurb: 'Save the tree — move it. Mature-tree relocation done with the patience and craft this work demands.',
@@ -202,6 +215,7 @@ export const services: Service[] = [
   },
   {
     slug: 'palm-tree-services',
+    tier: 1,
     name: 'Palm Tree Services',
     shortName: 'Palms',
     blurb: 'Specialty care for Florida palms — sabal, queen, royal, washingtonia, and more.',
@@ -234,6 +248,7 @@ export const services: Service[] = [
   },
   {
     slug: 'tree-removal',
+    tier: 1,
     name: 'Tree Removal & Replanting',
     shortName: 'Removal',
     blurb: 'Thoughtful removals as part of a healthy landscape — and we replant where you want.',
@@ -266,6 +281,7 @@ export const services: Service[] = [
   },
   {
     slug: 'tree-planting',
+    tier: 1,
     name: 'Tree Planting & Installation',
     shortName: 'Planting',
     blurb: 'Locally grown trees, planted right and cared for for years — same-day with a removal or on their own.',
@@ -298,6 +314,7 @@ export const services: Service[] = [
   },
   {
     slug: 'stump-grinding',
+    tier: 1,
     name: 'Stump Grinding',
     shortName: 'Stumps',
     blurb: 'Grind stumps below grade so you can replant, resod, or rebuild.',
@@ -326,6 +343,7 @@ export const services: Service[] = [
   },
   {
     slug: 'land-clearing',
+    tier: 1,
     name: 'Land & Lot Clearing',
     shortName: 'Land Clearing',
     blurb: 'Selective or full lot clearing for builders, developers, and landowners.',
@@ -354,6 +372,7 @@ export const services: Service[] = [
   },
   {
     slug: 'crane-assisted-removal',
+    tier: 2,
     name: 'Crane-Assisted Removal',
     shortName: 'Crane Work',
     blurb: 'For trees that are too large, too tight, or too risky to drop conventionally.',
@@ -382,6 +401,7 @@ export const services: Service[] = [
   },
   {
     slug: 'emergency-storm-damage',
+    tier: 2,
     name: 'Emergency & Storm Response',
     shortName: 'Emergency',
     blurb: 'When a storm catches you off guard, we respond fast.',
@@ -409,5 +429,8 @@ export const services: Service[] = [
     relatedSlugs: ['tree-removal', 'crane-assisted-removal', 'tree-pruning'],
   },
 ];
+
+// Services that carry the full service × city matrix.
+export const matrixServices = services.filter((s) => s.tier === 1);
 
 export const getServiceBySlug = (slug: string) => services.find((s) => s.slug === slug);

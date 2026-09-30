@@ -36,12 +36,18 @@ const defaultFaqs = [
 ];
 const faqs = service.faqs ?? defaultFaqs;
 
-// Every city, grouped by county — service hubs are the natural place to give
-// all 44 combo pages a crawl path (previously only the first 18 got links).
+// Where this service has its own page (tier-1 service × tier-1 place) link
+// there; everywhere else link the place's service-area page, so every link
+// resolves and no doorway pages get created. Orlando neighborhoods are
+// grouped under Orlando.
+const hasComboPages = service.tier === 1;
+const placeHref = (c: (typeof cities)[number]) =>
+  hasComboPages && c.tier === 1 ? `/services/${service.slug}/${c.slug}/` : `/service-area/${c.slug}/`;
+const neighborhoods = cities.filter((c) => c.neighborhoodOf === 'Orlando');
 const countyNames = [...new Set(cities.map((c) => c.county))];
 const citiesByCounty = countyNames.map((county) => ({
   county,
-  cities: cities.filter((c) => c.county === county),
+  cities: cities.filter((c) => c.county === county && !c.neighborhoodOf),
 }));
 
 // Curated "pairs with" cross-links (falls back to adjacent services).
@@ -97,12 +103,22 @@ const jsonLd = [serviceSchema({ name: service.name, description: service.descrip
 
         <h2>Cities we serve</h2>
         <p>We provide {service.shortName.toLowerCase()} services across Central Florida, including:</p>
+        {neighborhoods.length > 0 && (
+          <div class="county-group">
+            <h3>Orlando neighborhoods</h3>
+            <ul class="cities">
+              {neighborhoods.map((c) => (
+                <li><a href={placeHref(c)}>{service.shortName} in {c.name}</a></li>
+              ))}
+            </ul>
+          </div>
+        )}
         {citiesByCounty.map((group) => (
           <div class="county-group">
             <h3>{group.county} County</h3>
             <ul class="cities">
               {group.cities.map((c) => (
-                <li><a href={`/services/${service.slug}/${c.slug}/`}>{service.shortName} in {c.name}</a></li>
+                <li><a href={placeHref(c)}>{service.shortName} in {c.name}</a></li>
               ))}
             </ul>
           </div>

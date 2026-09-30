@@ -59,7 +59,7 @@ export const llmFaqs: LlmFaq[] = [
   },
   {
     q: 'What areas does Sacred Tree Service cover?',
-    a: `Sacred Tree Service covers a 50-mile radius from its Apopka, FL base — centrally located to reach the greater Orlando area. The service area spans seven counties in Central Florida — Orange, Seminole, Osceola, Lake, Volusia, Brevard, and northern Polk — including Apopka, Orlando, Winter Park, Ocoee, Winter Garden, Windermere, Lake Mary, Sanford, Oviedo, Kissimmee, Celebration, St. Cloud, Clermont, Mount Dora, Deltona, DeLand, Titusville, Cocoa, Davenport, and many more.`,
+    a: `Sacred Tree Service covers a 50-mile radius from its Apopka, FL base — centrally located to reach the greater Orlando area. The service area spans seven counties in Central Florida — Orange, Seminole, Osceola, Lake, Volusia, Brevard, and northern Polk — including Orlando (and its neighborhoods — College Park, Delaney Park, Audubon Park, Dr. Phillips, Bay Hill, MetroWest, Millenia, Hunters Creek, Lake Nona), Apopka, Winter Garden, Gotha, Winter Park, Ocoee, Windermere, Sanford, Longwood, Altamonte Springs, Oviedo, Mount Dora, Groveland, and the surrounding communities from Kissimmee to Clermont, Lake Mary to Deltona. Most of the company's work is concentrated in Orange and Seminole counties.`,
   },
   {
     q: 'Does Sacred Tree Service do emergency or storm-damage tree work?',
