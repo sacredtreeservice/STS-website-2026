@@ -88,8 +88,8 @@ export const localBusinessSchema = () => {
     // (professional service positioning), not the person.
     address: {
       '@type': 'PostalAddress',
-      // streetAddress + postalCode intentionally omitted — we publish city
-      // and region only to keep the precise HQ location off the public web.
+      // Full address published (owner decision 2026-09-30). The spreads only
+      // guard against an empty string if the fields are ever blanked again.
       ...(company.address.street ? { streetAddress: company.address.street } : {}),
       addressLocality: company.address.city,
       addressRegion: company.address.region,

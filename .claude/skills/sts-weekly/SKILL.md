@@ -50,9 +50,9 @@ exact inputs needed into `growth/inbox/out/needed-w<NN>.md`, commit that, and st
   `KNOWN_TYPES` in `scripts/qa/check-dist.mjs`.
 - Off-site recipes (LOCAL-*): write the pack to `growth/inbox/out/<name>-<date>.md` with exact
   current → correct values, URLs, field names. You cannot log into those accounts; don't pretend to.
-- Never: add booking calendars, dark mode, chat widgets, street address/ZIP, cert numbers, "24/7",
+- Never: add booking calendars, dark mode, chat widgets, cert numbers, "24/7",
   superlatives, fear copy, new links to `/book-a-call/` (only /contact/ links it, by design).
-- Never commit into the public repo: street address, any phone other than the public one, passwords,
+- Never commit into the public repo: any phone other than the public one, passwords,
   internal price books/cost basis, raw customer photos (inbox/ is gitignored for that reason), GPS EXIF.
 
 ## 3. Verify

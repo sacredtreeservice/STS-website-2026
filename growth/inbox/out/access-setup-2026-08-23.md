@@ -44,8 +44,8 @@ and review replies are managed — the biggest local ranking lever we have.
 Do this (whoever owns the profile — per section 8 of the source-of-truth doc):
 1. https://business.google.com → select Sacred Tree Service → **Business Profile settings → People
    and access → Add** → the consultant's email → role **Manager** (not Owner).
-2. While in there, confirm: business type = **Service-area business** with the street address
-   **hidden** (we only publish "Apopka, FL"); primary category **Tree service**; phone
+2. While in there, confirm: the address is **5844 Round Lake Rd, Apopka, FL 32712** (owner decision
+   2026-09-30 — published in full, matching the website); primary category **Tree service**; phone
    (321) 204-8459; website https://sacredtreeservice.com; hours Mon–Sat 8:00–18:00.
    (The NAP pack in `nap-fix-2026-08-23.md` has the full golden record.)
 

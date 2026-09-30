@@ -305,7 +305,7 @@ Produce `growth/inbox/out/nap-fix-<date>.md` with the exact current wrong value 
 correct value for each listing: BBB (lists Hiawassee 32818 + phone (407) 452-8779 + Facebook as
 website), Nextdoor (Ocoee address, no website), Yelp (ZIP 32812, category "Landscaping", possible
 duplicate slug), YellowPages/YardCareDirectory (Orlando 32818, no website). Correct values:
-"Sacred Tree Service LLC", Apopka, FL (service-area business — hide street address everywhere,
+"Sacred Tree Service LLC", 5844 Round Lake Rd, Apopka, FL 32712 (owner decision 2026-09-30: the full address is published everywhere,
 per Google SAB rules), (321) 204-8459, https://sacredtreeservice.com, primary category "Tree
 service". Include login URLs and the exact field names. Owner executes; model re-checks 2 weeks later.
 
